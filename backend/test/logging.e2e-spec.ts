@@ -5,6 +5,8 @@ import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { setupApp } from '../src/app.setup';
 import { OTP_SENDER, OtpSender } from '../src/auth/sms/sms-sender';
+import { randomUUID } from 'node:crypto';
+import { jpegWithMetadata } from './fixtures/images';
 import { API, resetDatabase } from './helpers';
 
 /** Captures everything the app logs so we can assert on what is (not) written. */
@@ -28,7 +30,7 @@ class SilentSender implements OtpSender {
   }
 }
 
-describe('Logs never contain OTPs, phone numbers or tokens', () => {
+describe('Logs never contain OTPs, phone numbers, tokens, addresses or uploads', () => {
   let app: INestApplication;
   const logger = new CapturingLogger();
   const sender = new SilentSender();
@@ -43,10 +45,11 @@ describe('Logs never contain OTPs, phone numbers or tokens', () => {
     app = moduleRef.createNestApplication({ logger });
     setupApp(app);
     await app.init();
-    const ds = app.get(DataSource);
-    await ds.runMigrations();
-    await resetDatabase(ds);
+    dataSource = app.get(DataSource);
+    await dataSource.runMigrations();
+    await resetDatabase(dataSource);
   });
+  let dataSource: DataSource;
   afterAll(async () => {
     process.env.OTP_DEV_EXPOSE_CODE = previousExpose;
     await app.close();
@@ -81,5 +84,56 @@ describe('Logs never contain OTPs, phone numbers or tokens', () => {
     expect(all).not.toContain('1099998877');
     expect(all).not.toContain(ok.body.accessToken);
     expect(all).not.toContain(ok.body.refreshToken);
+  });
+
+  it('runs a request submission with a photo and an address and checks every log line', async () => {
+    const http = () => request(app.getHttpServer());
+    const phone = '01099998866';
+    const otp = await http().post(`${API}/auth/otp/request`).send({ phone }).expect(200);
+    const session = await http()
+      .post(`${API}/auth/otp/verify`)
+      .send({ challengeId: otp.body.challengeId, phone, code: sender.last })
+      .expect(200);
+    const auth = { Authorization: `Bearer ${session.body.accessToken}` };
+    const [{ id: serviceId }] = await dataSource.query('SELECT id FROM services LIMIT 1');
+    const [{ id: areaId }] = await dataSource.query('SELECT id FROM service_areas LIMIT 1');
+    const photo = await http()
+      .post(`${API}/media`)
+      .set(auth)
+      .field('purpose', 'request_photo')
+      .attach('file', jpegWithMetadata(), 'my-home-photo.jpg')
+      .expect(201);
+    logger.lines = [];
+    await http()
+      .post(`${API}/requests`)
+      .set(auth)
+      .set('Idempotency-Key', randomUUID())
+      .send({
+        serviceId,
+        description: 'Secret-description-text leaking pipe',
+        photoIds: [photo.body.id],
+        address: {
+          areaId,
+          details: 'Private-street-name building 9',
+          latitude: 24.0912,
+          longitude: 32.8871,
+        },
+        schedule: { type: 'asap' },
+      })
+      .expect(201);
+    // A validation failure must not echo the submitted address either.
+    await http()
+      .post(`${API}/me/addresses`)
+      .set(auth)
+      .send({ areaId: 'bad', details: 'Private-street-name building 9' })
+      .expect(400);
+
+    const all = logger.lines.join('\n');
+    expect(logger.lines.some((l) => l.includes('POST /api/v1/requests'))).toBe(true);
+    expect(all).not.toContain('Private-street-name');
+    expect(all).not.toContain('Secret-description-text');
+    expect(all).not.toContain('24.0912');
+    expect(all).not.toContain('my-home-photo');
+    expect(all).not.toContain(session.body.accessToken);
   });
 });

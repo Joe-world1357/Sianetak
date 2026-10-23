@@ -19,9 +19,15 @@ export function setupApp(app: INestApplication) {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
     origin: config.corsOrigins.length > 0 ? config.corsOrigins : false,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Authorization', 'Content-Type', 'X-Request-Id', 'Accept-Language'],
-    exposedHeaders: ['X-Request-Id'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: [
+      'Authorization',
+      'Content-Type',
+      'X-Request-Id',
+      'Accept-Language',
+      'Idempotency-Key',
+    ],
+    exposedHeaders: ['X-Request-Id', 'Idempotent-Replayed'],
   });
   const http = app.getHttpAdapter().getInstance();
   http.disable?.('x-powered-by');
