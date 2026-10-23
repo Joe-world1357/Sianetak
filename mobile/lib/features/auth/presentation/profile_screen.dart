@@ -4,6 +4,9 @@ import '../../../core/app_scope.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../admin/presentation/admin_applications_screen.dart';
+import '../../requests/presentation/my_requests_screen.dart';
+import '../../technician/presentation/technician_application_screen.dart';
 import '../domain/auth_models.dart';
 import '../domain/egypt_phone.dart';
 import 'auth_error_text.dart';
@@ -41,6 +44,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     UserRole.admin => l10n.roleAdmin,
     UserRole.unknown => '—',
   };
+
+  /// Role-specific destinations. The server enforces each role; this only hides dead ends.
+  List<Widget> _roleEntries(
+    BuildContext context,
+    AppLocalizations l10n,
+    UserRole role,
+  ) {
+    Widget entry(IconData icon, String title, Widget Function() screen) => Card(
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () =>
+            Navigator.of(context)
+                .push(MaterialPageRoute<void>(builder: (_) => screen())),
+      ),
+    );
+    return [
+      if (role == UserRole.customer)
+        entry(
+          Icons.assignment_outlined,
+          l10n.myRequestsEntry,
+          () => const MyRequestsScreen(),
+        ),
+      if (role == UserRole.customer || role == UserRole.technician) ...[
+        const SizedBox(height: AppSpacing.sm),
+        entry(
+          Icons.handyman_outlined,
+          role == UserRole.technician
+              ? l10n.technicianEntryStatus
+              : l10n.technicianEntryApply,
+          () => const TechnicianApplicationScreen(),
+        ),
+      ],
+      if (role == UserRole.admin)
+        entry(
+          Icons.verified_user_outlined,
+          l10n.adminReviewEntry,
+          () => const AdminApplicationsScreen(),
+        ),
+    ];
+  }
 
   Future<void> _save() async {
     if (_saving || !(_formKey.currentState?.validate() ?? false)) return;
@@ -125,6 +170,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: _saving ? null : _save,
                   child: Text(l10n.saveButton),
                 ),
+                const SizedBox(height: AppSpacing.lg),
+                ..._roleEntries(context, l10n, user.role),
                 const SizedBox(height: AppSpacing.xl),
                 OutlinedButton.icon(
                   onPressed: _signOut,

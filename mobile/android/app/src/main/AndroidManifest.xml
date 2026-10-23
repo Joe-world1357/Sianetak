@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds need network access to reach the API (debug/profile manifests add it too). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- "Use my current location" when entering a service address (FR-REQ-04). Asked at use time. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:label="sianetak_customer"
         android:name="${applicationName}"

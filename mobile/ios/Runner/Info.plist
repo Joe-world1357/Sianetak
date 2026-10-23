@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>صيانتك تستخدم الكاميرا لتصوير المشكلة أو مستندات التحقق التي تختار إرفاقها. Sianetak uses the camera to photograph the problem or verification documents you choose to attach.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>صيانتك تحتاج الوصول إلى الصور لإرفاق الصور التي تختارها بطلبك. Sianetak needs photo access to attach the pictures you choose to your request.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>صيانتك تستخدم موقعك الحالي فقط عندما تطلب ذلك لتحديد عنوان الخدمة. Sianetak uses your current location only when you ask, to set the service address.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

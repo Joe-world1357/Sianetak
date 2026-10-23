@@ -105,9 +105,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestServiceButton => 'اطلب الخدمة';
 
   @override
-  String get requestComingSoon => 'تقديم طلبات الخدمة سيتاح قريبًا.';
-
-  @override
   String get signInToRequest => 'سجّل الدخول لطلب الخدمة';
 
   @override
@@ -253,4 +250,601 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signOutButton => 'تسجيل الخروج';
+
+  @override
+  String get nextButton => 'التالي';
+
+  @override
+  String get backButton => 'السابق';
+
+  @override
+  String get cancelButton => 'إلغاء';
+
+  @override
+  String get confirmButton => 'تأكيد';
+
+  @override
+  String get editButton => 'تعديل';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get requestFlowTitle => 'طلب خدمة';
+
+  @override
+  String get stepDescribeTitle => 'صف المشكلة';
+
+  @override
+  String get stepLocationTitle => 'عنوان الخدمة';
+
+  @override
+  String get stepScheduleTitle => 'الموعد';
+
+  @override
+  String get stepReviewTitle => 'مراجعة الطلب';
+
+  @override
+  String get descriptionLabel => 'وصف المشكلة';
+
+  @override
+  String get descriptionHint => 'مثال: تسريب مياه تحت حوض المطبخ منذ يومين';
+
+  @override
+  String descriptionTooShort(int min) {
+    return 'اكتب وصفًا من $min أحرف على الأقل.';
+  }
+
+  @override
+  String descriptionTooLong(int max) {
+    return 'الوصف أطول من $max حرف.';
+  }
+
+  @override
+  String get photosTitle => 'صور (اختياري)';
+
+  @override
+  String photosHelp(int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      max,
+      locale: localeName,
+      other: 'أضف حتى $max صورة توضح المشكلة.',
+      few: 'أضف حتى $max صور توضح المشكلة.',
+      two: 'أضف حتى صورتين توضحان المشكلة.',
+      one: 'أضف صورة واحدة توضح المشكلة.',
+    );
+    return '$_temp0 تُحذف بيانات الموقع من الصور تلقائيًا.';
+  }
+
+  @override
+  String get addPhotoCamera => 'التقاط صورة';
+
+  @override
+  String get addPhotoGallery => 'من المعرض';
+
+  @override
+  String get photoUploading => 'جارٍ رفع الصورة';
+
+  @override
+  String get photoFailed => 'تعذّر رفع الصورة';
+
+  @override
+  String get photoRetry => 'إعادة رفع الصورة';
+
+  @override
+  String get photoRemove => 'حذف الصورة';
+
+  @override
+  String photoNumber(int number) {
+    return 'صورة $number';
+  }
+
+  @override
+  String get photosUploadingWait => 'انتظر حتى يكتمل رفع الصور.';
+
+  @override
+  String get photosFailedFix => 'أعد رفع الصور التي فشلت أو احذفها.';
+
+  @override
+  String photoLimitReached(int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      max,
+      locale: localeName,
+      other: 'يمكنك إضافة $max صورة كحد أقصى.',
+      few: 'يمكنك إضافة $max صور كحد أقصى.',
+      two: 'يمكنك إضافة صورتين كحد أقصى.',
+      one: 'يمكنك إضافة صورة واحدة فقط.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get photoTooLarge => 'الصورة كبيرة جدًا. اختر صورة أصغر.';
+
+  @override
+  String get photoUploadsUnavailable =>
+      'رفع الصور غير متاح حاليًا. يمكنك إرسال الطلب بدون صور.';
+
+  @override
+  String get photoPermissionDenied =>
+      'لم يُسمح بالوصول إلى الكاميرا أو الصور. يمكنك السماح بذلك من إعدادات الجهاز، أو المتابعة بدون صور.';
+
+  @override
+  String get photoPickFailed => 'تعذّر فتح الصورة. حاول مرة أخرى.';
+
+  @override
+  String get savedAddressesTitle => 'عناويني المحفوظة';
+
+  @override
+  String get newAddressOption => 'عنوان جديد';
+
+  @override
+  String get areaLabel => 'المنطقة';
+
+  @override
+  String get areaRequired => 'اختر المنطقة.';
+
+  @override
+  String get addressDetailsLabel => 'العنوان بالتفصيل';
+
+  @override
+  String get addressDetailsHint => 'الشارع، رقم العمارة، الدور، الشقة';
+
+  @override
+  String get addressDetailsTooShort => 'اكتب العنوان بتفصيل أكثر.';
+
+  @override
+  String get landmarkLabel => 'علامة مميزة (اختياري)';
+
+  @override
+  String get addressLabelLabel => 'اسم العنوان (اختياري)';
+
+  @override
+  String get addressLabelHint => 'مثال: البيت، العمل';
+
+  @override
+  String get saveAddressLabel => 'احفظ هذا العنوان للمرات القادمة';
+
+  @override
+  String get useCurrentLocation => 'استخدم موقعي الحالي';
+
+  @override
+  String get locating => 'جارٍ تحديد موقعك…';
+
+  @override
+  String get locationCaptured => 'تمت إضافة موقعك الحالي إلى العنوان.';
+
+  @override
+  String get locationRemove => 'إزالة الموقع';
+
+  @override
+  String get locationOptionalNote =>
+      'الموقع اختياري ويساعد في الوصول إليك. لا يُستخدم إلا لطلباتك.';
+
+  @override
+  String get locationDenied =>
+      'لم يُسمح بالوصول إلى الموقع. اكتب العنوان يدويًا.';
+
+  @override
+  String get locationDeniedForever =>
+      'الوصول إلى الموقع مرفوض. يمكنك السماح به من إعدادات الجهاز، أو كتابة العنوان يدويًا.';
+
+  @override
+  String get locationServiceOff =>
+      'خدمة الموقع مغلقة في جهازك. شغّلها أو اكتب العنوان يدويًا.';
+
+  @override
+  String get locationUnavailable => 'تعذّر تحديد موقعك. اكتب العنوان يدويًا.';
+
+  @override
+  String get addressMissing => 'اختر عنوانًا.';
+
+  @override
+  String get noAreasConfigured => 'لا توجد مناطق خدمة متاحة حاليًا.';
+
+  @override
+  String get scheduleAsap => 'في أقرب وقت';
+
+  @override
+  String get scheduleAsapHint => 'بدون موعد محدد.';
+
+  @override
+  String get scheduleChooseSlot => 'أو اختر موعدًا';
+
+  @override
+  String get scheduleNoSlots => 'لا توجد مواعيد متاحة حاليًا.';
+
+  @override
+  String get scheduleMissing => 'اختر موعدًا أو «في أقرب وقت».';
+
+  @override
+  String slotRange(String day, String from, String to) {
+    return '$day، $from – $to';
+  }
+
+  @override
+  String get reviewServiceLabel => 'الخدمة';
+
+  @override
+  String get reviewDescriptionLabel => 'المشكلة';
+
+  @override
+  String get reviewPhotosLabel => 'الصور';
+
+  @override
+  String get reviewNoPhotos => 'بدون صور';
+
+  @override
+  String get reviewLocationLabel => 'العنوان';
+
+  @override
+  String get reviewScheduleLabel => 'الموعد';
+
+  @override
+  String get reviewPricingLabel => 'التسعير والرسوم';
+
+  @override
+  String feeInspection(String amount) {
+    return 'رسوم المعاينة: $amount';
+  }
+
+  @override
+  String get feeNoneAtSubmission =>
+      'لا تُدفع أي رسوم عند إرسال الطلب. أي سعر أو رسوم ستُعرض عليك لتوافق عليها قبل بدء العمل.';
+
+  @override
+  String get reviewNextSteps => 'بعد الإرسال سنراجع طلبك. لم يُعيَّن فني بعد.';
+
+  @override
+  String get submitRequestButton => 'إرسال الطلب';
+
+  @override
+  String get submittingLabel => 'جارٍ الإرسال…';
+
+  @override
+  String get submitFailedRetry =>
+      'لم يُرسل الطلب. تحقق من الاتصال واضغط «إرسال الطلب» مرة أخرى، ولن يتكرر طلبك.';
+
+  @override
+  String get requestSubmittedTitle => 'تم إرسال طلبك';
+
+  @override
+  String get requestReferenceLabel => 'رقم الطلب';
+
+  @override
+  String get requestSubmittedBody =>
+      'حالة الطلب: «تم الاستلام». يمكنك متابعته من «طلباتي».';
+
+  @override
+  String get viewRequestButton => 'عرض الطلب';
+
+  @override
+  String get backToHomeButton => 'العودة للرئيسية';
+
+  @override
+  String get statusSubmitted => 'تم الاستلام';
+
+  @override
+  String get statusUnknown => 'غير معروف';
+
+  @override
+  String get myRequestsTitle => 'طلباتي';
+
+  @override
+  String get myRequestsEmpty => 'لم ترسل أي طلب بعد. اختر خدمة لتبدأ.';
+
+  @override
+  String get loadMoreButton => 'عرض المزيد';
+
+  @override
+  String submittedOn(String date) {
+    return 'أُرسل في $date';
+  }
+
+  @override
+  String get requestDetailTitle => 'تفاصيل الطلب';
+
+  @override
+  String get timelineTitle => 'سجل الطلب';
+
+  @override
+  String get photoLoadFailed => 'تعذّر تحميل الصورة';
+
+  @override
+  String get requestsCustomerOnly => 'طلب الخدمات متاح لحسابات العملاء فقط.';
+
+  @override
+  String get errorServiceNotAvailable => 'هذه الخدمة غير متاحة حاليًا.';
+
+  @override
+  String get errorAreaNotAvailable => 'هذه المنطقة غير مخدومة حاليًا.';
+
+  @override
+  String get errorLocationOutOfArea => 'الموقع خارج نطاق الخدمة.';
+
+  @override
+  String get errorInvalidSchedule =>
+      'هذا الموعد لم يعد متاحًا. اختر موعدًا آخر.';
+
+  @override
+  String get errorTooManyOpenRequests =>
+      'لديك طلبات مفتوحة كثيرة. انتظر حتى تُنجز قبل إرسال طلب جديد.';
+
+  @override
+  String get errorMediaInvalid =>
+      'أحد الملفات لم يعد صالحًا. احذفه وأعد إضافته.';
+
+  @override
+  String get errorFileTooLarge => 'الملف كبير جدًا.';
+
+  @override
+  String get errorUnsupportedFile =>
+      'نوع الملف غير مدعوم. استخدم صورة JPG أو PNG.';
+
+  @override
+  String get errorMediaUnavailable => 'رفع الملفات غير متاح حاليًا.';
+
+  @override
+  String get errorMediaPendingLimit =>
+      'لديك ملفات مرفوعة كثيرة لم تُستخدم بعد. احذف بعضها أولًا.';
+
+  @override
+  String get errorAddressNotFound =>
+      'هذا العنوان لم يعد موجودًا. اختر عنوانًا آخر.';
+
+  @override
+  String get errorAddressLimit => 'وصلت إلى الحد الأقصى من العناوين المحفوظة.';
+
+  @override
+  String get errorValidation =>
+      'بعض البيانات غير صحيحة. راجعها وحاول مرة أخرى.';
+
+  @override
+  String get errorForbidden => 'ليس لديك صلاحية لهذا الإجراء.';
+
+  @override
+  String get errorApplicationAlreadySubmitted =>
+      'طلب الانضمام قيد المراجعة بالفعل.';
+
+  @override
+  String get errorApplicationStateConflict => 'تغيّرت حالة الطلب. حدّث الصفحة.';
+
+  @override
+  String get errorCategoryNotAvailable => 'أحد التخصصات لم يعد متاحًا.';
+
+  @override
+  String errorDocumentsRequired(int min) {
+    String _temp0 = intl.Intl.pluralLogic(
+      min,
+      locale: localeName,
+      other: 'أرفق $min مستندًا على الأقل.',
+      few: 'أرفق $min مستندات على الأقل.',
+      two: 'أرفق مستندين على الأقل.',
+      one: 'أرفق مستندًا واحدًا على الأقل.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorCannotReviewOwn => 'لا يمكنك مراجعة طلبك الشخصي.';
+
+  @override
+  String get myRequestsEntry => 'طلباتي';
+
+  @override
+  String get technicianEntryApply => 'انضم كفني';
+
+  @override
+  String get technicianEntryStatus => 'طلب الانضمام كفني';
+
+  @override
+  String get adminReviewEntry => 'مراجعة طلبات الفنيين';
+
+  @override
+  String get technicianApplyTitle => 'الانضمام كفني';
+
+  @override
+  String get technicianApplyIntro =>
+      'أرسل بياناتك لتراجعها الإدارة. لن تتلقى أي طلبات عمل قبل اعتماد حسابك.';
+
+  @override
+  String get fullNameLabel => 'الاسم الكامل';
+
+  @override
+  String get fullNameInvalid => 'أدخل اسمك الكامل بالحروف.';
+
+  @override
+  String get yearsLabel => 'سنوات الخبرة (اختياري)';
+
+  @override
+  String get yearsInvalid => 'أدخل رقمًا من 0 إلى 60.';
+
+  @override
+  String get bioLabel => 'نبذة عن خبرتك (اختياري)';
+
+  @override
+  String get specialtiesTitle => 'التخصصات';
+
+  @override
+  String get specialtiesRequired => 'اختر تخصصًا واحدًا على الأقل.';
+
+  @override
+  String get serviceAreasTitle => 'مناطق العمل';
+
+  @override
+  String get serviceAreasRequired => 'اختر منطقة واحدة على الأقل.';
+
+  @override
+  String get documentsTitle => 'مستندات التحقق';
+
+  @override
+  String get documentsOptionalHelp =>
+      'المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.';
+
+  @override
+  String documentsMinHelp(int min) {
+    String _temp0 = intl.Intl.pluralLogic(
+      min,
+      locale: localeName,
+      other: 'أرفق $min مستندًا على الأقل.',
+      few: 'أرفق $min مستندات على الأقل.',
+      two: 'أرفق مستندين على الأقل.',
+      one: 'أرفق مستندًا واحدًا على الأقل.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get documentsPrivacy =>
+      'المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.';
+
+  @override
+  String get documentKindLabel => 'نوع المستند';
+
+  @override
+  String get documentKindIdentity => 'إثبات الهوية';
+
+  @override
+  String get documentKindQualification => 'شهادة أو خبرة';
+
+  @override
+  String get documentKindOther => 'أخرى';
+
+  @override
+  String documentNumber(int number) {
+    return 'مستند $number';
+  }
+
+  @override
+  String get documentRemove => 'حذف المستند';
+
+  @override
+  String get documentLimitReached => 'وصلت إلى الحد الأقصى من المستندات.';
+
+  @override
+  String get submitApplicationButton => 'إرسال طلب الانضمام';
+
+  @override
+  String get resubmitApplicationButton => 'تعديل وإعادة الإرسال';
+
+  @override
+  String get applicationSubmittedMessage => 'تم إرسال طلبك للمراجعة.';
+
+  @override
+  String get applicationStatusTitle => 'طلب الانضمام كفني';
+
+  @override
+  String get verificationPending => 'قيد المراجعة';
+
+  @override
+  String get verificationPendingBody =>
+      'تراجع الإدارة بياناتك، وستظهر النتيجة هنا.';
+
+  @override
+  String get verificationApproved => 'معتمد';
+
+  @override
+  String get verificationApprovedBody =>
+      'تم اعتماد حسابك كفني. استقبال طلبات العمل سيتاح في تحديث قادم.';
+
+  @override
+  String get verificationRejected => 'لم يُقبل';
+
+  @override
+  String get verificationRejectedBody => 'يمكنك تعديل بياناتك وإعادة الإرسال.';
+
+  @override
+  String get verificationRejectedFinal =>
+      'لا يمكن إعادة الإرسال حاليًا. تواصل مع الدعم.';
+
+  @override
+  String get verificationSuspended => 'موقوف';
+
+  @override
+  String get verificationSuspendedBody =>
+      'تم إيقاف حسابك كفني مؤقتًا. تواصل مع الدعم.';
+
+  @override
+  String get decisionReasonLabel => 'سبب القرار';
+
+  @override
+  String get adminApplicationsTitle => 'طلبات الفنيين';
+
+  @override
+  String get adminApplicationsEmpty => 'لا توجد طلبات بهذه الحالة.';
+
+  @override
+  String adminApplicationMeta(int specialties, int areas, int documents) {
+    return 'التخصصات: $specialties · المناطق: $areas · المستندات: $documents';
+  }
+
+  @override
+  String get adminApplicantPhone => 'رقم الموبايل';
+
+  @override
+  String yearsValue(int years) {
+    return 'سنوات الخبرة: $years';
+  }
+
+  @override
+  String get documentsNone => 'لا توجد مستندات';
+
+  @override
+  String get pdfDocumentLabel => 'ملف PDF (المعاينة غير متاحة في التطبيق)';
+
+  @override
+  String get adminHistoryTitle => 'سجل المراجعة';
+
+  @override
+  String get historySubmitted => 'أرسل الطلب';
+
+  @override
+  String get historyResubmitted => 'أعاد الإرسال';
+
+  @override
+  String get historyApproved => 'اعتماد';
+
+  @override
+  String get historyRejected => 'رفض';
+
+  @override
+  String get historySuspended => 'إيقاف';
+
+  @override
+  String get adminApproveButton => 'اعتماد';
+
+  @override
+  String get adminRejectButton => 'رفض';
+
+  @override
+  String get adminSuspendButton => 'إيقاف';
+
+  @override
+  String get adminReinstateButton => 'إعادة التفعيل';
+
+  @override
+  String get adminApproveTitle => 'اعتماد الفني؟';
+
+  @override
+  String get adminApproveBody => 'سيصبح الحساب حساب فني معتمد.';
+
+  @override
+  String get adminRejectTitle => 'رفض الطلب';
+
+  @override
+  String get adminSuspendTitle => 'إيقاف الفني';
+
+  @override
+  String get adminNoteLabel => 'ملاحظة داخلية (اختياري)';
+
+  @override
+  String get adminReasonLabel => 'السبب (يظهر لمقدم الطلب)';
+
+  @override
+  String get adminReasonRequired => 'اكتب سببًا من 3 أحرف على الأقل.';
+
+  @override
+  String get adminDecisionSaved => 'تم حفظ القرار.';
 }
