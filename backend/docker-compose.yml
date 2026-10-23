@@ -1,0 +1,21 @@
+# Local development database only. Not a production deployment.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sianetak
+      POSTGRES_PASSWORD: sianetak_dev
+      POSTGRES_DB: sianetak
+    ports:
+      - '5432:5432'
+    volumes:
+      - sianetak_pgdata:/var/lib/postgresql/data
+      - ./scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U sianetak -d sianetak']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sianetak_pgdata:

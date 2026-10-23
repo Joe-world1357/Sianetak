@@ -1,0 +1,13 @@
+# Dependencies and build output
+node_modules/
+backend/dist/
+backend/coverage/
+mobile/build/
+mobile/.dart_tool/
+
+# Local environment
+.env
+*.log
+
+# Generated localizations (produced by `flutter gen-l10n`)
+mobile/lib/l10n/generated/
