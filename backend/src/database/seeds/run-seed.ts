@@ -1,7 +1,10 @@
-/** CLI: `npm run seed:catalog` — loads the SAMPLE catalog. Refuses to run in production. */
+/**
+ * CLI: `npm run seed:catalog` — loads the SAMPLE catalog and service areas.
+ * Refuses to run in production.
+ */
 import 'reflect-metadata';
 import dataSource from '../data-source';
-import { seedSampleCatalog } from './seed-catalog';
+import { seedSampleCatalog, seedSampleServiceAreas } from './seed-catalog';
 
 async function main() {
   if (process.env.NODE_ENV === 'production') {
@@ -14,6 +17,8 @@ async function main() {
     console.log(
       `Sample catalog: ${result.categoriesInserted} categories and ${result.servicesInserted} services inserted.`,
     );
+    const areas = await seedSampleServiceAreas(dataSource);
+    console.log(`Sample service areas: ${areas.areasInserted} inserted.`);
   } finally {
     await dataSource.destroy();
   }

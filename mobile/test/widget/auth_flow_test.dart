@@ -180,6 +180,8 @@ void main() {
     expect(harness.authRepository.lastName, 'أحمد محمد');
     expect(find.text('تم حفظ البيانات.'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('تسجيل الخروج'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('تسجيل الخروج'));
     await tester.pumpAndSettle();
     expect(harness.authController.isSignedIn, isFalse);
@@ -206,9 +208,9 @@ void main() {
       await tester.enterText(find.byType(TextFormField), '123456');
       await tester.pumpAndSettle();
 
-      // Back on the service detail, now signed in; submission itself lands in Sprint 2.
+      // Signed in, the customer continues straight into the request flow.
       expect(harness.authController.isSignedIn, isTrue);
-      expect(find.text('تقديم طلبات الخدمة سيتاح قريبًا.'), findsOneWidget);
+      expect(find.text('صف المشكلة'), findsOneWidget);
     },
   );
 

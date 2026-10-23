@@ -1,4 +1,7 @@
 /** Environment for API integration tests. Uses a dedicated database that tests may truncate. */
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 process.env.NODE_ENV = 'test';
 process.env.DATABASE_URL =
   process.env.TEST_DATABASE_URL ?? 'postgres://sianetak:sianetak_dev@localhost:5432/sianetak_test';
@@ -14,3 +17,9 @@ process.env.OTP_MAX_REQUESTS_PER_HOUR = '5';
 process.env.THROTTLE_GLOBAL_PER_MINUTE = '10000';
 process.env.THROTTLE_AUTH_PER_MINUTE = '10000';
 process.env.CORS_ORIGINS = '';
+process.env.MEDIA_STORAGE = 'local';
+process.env.MEDIA_LOCAL_DIR = process.env.TEST_MEDIA_DIR ?? join(tmpdir(), 'sianetak-test-media');
+process.env.MEDIA_MAX_IMAGE_BYTES = '200000';
+process.env.MEDIA_MAX_DOCUMENT_BYTES = '400000';
+process.env.REQUEST_MAX_PHOTOS = '3';
+process.env.REQUEST_MAX_OPEN_PER_CUSTOMER = '5';

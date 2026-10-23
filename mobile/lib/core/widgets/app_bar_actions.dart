@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../features/auth/domain/auth_models.dart';
 import '../../features/auth/presentation/profile_screen.dart';
+import '../../features/requests/presentation/my_requests_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../app_scope.dart';
@@ -18,6 +20,16 @@ class AppBarActions extends StatelessWidget {
       builder: (context, _) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (scope.auth.user?.role == UserRole.customer)
+            IconButton(
+              tooltip: l10n.myRequestsTitle,
+              icon: const Icon(Icons.assignment_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const MyRequestsScreen(),
+                ),
+              ),
+            ),
           TextButton(
             onPressed: scope.locale.toggle,
             child: Semantics(

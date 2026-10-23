@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -154,5 +155,83 @@ void main() {
       }),
     )..tokenProvider = _Tokens('secret');
     await api.get('/catalog/categories');
+  });
+
+  test('sends extra headers such as the idempotency key', () async {
+    final api = ApiClient(
+      baseUrl: 'http://api.test',
+      httpClient: MockClient((r) async {
+        expect(r.method, 'POST');
+        expect(r.headers['Idempotency-Key'], 'key-1');
+        expect(r.headers['Authorization'], 'Bearer secret');
+        expect(jsonDecode(r.body), {'a': 1});
+        return json({'id': 'r1'}, 201);
+      }),
+    )..tokenProvider = _Tokens('secret');
+    expect(
+      await api.post(
+        '/requests',
+        body: {'a': 1},
+        headers: {'Idempotency-Key': 'key-1'},
+        authenticated: true,
+      ),
+      {'id': 'r1'},
+    );
+  });
+
+  test('uploads a file as authenticated multipart form data', () async {
+    final api = ApiClient(
+      baseUrl: 'http://api.test',
+      httpClient: MockClient((r) async {
+        expect(r.method, 'POST');
+        expect(r.headers['Authorization'], 'Bearer secret');
+        expect(r.headers['content-type'], startsWith('multipart/form-data'));
+        final body = utf8.decode(r.bodyBytes, allowMalformed: true);
+        expect(body, contains('name="purpose"'));
+        expect(body, contains('request_photo'));
+        expect(body, contains('filename="photo.jpg"'));
+        return json({'id': 'm1', 'contentType': 'image/jpeg'}, 201);
+      }),
+    )..tokenProvider = _Tokens('secret');
+    final result = await api.uploadFile(
+      '/media',
+      fields: {'purpose': 'request_photo'},
+      bytes: Uint8List.fromList([1, 2, 3]),
+      filename: 'photo.jpg',
+    );
+    expect(result['id'], 'm1');
+  });
+
+  test('downloads private bytes with credentials and maps a 404', () async {
+    final api = ApiClient(
+      baseUrl: 'http://api.test',
+      httpClient: MockClient((r) async {
+        expect(r.headers['Authorization'], 'Bearer secret');
+        if (r.url.path.endsWith('/missing/content')) {
+          return json({
+            'error': {'code': 'MEDIA_NOT_FOUND', 'message': 'x'},
+          }, 404);
+        }
+        return http.Response.bytes([7, 8, 9], 200);
+      }),
+    )..tokenProvider = _Tokens('secret');
+    expect(await api.getBytes('/media/m1/content'), [7, 8, 9]);
+    await expectLater(
+      api.getBytes('/media/missing/content'),
+      throwsA(
+        isA<ApiException>().having((e) => e.code, 'code', 'MEDIA_NOT_FOUND'),
+      ),
+    );
+  });
+
+  test('a 204 delete succeeds without a body', () async {
+    final api = ApiClient(
+      baseUrl: 'http://api.test',
+      httpClient: MockClient((r) async {
+        expect(r.method, 'DELETE');
+        return http.Response('', 204);
+      }),
+    )..tokenProvider = _Tokens('secret');
+    await api.delete('/me/addresses/a1', authenticated: true);
   });
 }

@@ -149,7 +149,53 @@ String messageForError(AppLocalizations l10n, Object error) {
     case 'CATEGORY_NOT_FOUND':
     case 'SERVICE_NOT_FOUND':
     case 'NOT_FOUND':
+    case 'REQUEST_NOT_FOUND':
+    case 'MEDIA_NOT_FOUND':
+    case 'APPLICATION_NOT_FOUND':
       return l10n.errorNotFound;
+    case 'VALIDATION_FAILED':
+      return l10n.errorValidation;
+    case 'FORBIDDEN':
+    case 'APPLICATION_NOT_ALLOWED':
+    case 'TECHNICIAN_NOT_ELIGIBLE':
+      return l10n.errorForbidden;
+    case 'SERVICE_NOT_AVAILABLE':
+      return l10n.errorServiceNotAvailable;
+    case 'AREA_NOT_AVAILABLE':
+      return l10n.errorAreaNotAvailable;
+    case 'LOCATION_OUT_OF_AREA':
+      return l10n.errorLocationOutOfArea;
+    case 'LOCATION_REQUIRED':
+      return l10n.addressMissing;
+    case 'INVALID_SCHEDULE':
+      return l10n.errorInvalidSchedule;
+    case 'TOO_MANY_OPEN_REQUESTS':
+      return l10n.errorTooManyOpenRequests;
+    case 'MEDIA_INVALID':
+    case 'MEDIA_TOO_MANY':
+      return l10n.errorMediaInvalid;
+    case 'FILE_TOO_LARGE':
+      return l10n.errorFileTooLarge;
+    case 'UNSUPPORTED_FILE_TYPE':
+      return l10n.errorUnsupportedFile;
+    case 'MEDIA_STORAGE_UNAVAILABLE':
+      return l10n.errorMediaUnavailable;
+    case 'MEDIA_PENDING_LIMIT':
+      return l10n.errorMediaPendingLimit;
+    case 'ADDRESS_NOT_FOUND':
+      return l10n.errorAddressNotFound;
+    case 'ADDRESS_LIMIT_REACHED':
+      return l10n.errorAddressLimit;
+    case 'APPLICATION_ALREADY_SUBMITTED':
+      return l10n.errorApplicationAlreadySubmitted;
+    case 'APPLICATION_STATE_CONFLICT':
+      return l10n.errorApplicationStateConflict;
+    case 'CATEGORY_NOT_AVAILABLE':
+      return l10n.errorCategoryNotAvailable;
+    case 'DOCUMENTS_REQUIRED':
+      return l10n.errorDocumentsRequired(error.intDetail('min') ?? 1);
+    case 'CANNOT_REVIEW_OWN_APPLICATION':
+      return l10n.errorCannotReviewOwn;
     default:
       return l10n.errorGeneric;
   }

@@ -5,12 +5,14 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/async_view.dart';
 import '../../../core/widgets/sample_badge.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/sign_in_screen.dart';
+import '../../requests/presentation/create_request_screen.dart';
 import '../domain/catalog_models.dart';
 import 'price_guidance_text.dart';
 
-/// Service details with pricing guidance. Requesting requires sign-in (FR-AUTH-03);
-/// request submission itself arrives in Sprint 2.
+/// Service details with pricing guidance. Requesting requires sign-in (FR-AUTH-03) and a
+/// customer account; the server enforces both.
 class ServiceDetailScreen extends StatelessWidget {
   const ServiceDetailScreen({
     super.key,
@@ -48,9 +50,17 @@ class _ServiceDetailBody extends StatelessWidget {
           .push<bool>(MaterialPageRoute(builder: (_) => const SignInScreen()));
       if (signedIn != true || !context.mounted) return;
     }
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(l10n.requestComingSoon)));
+    if (auth.user?.role != UserRole.customer) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.requestsCustomerOnly)));
+      return;
+    }
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CreateRequestScreen(service: detail),
+      ),
+    );
   }
 
   @override

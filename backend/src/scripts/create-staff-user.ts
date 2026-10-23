@@ -1,9 +1,10 @@
 /**
- * Operator CLI: grant the technician or admin role to a phone number.
+ * Operator CLI: grant the admin role to a phone number.
  *   npm run user:create-staff -- --phone 01012345678 --role admin
  *
- * Self sign-up always creates customers; elevated roles are granted only through this tool until
- * the admin dashboard and technician onboarding (Sprint 2) exist.
+ * Self sign-up always creates customers. Since Sprint 2 the technician role is granted only by
+ * approving a technician application, so this tool no longer grants it: a technician created
+ * here would bypass verification.
  */
 import 'reflect-metadata';
 import dataSource from '../database/data-source';
@@ -18,8 +19,10 @@ function arg(name: string) {
 async function main() {
   const phone = normalizeEgyptMobile(arg('phone'));
   const role = arg('role') as UserRole | undefined;
-  if (!phone || !role || ![UserRole.Technician, UserRole.Admin].includes(role)) {
-    console.error('Usage: --phone <Egyptian mobile> --role <technician|admin>');
+  if (!phone || role !== UserRole.Admin) {
+    console.error(
+      'Usage: --phone <Egyptian mobile> --role admin  (technicians apply in the app and are approved by an admin)',
+    );
     process.exit(2);
   }
   await dataSource.initialize();

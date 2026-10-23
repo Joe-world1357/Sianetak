@@ -1,6 +1,8 @@
 import { DataSource } from 'typeorm';
 import { Service, ServiceCategory } from '../../catalog/catalog.entities';
+import { ServiceArea } from '../../locations/location.entities';
 import { SAMPLE_CATALOG, SAMPLE_PRICING } from './catalog.sample';
+import { SAMPLE_SERVICE_AREAS } from './service-areas.sample';
 
 /**
  * Idempotently inserts the sample catalog by slug. Existing rows are never modified or deleted,
@@ -54,4 +56,22 @@ export async function seedSampleCatalog(dataSource: DataSource) {
     }
   });
   return { categoriesInserted, servicesInserted };
+}
+
+/** Idempotently inserts sample service areas by slug; existing rows are never modified. */
+export async function seedSampleServiceAreas(dataSource: DataSource) {
+  let areasInserted = 0;
+  await dataSource.transaction(async (em) => {
+    for (const [i, a] of SAMPLE_SERVICE_AREAS.entries()) {
+      if (await em.existsBy(ServiceArea, { slug: a.slug })) continue;
+      await em.insert(ServiceArea, {
+        ...a,
+        sortOrder: (i + 1) * 10,
+        isActive: true,
+        isSample: true,
+      });
+      areasInserted++;
+    }
+  });
+  return { areasInserted };
 }

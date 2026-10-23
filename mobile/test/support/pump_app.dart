@@ -12,9 +12,21 @@ class TestHarness {
   TestHarness({
     CatalogRepository? catalog,
     FakeAuthRepository? auth,
+    FakeRequestsRepository? requests,
+    FakeMediaRepository? media,
+    FakeTechnicianRepository? technician,
+    FakeAdminRepository? admin,
+    FakeImagePicker? imagePicker,
+    FakeLocationService? location,
     Locale locale = LocaleController.arabic,
   }) : catalog = catalog ?? FakeCatalogRepository(),
        authRepository = auth ?? FakeAuthRepository(),
+       requests = requests ?? FakeRequestsRepository(),
+       media = media ?? FakeMediaRepository(),
+       technician = technician ?? FakeTechnicianRepository(),
+       admin = admin ?? FakeAdminRepository(),
+       imagePicker = imagePicker ?? FakeImagePicker(),
+       location = location ?? FakeLocationService(),
        locale = LocaleController(initial: locale) {
     authController = AuthController(
       repository: authRepository,
@@ -24,11 +36,26 @@ class TestHarness {
 
   final CatalogRepository catalog;
   final FakeAuthRepository authRepository;
+  final FakeRequestsRepository requests;
+  final FakeMediaRepository media;
+  final FakeTechnicianRepository technician;
+  final FakeAdminRepository admin;
+  final FakeImagePicker imagePicker;
+  final FakeLocationService location;
   final LocaleController locale;
   late final AuthController authController;
 
-  Widget get app =>
-      SianetakApp(catalog: catalog, auth: authController, locale: locale);
+  Widget get app => SianetakApp(
+    catalog: catalog,
+    auth: authController,
+    locale: locale,
+    requests: requests,
+    media: media,
+    technician: technician,
+    admin: admin,
+    imagePicker: imagePicker,
+    location: location,
+  );
 }
 
 /// Pumps the app and settles the initial load.

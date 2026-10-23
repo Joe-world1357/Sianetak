@@ -3,3 +3,5 @@ dist/
 coverage/
 .env
 *.tsbuildinfo
+# Local development uploads (MEDIA_STORAGE=local)
+var/
