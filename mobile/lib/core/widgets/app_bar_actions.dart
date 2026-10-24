@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../features/auth/domain/auth_models.dart';
-import '../../features/auth/presentation/profile_screen.dart';
-import '../../features/requests/presentation/my_requests_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../app_scope.dart';
 
-/// Language switch and account entry shown on every top-level screen.
+/// Language switch, plus sign-in for guests. Signed-in users reach their account from the
+/// bottom navigation.
 class AppBarActions extends StatelessWidget {
   const AppBarActions({super.key});
 
@@ -20,16 +18,6 @@ class AppBarActions extends StatelessWidget {
       builder: (context, _) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (scope.auth.user?.role == UserRole.customer)
-            IconButton(
-              tooltip: l10n.myRequestsTitle,
-              icon: const Icon(Icons.assignment_outlined),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const MyRequestsScreen(),
-                ),
-              ),
-            ),
           TextButton(
             onPressed: scope.locale.toggle,
             child: Semantics(
@@ -38,21 +26,15 @@ class AppBarActions extends StatelessWidget {
               child: Text(l10n.switchLanguage),
             ),
           ),
-          IconButton(
-            tooltip: scope.auth.isSignedIn
-                ? l10n.accountTooltip
-                : l10n.signInTooltip,
-            icon: Icon(
-              scope.auth.isSignedIn ? Icons.account_circle : Icons.login,
-            ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => scope.auth.isSignedIn
-                    ? const ProfileScreen()
-                    : const SignInScreen(),
+          if (!scope.auth.isSignedIn)
+            IconButton(
+              tooltip: l10n.signInTooltip,
+              icon: const Icon(Icons.login),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const SignInScreen()),
               ),
             ),
-          ),
+          const SizedBox(width: 4),
         ],
       ),
     );

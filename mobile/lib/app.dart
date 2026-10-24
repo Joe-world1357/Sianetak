@@ -9,9 +9,11 @@ import 'core/theme/app_theme.dart';
 import 'features/admin/data/admin_repository.dart';
 import 'features/auth/application/auth_controller.dart';
 import 'features/catalog/data/catalog_repository.dart';
-import 'features/catalog/presentation/home_screen.dart';
+import 'features/jobs/data/jobs_repository.dart';
 import 'features/media/data/media_repository.dart';
+import 'features/notifications/data/notifications_repository.dart';
 import 'features/requests/data/requests_repository.dart';
+import 'features/shell/role_shell.dart';
 import 'features/technician/data/technician_repository.dart';
 import 'l10n/generated/app_localizations.dart';
 
@@ -27,6 +29,10 @@ class SianetakApp extends StatelessWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    required this.jobs,
+    required this.notifications,
+    required this.changes,
+    this.resetDemo,
   });
 
   final CatalogRepository catalog;
@@ -38,6 +44,10 @@ class SianetakApp extends StatelessWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final JobsRepository jobs;
+  final NotificationsRepository notifications;
+  final Listenable changes;
+  final Future<void> Function()? resetDemo;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +61,10 @@ class SianetakApp extends StatelessWidget {
       admin: admin,
       imagePicker: imagePicker,
       location: location,
+      jobs: jobs,
+      notifications: notifications,
+      changes: changes,
+      resetDemo: resetDemo,
       child: ListenableBuilder(
         listenable: locale,
         builder: (context, _) => MaterialApp(
@@ -66,7 +80,7 @@ class SianetakApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           // Directionality (RTL for Arabic) follows the locale automatically.
-          home: const HomeScreen(),
+          home: const RootScreen(),
         ),
       ),
     );

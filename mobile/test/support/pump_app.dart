@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sianetak_customer/app.dart';
 import 'package:sianetak_customer/core/locale/locale_controller.dart';
 import 'package:sianetak_customer/features/auth/application/auth_controller.dart';
-import 'package:sianetak_customer/features/auth/data/token_store.dart';
 import 'package:sianetak_customer/features/catalog/data/catalog_repository.dart';
 
 import 'fakes.dart';
@@ -28,10 +27,7 @@ class TestHarness {
        imagePicker = imagePicker ?? FakeImagePicker(),
        location = location ?? FakeLocationService(),
        locale = LocaleController(initial: locale) {
-    authController = AuthController(
-      repository: authRepository,
-      tokenStore: InMemoryTokenStore(),
-    );
+    authController = AuthController(repository: authRepository);
   }
 
   final CatalogRepository catalog;
@@ -44,6 +40,7 @@ class TestHarness {
   final FakeLocationService location;
   final LocaleController locale;
   late final AuthController authController;
+  final changes = ChangeNotifier();
 
   Widget get app => SianetakApp(
     catalog: catalog,
@@ -55,6 +52,9 @@ class TestHarness {
     admin: admin,
     imagePicker: imagePicker,
     location: location,
+    jobs: FakeJobsRepository(),
+    notifications: FakeNotificationsRepository(),
+    changes: changes,
   );
 }
 

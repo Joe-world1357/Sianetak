@@ -1,58 +1,41 @@
-import '../../../core/network/api_client.dart';
+import '../../../demo/demo_backend.dart';
 import '../domain/auth_models.dart';
 
+/// Demo sign-in: pick one of the seeded accounts. No phone verification in the standalone demo.
 abstract class AuthRepository {
-  Future<OtpChallenge> requestOtp(String phoneE164);
-  Future<AuthSession> verifyOtp(OtpChallenge challenge, String code);
-  Future<AuthSession> refresh(String refreshToken);
-  Future<void> logout(String refreshToken);
-  Future<AppUser> fetchMe();
+  Future<List<AppUser>> demoAccounts();
+  Future<AppUser> signInAs(String userId);
+
+  /// The account still signed in from the last launch, if any.
+  Future<AppUser?> currentUser();
+  Future<void> signOut();
   Future<AppUser> updateName(String name);
 }
 
-class HttpAuthRepository implements AuthRepository {
-  HttpAuthRepository(this._api);
+class LocalAuthRepository implements AuthRepository {
+  LocalAuthRepository(this._backend);
 
-  final ApiClient _api;
+  final DemoBackend _backend;
 
   @override
-  Future<OtpChallenge> requestOtp(String phoneE164) async {
-    final json = await _api.post(
-      '/auth/otp/request',
-      body: {'phone': phoneE164},
-    );
-    return OtpChallenge.fromJson(phoneE164, json);
+  Future<List<AppUser>> demoAccounts() async => (await _backend.demoAccounts())
+      .map(AppUser.fromJson)
+      .toList(growable: false);
+
+  @override
+  Future<AppUser> signInAs(String userId) async =>
+      AppUser.fromJson(await _backend.signIn(userId));
+
+  @override
+  Future<AppUser?> currentUser() async {
+    final json = await _backend.currentUser();
+    return json == null ? null : AppUser.fromJson(json);
   }
 
   @override
-  Future<AuthSession> verifyOtp(OtpChallenge challenge, String code) async {
-    final json = await _api.post(
-      '/auth/otp/verify',
-      body: {
-        'challengeId': challenge.challengeId,
-        'phone': challenge.phone,
-        'code': code,
-      },
-    );
-    return AuthSession.fromJson(json);
-  }
+  Future<void> signOut() => _backend.signOut();
 
   @override
-  Future<AuthSession> refresh(String refreshToken) async =>
-      AuthSession.fromJson(
-        await _api.post('/auth/refresh', body: {'refreshToken': refreshToken}),
-      );
-
-  @override
-  Future<void> logout(String refreshToken) =>
-      _api.post('/auth/logout', body: {'refreshToken': refreshToken});
-
-  @override
-  Future<AppUser> fetchMe() async =>
-      AppUser.fromJson(await _api.get('/me', authenticated: true));
-
-  @override
-  Future<AppUser> updateName(String name) async => AppUser.fromJson(
-    await _api.patch('/me', body: {'name': name}, authenticated: true),
-  );
+  Future<AppUser> updateName(String name) async =>
+      AppUser.fromJson(await _backend.updateName(name));
 }

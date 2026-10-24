@@ -3,6 +3,11 @@
 Home maintenance marketplace for Aswan, Egypt. This repository holds the Sprint 1 increment:
 project foundation, customer phone OTP authentication, and the guest service catalog.
 
+> **Current state: standalone demo.** This is a school project, so the mobile app now runs
+> entirely on the device with local storage and demo accounts (Customer, Technician, Admin), and
+> no longer needs the backend or OTP. See [`mobile/README.md`](mobile/README.md). The `backend/`
+> folder is kept as the reference implementation of the Sprint 1/2 API rules.
+
 ```
 backend/   NestJS + PostgreSQL API (modular monolith)
 mobile/    Flutter customer app (Arabic RTL by default, English available)

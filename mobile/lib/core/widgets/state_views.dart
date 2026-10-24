@@ -112,37 +112,12 @@ class _CenteredMessage extends StatelessWidget {
   }
 }
 
-/// Maps API error codes to localized, user-facing copy.
+/// Maps data-layer error codes to localized, user-facing copy.
 String messageForError(AppLocalizations l10n, Object error) {
   if (error is! ApiException) return l10n.errorGeneric;
   switch (error.code) {
     case ApiException.network:
       return l10n.errorNetwork;
-    case 'INVALID_PHONE':
-      return l10n.phoneInvalid;
-    case 'OTP_INVALID':
-      final attempts = error.intDetail('attemptsRemaining');
-      return attempts == null
-          ? l10n.errorOtpInvalidNoCount
-          : l10n.errorOtpInvalid(attempts);
-    case 'OTP_EXPIRED':
-      return l10n.errorOtpExpired;
-    case 'OTP_TOO_MANY_ATTEMPTS':
-      return l10n.errorOtpTooManyAttempts;
-    case 'OTP_RESEND_TOO_SOON':
-      return l10n.errorResendTooSoon(
-        error.intDetail('retryAfterSeconds') ?? 60,
-      );
-    case 'OTP_RATE_LIMITED':
-      return l10n.errorOtpRateLimited;
-    case 'RATE_LIMITED':
-      return l10n.errorRateLimited;
-    case 'OTP_DELIVERY_UNAVAILABLE':
-      return l10n.errorOtpUnavailable;
-    case 'OTP_DELIVERY_FAILED':
-      return l10n.errorOtpDeliveryFailed;
-    case 'ACCOUNT_SUSPENDED':
-      return l10n.errorAccountSuspended;
     case 'UNAUTHENTICATED':
     case 'REFRESH_TOKEN_INVALID':
       return l10n.errorSessionExpired;
@@ -196,6 +171,12 @@ String messageForError(AppLocalizations l10n, Object error) {
       return l10n.errorDocumentsRequired(error.intDetail('min') ?? 1);
     case 'CANNOT_REVIEW_OWN_APPLICATION':
       return l10n.errorCannotReviewOwn;
+    case 'OFFER_EXPIRED':
+      return l10n.errorOfferExpired;
+    case 'OFFER_TAKEN':
+      return l10n.errorOfferTaken;
+    case 'REQUEST_STATE_CONFLICT':
+      return l10n.errorStateConflict;
     default:
       return l10n.errorGeneric;
   }

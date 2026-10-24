@@ -1,17 +1,26 @@
 {
   "@@locale": "ar",
   "appTitle": "صيانتك",
-  "@appTitle": { "description": "App name" },
+  "@appTitle": {
+    "description": "App name"
+  },
   "homeHeadline": "ما الخدمة التي تحتاجها؟",
   "homeSubtitle": "اختر نوع الخدمة واطّلع على التفاصيل قبل الطلب.",
   "categoriesTitle": "الخدمات",
   "switchLanguage": "English",
-  "@switchLanguage": { "description": "Label of the button that switches to the other language" },
+  "@switchLanguage": {
+    "description": "Label of the button that switches to the other language"
+  },
   "switchLanguageTooltip": "تغيير اللغة إلى الإنجليزية",
-  "accountTooltip": "حسابي",
   "signInTooltip": "تسجيل الدخول",
   "servicesCount": "{count, plural, =0{لا توجد خدمات} =1{خدمة واحدة} =2{خدمتان} few{{count} خدمات} many{{count} خدمة} other{{count} خدمة}}",
-  "@servicesCount": { "placeholders": { "count": { "type": "int" } } },
+  "@servicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sampleDataBadge": "بيانات تجريبية",
   "sampleDataNotice": "هذه بيانات تجريبية للعرض فقط ولم تُعتمد بعد.",
   "loading": "جارٍ التحميل…",
@@ -25,52 +34,28 @@
   "priceInspectionRequired": "السعر يُحدَّد بعد المعاينة",
   "priceInspectionExplanation": "لا يوجد سعر تقديري موثوق لهذه الخدمة. سيعاين الفني المشكلة ويرسل لك عرض سعر مفصّل توافق عليه قبل بدء العمل.",
   "priceIndicativeRange": "سعر تقديري: {min} – {max}",
-  "@priceIndicativeRange": { "placeholders": { "min": { "type": "String" }, "max": { "type": "String" } } },
+  "@priceIndicativeRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
   "priceIndicativeExplanation": "السعر النهائي يُحدَّد بعد المعاينة ويحتاج موافقتك قبل بدء العمل.",
   "pricingTitle": "التسعير",
   "aboutServiceTitle": "عن الخدمة",
   "requestServiceButton": "اطلب الخدمة",
   "signInToRequest": "سجّل الدخول لطلب الخدمة",
-  "signInTitle": "تسجيل الدخول",
-  "signInSubtitle": "أدخل رقم الموبايل وسنرسل إليك رمز تحقق في رسالة نصية.",
-  "phoneLabel": "رقم الموبايل",
-  "phoneHint": "01XXXXXXXXX",
-  "phoneInvalid": "أدخل رقم موبايل مصري صحيح (مثال: 01012345678).",
-  "sendCodeButton": "إرسال الرمز",
-  "otpTitle": "أدخل رمز التحقق",
-  "otpSubtitle": "أرسلنا رمزًا من {length} أرقام إلى {phone}.",
-  "@otpSubtitle": { "placeholders": { "length": { "type": "int" }, "phone": { "type": "String" } } },
-  "otpLabel": "رمز التحقق",
-  "otpInvalidFormat": "أدخل الرمز كاملًا ({length} أرقام).",
-  "@otpInvalidFormat": { "placeholders": { "length": { "type": "int" } } },
-  "verifyButton": "تأكيد",
-  "resendIn": "إعادة الإرسال بعد {seconds} ث",
-  "@resendIn": { "placeholders": { "seconds": { "type": "int" } } },
-  "resendButton": "إعادة إرسال الرمز",
-  "changeNumber": "تغيير الرقم",
-  "codeResent": "تم إرسال رمز جديد.",
-  "devCodeBanner": "وضع التطوير فقط — لم تُرسل رسالة. الرمز: {code}",
-  "@devCodeBanner": { "placeholders": { "code": { "type": "String" } } },
-  "errorOtpInvalid": "الرمز غير صحيح. {attempts, plural, =0{لا توجد محاولات متبقية.} =1{تبقّت محاولة واحدة.} =2{تبقّت محاولتان.} few{تبقّت {attempts} محاولات.} other{تبقّت {attempts} محاولة.}}",
-  "@errorOtpInvalid": { "placeholders": { "attempts": { "type": "int" } } },
-  "errorOtpInvalidNoCount": "الرمز غير صحيح.",
-  "errorOtpExpired": "انتهت صلاحية الرمز. اطلب رمزًا جديدًا.",
-  "errorOtpTooManyAttempts": "محاولات خاطئة كثيرة. اطلب رمزًا جديدًا.",
-  "errorResendTooSoon": "انتظر {seconds} ثانية قبل طلب رمز جديد.",
-  "@errorResendTooSoon": { "placeholders": { "seconds": { "type": "int" } } },
-  "errorOtpRateLimited": "طلبت رموزًا كثيرة لهذا الرقم. حاول مرة أخرى بعد قليل.",
-  "errorRateLimited": "طلبات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.",
-  "errorOtpUnavailable": "تسجيل الدخول برسائل SMS غير متاح حاليًا.",
-  "errorOtpDeliveryFailed": "تعذّر إرسال الرمز. حاول مرة أخرى.",
-  "errorAccountSuspended": "تم إيقاف هذا الحساب. تواصل مع الدعم.",
+  "signInTitle": "اختر حساب التجربة",
+  "signInSubtitle": "نسخة عرض تعمل بالكامل على جهازك. جرّب التطبيق بأي دور.",
   "errorSessionExpired": "انتهت جلستك. سجّل الدخول مرة أخرى.",
-  "signedInWelcome": "أهلًا بك! تم تسجيل الدخول.",
   "profileTitle": "حسابي",
   "profileNameLabel": "الاسم",
   "profileNameHint": "اكتب اسمك",
   "profileNameInvalid": "أدخل اسمًا من حرفين على الأقل.",
-  "profilePhoneLabel": "رقم الموبايل",
-  "profileRoleLabel": "نوع الحساب",
   "roleCustomer": "عميل",
   "roleTechnician": "فني",
   "roleAdmin": "إدارة",
@@ -83,7 +68,16 @@
   "confirmButton": "تأكيد",
   "editButton": "تعديل",
   "stepOf": "الخطوة {current} من {total}",
-  "@stepOf": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
+  "@stepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "requestFlowTitle": "طلب خدمة",
   "stepDescribeTitle": "صف المشكلة",
   "stepLocationTitle": "عنوان الخدمة",
@@ -92,12 +86,30 @@
   "descriptionLabel": "وصف المشكلة",
   "descriptionHint": "مثال: تسريب مياه تحت حوض المطبخ منذ يومين",
   "descriptionTooShort": "اكتب وصفًا من {min} أحرف على الأقل.",
-  "@descriptionTooShort": { "placeholders": { "min": { "type": "int" } } },
+  "@descriptionTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
   "descriptionTooLong": "الوصف أطول من {max} حرف.",
-  "@descriptionTooLong": { "placeholders": { "max": { "type": "int" } } },
+  "@descriptionTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "photosTitle": "صور (اختياري)",
   "photosHelp": "{max, plural, =1{أضف صورة واحدة توضح المشكلة.} =2{أضف حتى صورتين توضحان المشكلة.} few{أضف حتى {max} صور توضح المشكلة.} other{أضف حتى {max} صورة توضح المشكلة.}} تُحذف بيانات الموقع من الصور تلقائيًا.",
-  "@photosHelp": { "placeholders": { "max": { "type": "int" } } },
+  "@photosHelp": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "addPhotoCamera": "التقاط صورة",
   "addPhotoGallery": "من المعرض",
   "photoUploading": "جارٍ رفع الصورة",
@@ -105,11 +117,23 @@
   "photoRetry": "إعادة رفع الصورة",
   "photoRemove": "حذف الصورة",
   "photoNumber": "صورة {number}",
-  "@photoNumber": { "placeholders": { "number": { "type": "int" } } },
+  "@photoNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "photosUploadingWait": "انتظر حتى يكتمل رفع الصور.",
   "photosFailedFix": "أعد رفع الصور التي فشلت أو احذفها.",
   "photoLimitReached": "{max, plural, =1{يمكنك إضافة صورة واحدة فقط.} =2{يمكنك إضافة صورتين كحد أقصى.} few{يمكنك إضافة {max} صور كحد أقصى.} other{يمكنك إضافة {max} صورة كحد أقصى.}}",
-  "@photoLimitReached": { "placeholders": { "max": { "type": "int" } } },
+  "@photoLimitReached": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "photoTooLarge": "الصورة كبيرة جدًا. اختر صورة أصغر.",
   "photoUploadsUnavailable": "رفع الصور غير متاح حاليًا. يمكنك إرسال الطلب بدون صور.",
   "photoPermissionDenied": "لم يُسمح بالوصول إلى الكاميرا أو الصور. يمكنك السماح بذلك من إعدادات الجهاز، أو المتابعة بدون صور.",
@@ -142,7 +166,19 @@
   "scheduleNoSlots": "لا توجد مواعيد متاحة حاليًا.",
   "scheduleMissing": "اختر موعدًا أو «في أقرب وقت».",
   "slotRange": "{day}، {from} – {to}",
-  "@slotRange": { "placeholders": { "day": { "type": "String" }, "from": { "type": "String" }, "to": { "type": "String" } } },
+  "@slotRange": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
   "reviewServiceLabel": "الخدمة",
   "reviewDescriptionLabel": "المشكلة",
   "reviewPhotosLabel": "الصور",
@@ -151,7 +187,13 @@
   "reviewScheduleLabel": "الموعد",
   "reviewPricingLabel": "التسعير والرسوم",
   "feeInspection": "رسوم المعاينة: {amount}",
-  "@feeInspection": { "placeholders": { "amount": { "type": "String" } } },
+  "@feeInspection": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "feeNoneAtSubmission": "لا تُدفع أي رسوم عند إرسال الطلب. أي سعر أو رسوم ستُعرض عليك لتوافق عليها قبل بدء العمل.",
   "reviewNextSteps": "بعد الإرسال سنراجع طلبك. لم يُعيَّن فني بعد.",
   "submitRequestButton": "إرسال الطلب",
@@ -162,13 +204,19 @@
   "requestSubmittedBody": "حالة الطلب: «تم الاستلام». يمكنك متابعته من «طلباتي».",
   "viewRequestButton": "عرض الطلب",
   "backToHomeButton": "العودة للرئيسية",
-  "statusSubmitted": "تم الاستلام",
+  "statusSubmitted": "بانتظار فني",
   "statusUnknown": "غير معروف",
   "myRequestsTitle": "طلباتي",
   "myRequestsEmpty": "لم ترسل أي طلب بعد. اختر خدمة لتبدأ.",
   "loadMoreButton": "عرض المزيد",
   "submittedOn": "أُرسل في {date}",
-  "@submittedOn": { "placeholders": { "date": { "type": "String" } } },
+  "@submittedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "requestDetailTitle": "تفاصيل الطلب",
   "timelineTitle": "سجل الطلب",
   "photoLoadFailed": "تعذّر تحميل الصورة",
@@ -191,12 +239,16 @@
   "errorApplicationStateConflict": "تغيّرت حالة الطلب. حدّث الصفحة.",
   "errorCategoryNotAvailable": "أحد التخصصات لم يعد متاحًا.",
   "errorDocumentsRequired": "{min, plural, =1{أرفق مستندًا واحدًا على الأقل.} =2{أرفق مستندين على الأقل.} few{أرفق {min} مستندات على الأقل.} other{أرفق {min} مستندًا على الأقل.}}",
-  "@errorDocumentsRequired": { "placeholders": { "min": { "type": "int" } } },
+  "@errorDocumentsRequired": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
   "errorCannotReviewOwn": "لا يمكنك مراجعة طلبك الشخصي.",
-  "myRequestsEntry": "طلباتي",
   "technicianEntryApply": "انضم كفني",
   "technicianEntryStatus": "طلب الانضمام كفني",
-  "adminReviewEntry": "مراجعة طلبات الفنيين",
   "technicianApplyTitle": "الانضمام كفني",
   "technicianApplyIntro": "أرسل بياناتك لتراجعها الإدارة. لن تتلقى أي طلبات عمل قبل اعتماد حسابك.",
   "fullNameLabel": "الاسم الكامل",
@@ -211,14 +263,26 @@
   "documentsTitle": "مستندات التحقق",
   "documentsOptionalHelp": "المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.",
   "documentsMinHelp": "{min, plural, =1{أرفق مستندًا واحدًا على الأقل.} =2{أرفق مستندين على الأقل.} few{أرفق {min} مستندات على الأقل.} other{أرفق {min} مستندًا على الأقل.}}",
-  "@documentsMinHelp": { "placeholders": { "min": { "type": "int" } } },
+  "@documentsMinHelp": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
   "documentsPrivacy": "المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.",
   "documentKindLabel": "نوع المستند",
   "documentKindIdentity": "إثبات الهوية",
   "documentKindQualification": "شهادة أو خبرة",
   "documentKindOther": "أخرى",
   "documentNumber": "مستند {number}",
-  "@documentNumber": { "placeholders": { "number": { "type": "int" } } },
+  "@documentNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "documentRemove": "حذف المستند",
   "documentLimitReached": "وصلت إلى الحد الأقصى من المستندات.",
   "submitApplicationButton": "إرسال طلب الانضمام",
@@ -238,10 +302,28 @@
   "adminApplicationsTitle": "طلبات الفنيين",
   "adminApplicationsEmpty": "لا توجد طلبات بهذه الحالة.",
   "adminApplicationMeta": "التخصصات: {specialties} · المناطق: {areas} · المستندات: {documents}",
-  "@adminApplicationMeta": { "placeholders": { "specialties": { "type": "int" }, "areas": { "type": "int" }, "documents": { "type": "int" } } },
+  "@adminApplicationMeta": {
+    "placeholders": {
+      "specialties": {
+        "type": "int"
+      },
+      "areas": {
+        "type": "int"
+      },
+      "documents": {
+        "type": "int"
+      }
+    }
+  },
   "adminApplicantPhone": "رقم الموبايل",
   "yearsValue": "سنوات الخبرة: {years}",
-  "@yearsValue": { "placeholders": { "years": { "type": "int" } } },
+  "@yearsValue": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
   "documentsNone": "لا توجد مستندات",
   "pdfDocumentLabel": "ملف PDF (المعاينة غير متاحة في التطبيق)",
   "adminHistoryTitle": "سجل المراجعة",
@@ -261,5 +343,339 @@
   "adminNoteLabel": "ملاحظة داخلية (اختياري)",
   "adminReasonLabel": "السبب (يظهر لمقدم الطلب)",
   "adminReasonRequired": "اكتب سببًا من 3 أحرف على الأقل.",
-  "adminDecisionSaved": "تم حفظ القرار."
+  "adminDecisionSaved": "تم حفظ القرار.",
+  "statusUnmatched": "بانتظار الإدارة",
+  "statusAssigned": "تم تعيين فني",
+  "statusEnRoute": "الفني في الطريق",
+  "statusArrived": "وصل الفني",
+  "statusQuoted": "بانتظار موافقة السعر",
+  "statusQuoteRejected": "العرض مرفوض",
+  "statusInProgress": "جارٍ التنفيذ",
+  "statusCompleted": "مكتمل",
+  "statusCancelled": "ملغي",
+  "demoCustomerBlurb": "اطلب خدمة، تابع الفني، وافق على السعر وقيّم.",
+  "demoTechnicianBlurb": "استقبل العروض، حدّث حالة العمل وأرسل عرض السعر.",
+  "demoAdminBlurb": "تابع الطلبات، عيّن الفنيين وراجع طلبات الانضمام.",
+  "demoOfflineNote": "لا حاجة لإنترنت أو رمز تحقق. تُحفظ البيانات على هذا الجهاز ويمكن إعادة ضبطها من حسابي.",
+  "homeGreeting": "أهلًا {name} 👋",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tabHome": "الرئيسية",
+  "tabRequests": "طلباتي",
+  "tabNotifications": "الإشعارات",
+  "tabAccount": "حسابي",
+  "tabOffers": "العروض",
+  "tabJobs": "أعمالي",
+  "tabDashboard": "لوحة التحكم",
+  "tabTechnicians": "الفنيون",
+  "languageSetting": "اللغة",
+  "switchAccountButton": "التبديل إلى حساب آخر",
+  "resetDemoButton": "إعادة ضبط بيانات التجربة",
+  "resetDemoTitle": "إعادة ضبط البيانات؟",
+  "resetDemoBody": "ستُحذف كل الطلبات والرسائل والصور على هذا الجهاز وتعود بيانات التجربة الأصلية.",
+  "technicianCardTitle": "الفني",
+  "customerCardTitle": "العميل",
+  "ratingNone": "لا تقييمات بعد",
+  "ratingSummary": "{avg} ({count})",
+  "@ratingSummary": {
+    "placeholders": {
+      "avg": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingStars": "{stars} من ٥ نجوم",
+  "@ratingStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingTitle": "تقييمك",
+  "etaEstimate": "الوصول المتوقع خلال ٢٠–٣٠ دقيقة تقريبًا",
+  "chatOpenButton": "محادثة الطلب",
+  "chatViewButton": "عرض المحادثة",
+  "chatTitle": "المحادثة",
+  "chatEmpty": "لا رسائل بعد. اكتب أول رسالة.",
+  "chatHint": "اكتب رسالة…",
+  "chatSend": "إرسال",
+  "chatReadOnly": "المحادثة للعرض فقط.",
+  "paymentTitle": "الدفع",
+  "paymentCashCollected": "تم التحصيل نقدًا",
+  "paymentCommission": "عمولة المنصة",
+  "paymentRecordedAt": "وقت التسجيل",
+  "cancelReasonTitle": "سبب الإلغاء",
+  "addressHiddenUntilAccepted": "يظهر العنوان بالتفصيل بعد قبول الطلب.",
+  "byOperations": "بواسطة الإدارة",
+  "quoteTitle": "عرض السعر",
+  "quotePending": "بانتظار الموافقة",
+  "quoteApproved": "تمت الموافقة",
+  "quoteRejected": "مرفوض",
+  "journeyStep": "المرحلة {step} من {total}",
+  "@journeyStep": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelRequestButton": "إلغاء الطلب",
+  "cancelSheetTitle": "لماذا تريد إلغاء الطلب؟",
+  "cancelReasonChangedMind": "لم أعد بحاجة للخدمة",
+  "cancelReasonFixed": "تم حل المشكلة",
+  "cancelReasonTooLong": "الانتظار طويل",
+  "cancelReasonOther": "سبب آخر",
+  "requestCancelledToast": "تم إلغاء الطلب.",
+  "customerSearchingTitle": "نبحث لك عن فني مناسب",
+  "customerSearchingBody": "أرسلنا طلبك للفنيين المعتمدين في منطقتك. ستصلك رسالة فور قبول أحدهم.",
+  "customerUnmatchedTitle": "لم يقبل أي فني بعد",
+  "customerUnmatchedBody": "فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.",
+  "customerAssignedTitle": "فنيك جاهز",
+  "customerAssignedBody": "سيعاين الفني المشكلة ثم يرسل لك عرض سعر قبل بدء أي عمل.",
+  "customerQuoteTitle": "عرض سعر: {amount}",
+  "@customerQuoteTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerQuoteBody": "لن يبدأ العمل إلا بعد موافقتك. الدفع نقدًا عند الانتهاء.",
+  "customerQuoteRejectedTitle": "رفضت عرض السعر",
+  "customerQuoteRejectedBody": "يمكن للفني إرسال عرض جديد، أو يمكنك إلغاء الطلب.",
+  "customerInProgressTitle": "العمل جارٍ الآن",
+  "customerInProgressBody": "سيؤكد الفني الانتهاء وتحصيل المبلغ المتفق عليه.",
+  "customerCompletedTitle": "اكتملت الخدمة",
+  "customerCompletedBody": "شاركنا رأيك في الفني لمساعدة الآخرين.",
+  "approveQuoteButton": "الموافقة على السعر",
+  "rejectQuoteButton": "رفض العرض",
+  "quoteApprovedToast": "تمت الموافقة. أبلغنا الفني ليبدأ العمل.",
+  "rateButton": "قيّم الخدمة",
+  "rateSheetTitle": "كيف كانت الخدمة؟",
+  "rateCommentLabel": "تعليق (اختياري)",
+  "rateSubmitButton": "إرسال التقييم",
+  "ratingThanks": "شكرًا لتقييمك!",
+  "offerForYouTitle": "طلب جديد لك",
+  "offerExpiresIn": "{minutes, plural, =0{ينتهي العرض الآن} =1{ينتهي خلال دقيقة} =2{ينتهي خلال دقيقتين} few{ينتهي خلال {minutes} دقائق} other{ينتهي خلال {minutes} دقيقة}}",
+  "@offerExpiresIn": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptOfferButton": "قبول الطلب",
+  "declineOfferButton": "اعتذار",
+  "offerAcceptedToast": "تم قبول الطلب وأبلغنا العميل.",
+  "techAssignedTitle": "الطلب لك",
+  "techAssignedBody": "أبلغ العميل عندما تتحرك إليه.",
+  "onMyWayButton": "أنا في الطريق",
+  "arrivedButton": "وصلت",
+  "customerNotifiedToast": "تم إبلاغ العميل.",
+  "techQuoteNeededTitle": "عاين وأرسل عرض السعر",
+  "techQuoteRejectedTitle": "رفض العميل العرض",
+  "techQuoteNeededBody": "لا يبدأ العمل قبل موافقة العميل على السعر.",
+  "sendQuoteButton": "إرسال عرض السعر",
+  "techAwaitingApprovalTitle": "بانتظار موافقة العميل",
+  "techAwaitingApprovalBody": "سنبلغك فور الموافقة على العرض أو رفضه.",
+  "techWorkingTitle": "تمت الموافقة، ابدأ العمل",
+  "techWorkingBody": "عند الانتهاء حصّل {amount} نقدًا وأكّد الإنجاز.",
+  "@techWorkingBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "completeJobButton": "تم الانتهاء وتحصيل المبلغ",
+  "completeJobTitle": "تأكيد الانتهاء",
+  "completeJobBody": "هل انتهى العمل وتم تحصيل {amount} نقدًا من العميل؟",
+  "@completeJobBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "jobCompletedToast": "تم تسجيل الإنجاز والدفع.",
+  "quoteSheetTitle": "عرض السعر",
+  "quoteSheetHint": "أدخل السعر الإجمالي (مصنعية وقطع غيار) بعد المعاينة.",
+  "quoteAmountLabel": "المبلغ",
+  "quoteAmountInvalid": "أدخل مبلغًا صحيحًا.",
+  "quoteNoteLabel": "تفاصيل العمل (اختياري)",
+  "currencyEgpShort": "ج.م",
+  "quoteSentToast": "تم إرسال العرض للعميل.",
+  "adminSearchingTitle": "العروض مرسلة للفنيين",
+  "adminUnmatchedTitle": "يحتاج تعيينًا يدويًا",
+  "adminAssignBody": "يمكنك تعيين فني معتمد يغطي الخدمة والمنطقة.",
+  "assignTechnicianButton": "تعيين فني",
+  "assignSheetTitle": "اختر فنيًا",
+  "assignNoneEligible": "لا يوجد فني معتمد يغطي هذه الخدمة والمنطقة.",
+  "assignedToast": "تم تعيين الفني.",
+  "offersTitle": "عروض العمل",
+  "offersIntro": "طلبات تناسب تخصصك ومنطقتك. أول من يقبل يحصل على الطلب.",
+  "offersEmpty": "لا عروض جديدة الآن. سنبلغك عند وصول طلب.",
+  "myJobsTitle": "أعمالي",
+  "jobsActiveTab": "الحالية",
+  "jobsHistoryTab": "السابقة",
+  "jobsEmptyActive": "لا أعمال حالية. اقبل عرضًا لتبدأ.",
+  "jobsEmptyHistory": "لا أعمال منتهية بعد.",
+  "earningsTitle": "صافي أرباحك",
+  "earningsNetHint": "بعد خصم عمولة المنصة (١٠٪ — قيمة مقترحة)",
+  "earningsJobs": "أعمال",
+  "earningsCollected": "المحصّل",
+  "earningsCommission": "العمولة",
+  "notificationsTitle": "الإشعارات",
+  "notificationsEmpty": "لا إشعارات بعد.",
+  "markAllRead": "تحديد الكل كمقروء",
+  "ntfNewOffer": "طلب جديد يناسبك {ref}",
+  "@ntfNewOffer": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfAssignedByAdmin": "عيّنتك الإدارة على الطلب {ref}",
+  "@ntfAssignedByAdmin": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfAssigned": "تم تعيين فني لطلبك {ref}",
+  "@ntfAssigned": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfEnRoute": "الفني في الطريق إليك {ref}",
+  "@ntfEnRoute": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfArrived": "وصل الفني {ref}",
+  "@ntfArrived": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfQuoted": "وصلك عرض سعر للطلب {ref}",
+  "@ntfQuoted": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfQuoteApproved": "وافق العميل على عرضك {ref}",
+  "@ntfQuoteApproved": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfQuoteRejected": "رفض العميل عرضك {ref}",
+  "@ntfQuoteRejected": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfCompleted": "اكتملت الخدمة {ref}. قيّم الفني",
+  "@ntfCompleted": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfRated": "وصلك تقييم جديد {ref}",
+  "@ntfRated": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfMessage": "رسالة جديدة بخصوص {ref}",
+  "@ntfMessage": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfCancelled": "تم إلغاء الطلب {ref}",
+  "@ntfCancelled": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfUnmatched": "الطلب {ref} يحتاج تعيين فني",
+  "@ntfUnmatched": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfApplicationSubmitted": "طلب انضمام فني جديد بانتظار المراجعة",
+  "ntfApplicationApproved": "تمت الموافقة على طلب انضمامك كفني",
+  "ntfApplicationRejected": "لم تتم الموافقة على طلب انضمامك",
+  "ntfApplicationSuspended": "تم إيقاف حسابك كفني مؤقتًا",
+  "adminDashboardTitle": "لوحة التشغيل",
+  "kpiNeedsAttention": "بحاجة لمتابعة",
+  "kpiInProgress": "قيد التنفيذ",
+  "kpiCompleted": "مكتملة",
+  "kpiCommission": "إجمالي العمولات",
+  "kpiPendingApplications": "{count, plural, =0{لا طلبات انضمام معلّقة} =1{طلب انضمام واحد بانتظار المراجعة} =2{طلبا انضمام بانتظار المراجعة} few{{count} طلبات انضمام بانتظار المراجعة} other{{count} طلب انضمام بانتظار المراجعة}}",
+  "@kpiPendingApplications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kpiApprovedTechnicians": "{count, plural, =0{لا فنيين معتمدين} =1{فني معتمد واحد} =2{فنيان معتمدان} few{{count} فنيين معتمدين} other{{count} فني معتمد}}",
+  "@kpiApprovedTechnicians": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminRequestsTitle": "الطلبات",
+  "adminFilterAttention": "بحاجة لمتابعة",
+  "adminFilterActive": "قيد التنفيذ",
+  "adminFilterDone": "منتهية",
+  "adminFilterAll": "الكل",
+  "adminRequestsEmpty": "لا طلبات هنا.",
+  "errorOfferExpired": "انتهت مهلة هذا العرض.",
+  "errorOfferTaken": "قبل فني آخر هذا الطلب بالفعل.",
+  "errorStateConflict": "تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى."
 }

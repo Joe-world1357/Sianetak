@@ -26,8 +26,8 @@ Future<TestHarness> openQueue(
     harness: TestHarness(auth: adminAuth(), admin: admin),
   );
   await signIn(tester);
-  await openProfile(tester);
-  await tapVisible(tester, find.text('مراجعة طلبات الفنيين'));
+  await tester.tap(find.text('الفنيون'));
+  await tester.pumpAndSettle();
   return h;
 }
 
@@ -148,11 +148,11 @@ void main() {
     expect(find.text('قيد المراجعة'), findsOneWidget);
   });
 
-  testWidgets('customers do not see the admin entry', (tester) async {
+  testWidgets('customers do not see the admin navigation', (tester) async {
     await pumpApp(tester);
     await signIn(tester);
-    await openProfile(tester);
-    expect(find.text('مراجعة طلبات الفنيين'), findsNothing);
+    expect(find.text('الفنيون'), findsNothing);
+    expect(find.text('لوحة التحكم'), findsNothing);
   });
 
   testWidgets('the admin queue works in English', (tester) async {
