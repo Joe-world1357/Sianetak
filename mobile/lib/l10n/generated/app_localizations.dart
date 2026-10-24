@@ -1025,7 +1025,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentsOptionalHelp.
   ///
   /// In ar, this message translates to:
-  /// **'المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.'**
+  /// **'اختياري: أرفق ما يثبت هويتك أو خبرتك، مثل البطاقة أو شهادة.'**
   String get documentsOptionalHelp;
 
   /// No description provided for @documentsMinHelp.
@@ -1037,7 +1037,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentsPrivacy.
   ///
   /// In ar, this message translates to:
-  /// **'المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.'**
+  /// **'المستندات محفوظة على هذا الجهاز، ولا يطّلع عليها إلا المسؤول.'**
   String get documentsPrivacy;
 
   /// No description provided for @documentKindLabel.
@@ -1649,7 +1649,7 @@ abstract class AppLocalizations {
   /// No description provided for @customerUnmatchedBody.
   ///
   /// In ar, this message translates to:
-  /// **'فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.'**
+  /// **'لم يقبل أي فني الطلب بعد. سيعيّن المسؤول فنياً يدوياً.'**
   String get customerUnmatchedBody;
 
   /// No description provided for @customerAssignedTitle.

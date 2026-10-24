@@ -124,6 +124,7 @@ class LocationStep extends StatelessWidget {
             decoration: InputDecoration(
               labelText: l10n.addressDetailsLabel,
               hintText: l10n.addressDetailsHint,
+              counterText: '',
               alignLabelWithHint: true,
               errorText: issue == DraftIssue.detailsTooShort
                   ? draftIssueMessage(l10n, issue!, draft.options)
@@ -135,7 +136,10 @@ class LocationStep extends StatelessWidget {
             controller: landmark,
             maxLength: 150,
             onChanged: (v) => draft.update(() => draft.landmark = v),
-            decoration: InputDecoration(labelText: l10n.landmarkLabel),
+            decoration: InputDecoration(
+              labelText: l10n.landmarkLabel,
+              counterText: '',
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           _CurrentLocation(
@@ -163,6 +167,7 @@ class LocationStep extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: l10n.addressLabelLabel,
                 hintText: l10n.addressLabelHint,
+                counterText: '',
               ),
             ),
         ],

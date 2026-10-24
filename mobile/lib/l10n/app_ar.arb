@@ -256,7 +256,7 @@
   "serviceAreasTitle": "مناطق العمل",
   "serviceAreasRequired": "اختر منطقة واحدة على الأقل.",
   "documentsTitle": "مستندات التحقق",
-  "documentsOptionalHelp": "المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.",
+  "documentsOptionalHelp": "اختياري: أرفق ما يثبت هويتك أو خبرتك، مثل البطاقة أو شهادة.",
   "documentsMinHelp": "{min, plural, =1{أرفق مستندًا واحدًا على الأقل.} =2{أرفق مستندين على الأقل.} few{أرفق {min} مستندات على الأقل.} other{أرفق {min} مستندًا على الأقل.}}",
   "@documentsMinHelp": {
     "placeholders": {
@@ -265,7 +265,7 @@
       }
     }
   },
-  "documentsPrivacy": "المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.",
+  "documentsPrivacy": "المستندات محفوظة على هذا الجهاز، ولا يطّلع عليها إلا المسؤول.",
   "documentKindLabel": "نوع المستند",
   "documentKindIdentity": "إثبات الهوية",
   "documentKindQualification": "شهادة أو خبرة",
@@ -428,7 +428,7 @@
   "customerSearchingTitle": "نبحث لك عن فني مناسب",
   "customerSearchingBody": "أرسلنا طلبك للفنيين المعتمدين في منطقتك. ستصلك رسالة فور قبول أحدهم.",
   "customerUnmatchedTitle": "لم يقبل أي فني بعد",
-  "customerUnmatchedBody": "فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.",
+  "customerUnmatchedBody": "لم يقبل أي فني الطلب بعد. سيعيّن المسؤول فنياً يدوياً.",
   "customerAssignedTitle": "فنيك جاهز",
   "customerAssignedBody": "سيعاين الفني المشكلة ثم يرسل لك عرض سعر قبل بدء أي عمل.",
   "customerQuoteTitle": "عرض سعر: {amount}",

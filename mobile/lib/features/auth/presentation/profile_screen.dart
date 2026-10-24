@@ -216,6 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: InputDecoration(
                               labelText: l10n.profileNameLabel,
                               hintText: l10n.profileNameHint,
+                              counterText: '',
                             ),
                             validator: (v) => (v?.trim().length ?? 0) < 2
                                 ? l10n.profileNameInvalid

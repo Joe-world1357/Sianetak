@@ -561,7 +561,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentsOptionalHelp =>
-      'The required documents haven\'t been decided yet. Attach anything that shows your identity or experience.';
+      'Optional: attach proof of identity or experience, such as an ID or a certificate.';
 
   @override
   String documentsMinHelp(int min) {
@@ -576,7 +576,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentsPrivacy =>
-      'Documents are private and only seen by the review team.';
+      'Documents stay on this device and only an administrator can open them.';
 
   @override
   String get documentKindLabel => 'Document type';
@@ -907,7 +907,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customerUnmatchedBody =>
-      'Our operations team will assign one for you shortly.';
+      'No technician has accepted yet. An administrator will assign one.';
 
   @override
   String get customerAssignedTitle => 'Your technician is on it';

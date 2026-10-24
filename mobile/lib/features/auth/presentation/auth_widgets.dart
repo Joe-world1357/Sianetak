@@ -6,7 +6,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../local/local_backend.dart';
 import '../domain/egypt_phone.dart';
 
-/// Shared layout for the sign-in and sign-up screens: a centred column of at most 440 pt.
+/// Shared layout for the sign-in and sign-up screens: a top-aligned column of at most 440 pt.
 class AuthLayout extends StatelessWidget {
   const AuthLayout({super.key, required this.children, this.appBar});
 
@@ -18,11 +18,12 @@ class AuthLayout extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: SafeArea(
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(
               AppSpacing.lg,
-              AppSpacing.md,
+              AppSpacing.lg,
               AppSpacing.lg,
               AppSpacing.lg,
             ),

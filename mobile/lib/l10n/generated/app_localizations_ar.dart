@@ -551,7 +551,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentsOptionalHelp =>
-      'المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.';
+      'اختياري: أرفق ما يثبت هويتك أو خبرتك، مثل البطاقة أو شهادة.';
 
   @override
   String documentsMinHelp(int min) {
@@ -568,7 +568,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentsPrivacy =>
-      'المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.';
+      'المستندات محفوظة على هذا الجهاز، ولا يطّلع عليها إلا المسؤول.';
 
   @override
   String get documentKindLabel => 'نوع المستند';
@@ -895,7 +895,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get customerUnmatchedBody =>
-      'فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.';
+      'لم يقبل أي فني الطلب بعد. سيعيّن المسؤول فنياً يدوياً.';
 
   @override
   String get customerAssignedTitle => 'فنيك جاهز';
