@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../domain/catalog_models.dart';
 
 abstract class CatalogRepository {
@@ -7,11 +7,11 @@ abstract class CatalogRepository {
   Future<ServiceDetail> getService(String slug);
 }
 
-/// Guest-accessible catalog, read from the on-device demo database.
+/// The service catalog, read from the on-device database.
 class LocalCatalogRepository implements CatalogRepository {
   LocalCatalogRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<List<ServiceCategory>> listCategories() async =>

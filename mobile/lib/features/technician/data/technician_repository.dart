@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../../requests/domain/request_models.dart';
 import '../domain/technician_models.dart';
 
@@ -11,7 +11,7 @@ abstract class TechnicianRepository {
 class LocalTechnicianRepository implements TechnicianRepository {
   LocalTechnicianRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<OwnApplicationState> getOwn() async =>

@@ -9,9 +9,10 @@ import '../../technician/presentation/technician_application_screen.dart';
 import '../domain/auth_models.dart';
 import '../domain/egypt_phone.dart';
 import 'auth_error_text.dart';
-import 'sign_in_screen.dart';
+import 'change_password_screen.dart';
+import 'register_screen.dart';
 
-/// Signed-in user's profile foundation: name, phone, role and sign-out.
+/// The signed-in account: name, phone, role, password, language, data notice and sign-out.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -45,34 +46,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     UserRole.unknown => '—',
   };
 
-  /// Role-specific destinations. The server enforces each role; this only hides dead ends.
-  List<Widget> _roleEntries(
-    BuildContext context,
-    AppLocalizations l10n,
-    UserRole role,
-  ) {
-    Widget entry(IconData icon, String title, Widget Function() screen) => Card(
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () =>
-            Navigator.of(context)
-                .push(MaterialPageRoute<void>(builder: (_) => screen())),
-      ),
-    );
-    return [
-      if (role == UserRole.customer || role == UserRole.technician) ...[
-        entry(
-          Icons.handyman_outlined,
-          role == UserRole.technician
-              ? l10n.technicianEntryStatus
-              : l10n.technicianEntryApply,
-          () => const TechnicianApplicationScreen(),
-        ),
-      ],
-    ];
-  }
+  void _push(Widget Function() screen) =>
+      Navigator.of(context)
+          .push(MaterialPageRoute<void>(builder: (_) => screen()));
 
   Future<void> _save() async {
     if (_saving || !(_formKey.currentState?.validate() ?? false)) return;
@@ -95,44 +71,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _signOut() => AppScope.of(context).auth.signOut();
-
-  Future<void> _switchAccount() async {
-    final auth = AppScope.of(context).auth;
-    final navigator = Navigator.of(context);
-    await auth.signOut();
-    await navigator.push(
-      MaterialPageRoute<void>(builder: (_) => const SignInScreen()),
-    );
-  }
-
-  Future<void> _resetDemo() async {
+  Future<void> _signOut() async {
     final l10n = AppLocalizations.of(context);
-    final scope = AppScope.of(context);
+    final auth = AppScope.of(context).auth;
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.resetDemoTitle),
-        content: Text(l10n.resetDemoBody),
+        title: Text(l10n.signOutConfirmTitle),
+        content: Text(l10n.signOutConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(l10n.cancelButton),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              minimumSize: const Size(0, 44),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
             onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.resetDemoButton),
+            child: Text(l10n.signOutButton),
           ),
         ],
       ),
     );
-    if (ok != true || scope.resetDemo == null) return;
-    await scope.resetDemo!();
-    await scope.auth.restore();
+    if (ok == true) await auth.signOut();
+  }
+
+  void _aboutData() {
+    final l10n = AppLocalizations.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.phonelink_lock_rounded),
+        title: Text(l10n.aboutDataEntry),
+        content: Text(l10n.aboutDataBody),
+        actions: [
+          FilledButton(
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.gotIt),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -237,6 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: InputDecoration(
                               labelText: l10n.profileNameLabel,
                               hintText: l10n.profileNameHint,
+                              counterText: '',
                             ),
                             validator: (v) => (v?.trim().length ?? 0) < 2
                                 ? l10n.profileNameInvalid
@@ -257,12 +237,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                ..._roleEntries(context, l10n, user.role),
-                const SizedBox(height: AppSpacing.md),
                 Card(
                   clipBehavior: Clip.antiAlias,
                   child: Column(
                     children: [
+                      if (user.role == UserRole.technician && user.canWork) ...[
+                        setting(
+                          Icons.badge_outlined,
+                          l10n.technicianEntryStatus,
+                          () =>
+                              _push(() => const TechnicianApplicationScreen()),
+                        ),
+                        const Divider(indent: 56),
+                      ],
+                      if (user.role == UserRole.admin) ...[
+                        setting(
+                          Icons.person_add_alt_1_outlined,
+                          l10n.addAdminEntry,
+                          () => _push(
+                            () => const RegisterScreen(
+                              mode: RegisterMode.addAdmin,
+                            ),
+                          ),
+                        ),
+                        const Divider(indent: 56),
+                      ],
+                      setting(
+                        Icons.password_rounded,
+                        l10n.changePasswordEntry,
+                        () => _push(() => const ChangePasswordScreen()),
+                      ),
+                      const Divider(indent: 56),
                       setting(
                         Icons.translate_rounded,
                         l10n.languageSetting,
@@ -271,18 +276,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const Divider(indent: 56),
                       setting(
-                        Icons.switch_account_rounded,
-                        l10n.switchAccountButton,
-                        _switchAccount,
+                        Icons.info_outline_rounded,
+                        l10n.aboutDataEntry,
+                        _aboutData,
                       ),
-                      if (scope.resetDemo != null) ...[
-                        const Divider(indent: 56),
-                        setting(
-                          Icons.restart_alt_rounded,
-                          l10n.resetDemoButton,
-                          _resetDemo,
-                        ),
-                      ],
                     ],
                   ),
                 ),

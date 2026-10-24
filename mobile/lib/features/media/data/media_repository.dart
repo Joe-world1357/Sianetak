@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../domain/media_models.dart';
 
 enum MediaPurpose { requestPhoto, technicianDocument }
@@ -15,7 +15,7 @@ abstract class MediaRepository {
 class LocalMediaRepository implements MediaRepository {
   LocalMediaRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<UploadedMedia> upload(MediaPurpose purpose, PickedImage file) async =>

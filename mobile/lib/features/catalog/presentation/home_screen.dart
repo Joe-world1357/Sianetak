@@ -107,60 +107,29 @@ class _Header extends StatelessWidget {
     final theme = Theme.of(context);
     final auth = AppScope.of(context).auth;
     final name = auth.user?.name?.trim();
-    final white70 = Colors.white.withValues(alpha: 0.8);
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg - 4),
-      decoration: BoxDecoration(
-        gradient: AppColors.heroGradient,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (name != null && name.isNotEmpty)
-                  Text(
-                    l10n.homeGreeting(name.split(' ').first),
-                    style: theme.textTheme.bodyMedium?.copyWith(color: white70),
-                  ),
-                Semantics(
-                  header: true,
-                  child: Text(
-                    l10n.homeHeadline,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l10n.homeSubtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: white70),
-                ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (name != null && name.isNotEmpty)
+          Text(
+            l10n.homeGreeting(name.split(' ').first),
+            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.muted),
+          ),
+        Semantics(
+          header: true,
+          child: Text(
+            l10n.homeHeadline,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
-          ExcludeSemantics(
-            child: Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(
-                Icons.handyman_rounded,
-                color: Colors.white,
-                size: 34,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l10n.homeSubtitle,
+          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted),
+        ),
+      ],
     );
   }
 }

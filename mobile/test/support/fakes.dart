@@ -25,7 +25,6 @@ ServiceCategory category({
   String ar = 'سباكة',
   String en = 'Plumbing',
   int serviceCount = 2,
-  bool isSample = true,
 }) => ServiceCategory(
   id: 'cat-$slug',
   slug: slug,
@@ -33,7 +32,6 @@ ServiceCategory category({
   description: text('وصف $ar', '$en description'),
   iconKey: slug,
   serviceCount: serviceCount,
-  isSample: isSample,
 );
 
 ServiceSummary service({
@@ -41,13 +39,11 @@ ServiceSummary service({
   String ar = 'إصلاح تسريب',
   String en = 'Leak repair',
   PricingGuidance? pricing,
-  bool isSample = true,
 }) => ServiceSummary(
   id: 'svc-$slug',
   slug: slug,
   name: text(ar, en),
   pricing: pricing ?? const PricingGuidance.inspectionRequired(),
-  isSample: isSample,
 );
 
 /// In-memory catalog that can be told to fail or stall.
@@ -93,29 +89,71 @@ class FakeCatalogRepository implements CatalogRepository {
   );
 }
 
-/// Demo-account auth with one scriptable user per role.
+/// Local accounts with one scriptable user; signs in with [phone] and [password].
 class FakeAuthRepository implements AuthRepository {
-  FakeAuthRepository({UserRole role = UserRole.customer})
-    : user = AppUser(
-        id: 'u1',
-        phone: '+201012345678',
-        name: 'أحمد',
-        role: role,
-      );
+  FakeAuthRepository({
+    UserRole role = UserRole.customer,
+    TechnicianStatus? technicianStatus,
+    this.adminExists = true,
+    this.onboardingDone = true,
+  }) : user = AppUser(
+         id: 'u1',
+         phone: '+201012345678',
+         name: 'أحمد',
+         role: role,
+         technicianStatus:
+             technicianStatus ??
+             (role == UserRole.technician ? TechnicianStatus.approved : null),
+       );
+
+  static const phone = '01012345678';
+  static const password = 'secret123';
 
   AppUser user;
   AppUser? signedIn;
   String? lastName;
   int signOutCount = 0;
+  bool adminExists;
+  bool onboardingDone;
+  String currentPassword = password;
+  final List<AppUser> createdAdmins = [];
 
   @override
-  Future<List<AppUser>> demoAccounts() async => [user];
+  Future<AppUser?> currentUser({bool renew = false}) async => signedIn;
 
   @override
-  Future<AppUser> signInAs(String userId) async => signedIn = user;
+  Future<AppUser> signIn({
+    required String phone,
+    required String password,
+  }) async {
+    if (phone != FakeAuthRepository.phone || password != currentPassword) {
+      throw const ApiException(code: 'INVALID_CREDENTIALS', statusCode: 401);
+    }
+    return signedIn = user;
+  }
 
   @override
-  Future<AppUser?> currentUser() async => signedIn;
+  Future<AppUser> register({
+    required String name,
+    required String phone,
+    required String password,
+    required AccountType type,
+  }) async {
+    if (phone == FakeAuthRepository.phone) {
+      throw const ApiException(code: 'PHONE_TAKEN', statusCode: 409);
+    }
+    return signedIn = user = AppUser(
+      id: 'u2',
+      phone: '+2$phone',
+      name: name,
+      role: type == AccountType.customer
+          ? UserRole.customer
+          : UserRole.technician,
+      technicianStatus: type == AccountType.technician
+          ? TechnicianStatus.notSubmitted
+          : null,
+    );
+  }
 
   @override
   Future<void> signOut() async {
@@ -126,9 +164,69 @@ class FakeAuthRepository implements AuthRepository {
   @override
   Future<AppUser> updateName(String name) async {
     lastName = name;
-    user = AppUser(id: user.id, phone: user.phone, name: name, role: user.role);
+    user = AppUser(
+      id: user.id,
+      phone: user.phone,
+      name: name,
+      role: user.role,
+      technicianStatus: user.technicianStatus,
+    );
     return signedIn = user;
   }
+
+  @override
+  Future<void> changePassword({
+    required String current,
+    required String next,
+  }) async {
+    if (current != currentPassword) {
+      throw const ApiException(code: 'WRONG_PASSWORD', statusCode: 422);
+    }
+    currentPassword = next;
+  }
+
+  @override
+  Future<bool> hasAdmin() async => adminExists;
+
+  @override
+  Future<AppUser> setupAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    if (adminExists) {
+      throw const ApiException(code: 'ADMIN_EXISTS', statusCode: 409);
+    }
+    adminExists = true;
+    return signedIn = user = AppUser(
+      id: 'admin',
+      phone: '+2$phone',
+      name: name,
+      role: UserRole.admin,
+    );
+  }
+
+  @override
+  Future<AppUser> createAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    final admin = AppUser(
+      id: 'admin-${createdAdmins.length}',
+      phone: '+2$phone',
+      name: name,
+      role: UserRole.admin,
+    );
+    createdAdmins.add(admin);
+    return admin;
+  }
+
+  @override
+  Future<bool> onboardingSeen() async => onboardingDone;
+
+  @override
+  Future<void> markOnboardingSeen() async => onboardingDone = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -138,12 +236,7 @@ ServiceArea area({
   String slug = 'aswan-city-centre',
   String ar = 'وسط المدينة',
   String en = 'City centre',
-}) => ServiceArea(
-  id: 'area-$slug',
-  slug: slug,
-  name: text(ar, en),
-  isSample: true,
-);
+}) => ServiceArea(id: 'area-$slug', slug: slug, name: text(ar, en));
 
 /// Slots start tomorrow so they never fall in the past while a test runs.
 List<TimeSlot> sampleSlots() {

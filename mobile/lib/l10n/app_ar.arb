@@ -12,7 +12,6 @@
     "description": "Label of the button that switches to the other language"
   },
   "switchLanguageTooltip": "تغيير اللغة إلى الإنجليزية",
-  "signInTooltip": "تسجيل الدخول",
   "servicesCount": "{count, plural, =0{لا توجد خدمات} =1{خدمة واحدة} =2{خدمتان} few{{count} خدمات} many{{count} خدمة} other{{count} خدمة}}",
   "@servicesCount": {
     "placeholders": {
@@ -21,15 +20,13 @@
       }
     }
   },
-  "sampleDataBadge": "بيانات تجريبية",
-  "sampleDataNotice": "هذه بيانات تجريبية للعرض فقط ولم تُعتمد بعد.",
   "loading": "جارٍ التحميل…",
   "retry": "حاول مرة أخرى",
   "emptyCategories": "لا توجد خدمات متاحة حاليًا. حاول لاحقًا.",
   "emptyServices": "لا توجد خدمات متاحة في هذا القسم حاليًا.",
   "errorLoadTitle": "تعذّر تحميل البيانات",
   "errorNotFound": "العنصر المطلوب غير موجود أو لم يعد متاحًا.",
-  "errorNetwork": "تعذّر الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.",
+  "errorNetwork": "تعذّر الوصول إلى البيانات. حاول مرة أخرى.",
   "errorGeneric": "حدث خطأ غير متوقع. حاول مرة أخرى.",
   "priceInspectionRequired": "السعر يُحدَّد بعد المعاينة",
   "priceInspectionExplanation": "لا يوجد سعر تقديري موثوق لهذه الخدمة. سيعاين الفني المشكلة ويرسل لك عرض سعر مفصّل توافق عليه قبل بدء العمل.",
@@ -48,9 +45,8 @@
   "pricingTitle": "التسعير",
   "aboutServiceTitle": "عن الخدمة",
   "requestServiceButton": "اطلب الخدمة",
-  "signInToRequest": "سجّل الدخول لطلب الخدمة",
-  "signInTitle": "اختر حساب التجربة",
-  "signInSubtitle": "نسخة عرض تعمل بالكامل على جهازك. جرّب التطبيق بأي دور.",
+  "signInTitle": "تسجيل الدخول",
+  "signInSubtitle": "أهلاً بعودتك. ادخل برقم موبايلك وكلمة المرور.",
   "errorSessionExpired": "انتهت جلستك. سجّل الدخول مرة أخرى.",
   "profileTitle": "حسابي",
   "profileNameLabel": "الاسم",
@@ -247,7 +243,6 @@
     }
   },
   "errorCannotReviewOwn": "لا يمكنك مراجعة طلبك الشخصي.",
-  "technicianEntryApply": "انضم كفني",
   "technicianEntryStatus": "طلب الانضمام كفني",
   "technicianApplyTitle": "الانضمام كفني",
   "technicianApplyIntro": "أرسل بياناتك لتراجعها الإدارة. لن تتلقى أي طلبات عمل قبل اعتماد حسابك.",
@@ -261,7 +256,7 @@
   "serviceAreasTitle": "مناطق العمل",
   "serviceAreasRequired": "اختر منطقة واحدة على الأقل.",
   "documentsTitle": "مستندات التحقق",
-  "documentsOptionalHelp": "المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.",
+  "documentsOptionalHelp": "اختياري: أرفق ما يثبت هويتك أو خبرتك، مثل البطاقة أو شهادة.",
   "documentsMinHelp": "{min, plural, =1{أرفق مستندًا واحدًا على الأقل.} =2{أرفق مستندين على الأقل.} few{أرفق {min} مستندات على الأقل.} other{أرفق {min} مستندًا على الأقل.}}",
   "@documentsMinHelp": {
     "placeholders": {
@@ -270,7 +265,7 @@
       }
     }
   },
-  "documentsPrivacy": "المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.",
+  "documentsPrivacy": "المستندات محفوظة على هذا الجهاز، ولا يطّلع عليها إلا المسؤول.",
   "documentKindLabel": "نوع المستند",
   "documentKindIdentity": "إثبات الهوية",
   "documentKindQualification": "شهادة أو خبرة",
@@ -290,14 +285,14 @@
   "applicationSubmittedMessage": "تم إرسال طلبك للمراجعة.",
   "applicationStatusTitle": "طلب الانضمام كفني",
   "verificationPending": "قيد المراجعة",
-  "verificationPendingBody": "تراجع الإدارة بياناتك، وستظهر النتيجة هنا.",
+  "verificationPendingBody": "يراجع المسؤول بياناتك، وستظهر النتيجة هنا. يمكنك الدخول لاحقاً لمتابعتها.",
   "verificationApproved": "معتمد",
-  "verificationApprovedBody": "تم اعتماد حسابك كفني. استقبال طلبات العمل سيتاح في تحديث قادم.",
+  "verificationApprovedBody": "تم اعتماد حسابك كفني. ستجد عروض العمل والأعمال المسندة إليك في الشاشة الرئيسية.",
   "verificationRejected": "لم يُقبل",
   "verificationRejectedBody": "يمكنك تعديل بياناتك وإعادة الإرسال.",
-  "verificationRejectedFinal": "لا يمكن إعادة الإرسال حاليًا. تواصل مع الدعم.",
+  "verificationRejectedFinal": "لا يمكن إعادة الإرسال حالياً. تواصل مع المسؤول.",
   "verificationSuspended": "موقوف",
-  "verificationSuspendedBody": "تم إيقاف حسابك كفني مؤقتًا. تواصل مع الدعم.",
+  "verificationSuspendedBody": "تم إيقاف حسابك كفني مؤقتاً. تواصل مع المسؤول.",
   "decisionReasonLabel": "سبب القرار",
   "adminApplicationsTitle": "طلبات الفنيين",
   "adminApplicationsEmpty": "لا توجد طلبات بهذه الحالة.",
@@ -353,10 +348,6 @@
   "statusInProgress": "جارٍ التنفيذ",
   "statusCompleted": "مكتمل",
   "statusCancelled": "ملغي",
-  "demoCustomerBlurb": "اطلب خدمة، تابع الفني، وافق على السعر وقيّم.",
-  "demoTechnicianBlurb": "استقبل العروض، حدّث حالة العمل وأرسل عرض السعر.",
-  "demoAdminBlurb": "تابع الطلبات، عيّن الفنيين وراجع طلبات الانضمام.",
-  "demoOfflineNote": "لا حاجة لإنترنت أو رمز تحقق. تُحفظ البيانات على هذا الجهاز ويمكن إعادة ضبطها من حسابي.",
   "homeGreeting": "أهلًا {name} 👋",
   "@homeGreeting": {
     "placeholders": {
@@ -374,10 +365,6 @@
   "tabDashboard": "لوحة التحكم",
   "tabTechnicians": "الفنيون",
   "languageSetting": "اللغة",
-  "switchAccountButton": "التبديل إلى حساب آخر",
-  "resetDemoButton": "إعادة ضبط بيانات التجربة",
-  "resetDemoTitle": "إعادة ضبط البيانات؟",
-  "resetDemoBody": "ستُحذف كل الطلبات والرسائل والصور على هذا الجهاز وتعود بيانات التجربة الأصلية.",
   "technicianCardTitle": "الفني",
   "customerCardTitle": "العميل",
   "ratingNone": "لا تقييمات بعد",
@@ -441,7 +428,7 @@
   "customerSearchingTitle": "نبحث لك عن فني مناسب",
   "customerSearchingBody": "أرسلنا طلبك للفنيين المعتمدين في منطقتك. ستصلك رسالة فور قبول أحدهم.",
   "customerUnmatchedTitle": "لم يقبل أي فني بعد",
-  "customerUnmatchedBody": "فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.",
+  "customerUnmatchedBody": "لم يقبل أي فني الطلب بعد. سيعيّن المسؤول فنياً يدوياً.",
   "customerAssignedTitle": "فنيك جاهز",
   "customerAssignedBody": "سيعاين الفني المشكلة ثم يرسل لك عرض سعر قبل بدء أي عمل.",
   "customerQuoteTitle": "عرض سعر: {amount}",
@@ -677,5 +664,77 @@
   "adminRequestsEmpty": "لا طلبات هنا.",
   "errorOfferExpired": "انتهت مهلة هذا العرض.",
   "errorOfferTaken": "قبل فني آخر هذا الطلب بالفعل.",
-  "errorStateConflict": "تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى."
+  "errorStateConflict": "تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى.",
+  "onboardingSkip": "تخطي",
+  "onboardingNext": "التالي",
+  "onboardingStart": "ابدأ الآن",
+  "onboarding1Title": "صيانة بيتك في مكان واحد",
+  "onboarding1Body": "سباكة وكهرباء وتكييف ونجارة ونقاشة وأجهزة منزلية في أسوان.",
+  "onboarding2Title": "فنيون تتم مراجعتهم",
+  "onboarding2Body": "كل فني يقدّم طلب انضمام، ولا يستقبل أي عمل إلا بعد موافقة المسؤول.",
+  "onboarding3Title": "أنت تقرر قبل البدء",
+  "onboarding3Body": "راجع عرض السعر ووافق عليه، وتابع الحالة لحظة بلحظة، ثم قيّم الخدمة.",
+  "phoneLabel": "رقم الموبايل",
+  "phoneInvalid": "أدخل رقم موبايل مصري صحيح، مثل 01012345678.",
+  "passwordLabel": "كلمة المرور",
+  "passwordConfirmLabel": "تأكيد كلمة المرور",
+  "passwordRules": "٨ أحرف على الأقل، منها حرف ورقم.",
+  "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+  "passwordRequired": "أدخل كلمة المرور.",
+  "showPassword": "إظهار كلمة المرور",
+  "hidePassword": "إخفاء كلمة المرور",
+  "signInButton": "دخول",
+  "noAccountPrompt": "جديد على صيانتك؟",
+  "createAccountLink": "أنشئ حساباً",
+  "haveAccountPrompt": "لديك حساب؟",
+  "signInLink": "سجّل الدخول",
+  "registerTitle": "إنشاء حساب",
+  "registerSubtitle": "اختر نوع الحساب ثم أكمل بياناتك.",
+  "accountTypeLabel": "نوع الحساب",
+  "accountTypeCustomerBlurb": "اطلب خدمة وتابعها حتى تنتهي.",
+  "accountTypeTechnicianBlurb": "قدّم طلب انضمام واستقبل الأعمال بعد الموافقة.",
+  "registerButton": "إنشاء الحساب",
+  "localDataNote": "يعمل التطبيق بدون إنترنت. الحسابات والبيانات محفوظة على هذا الجهاز فقط، وتتشاركها كل الحسابات المسجلة عليه.",
+  "adminSetupPrompt": "مالك الجهاز؟",
+  "adminSetupLink": "إعداد حساب المسؤول",
+  "adminSetupTitle": "إعداد حساب المسؤول",
+  "adminSetupBody": "يمكن إنشاء أول حساب مسؤول مرة واحدة فقط على هذا الجهاز. بعدها لا يضيف مسؤولاً جديداً إلا مسؤول.",
+  "adminSetupButton": "إنشاء حساب المسؤول",
+  "addAdminEntry": "إضافة مسؤول",
+  "addAdminTitle": "إضافة مسؤول",
+  "addAdminBody": "سيتمكن من مراجعة الفنيين وإدارة الطلبات. أبلغه بكلمة المرور بطريقة آمنة.",
+  "addAdminButton": "إضافة المسؤول",
+  "adminAdded": "تمت إضافة المسؤول {name}.",
+  "@adminAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "changePasswordEntry": "تغيير كلمة المرور",
+  "changePasswordTitle": "تغيير كلمة المرور",
+  "currentPasswordLabel": "كلمة المرور الحالية",
+  "newPasswordLabel": "كلمة المرور الجديدة",
+  "passwordChanged": "تم تغيير كلمة المرور.",
+  "signOutConfirmTitle": "تسجيل الخروج؟",
+  "signOutConfirmBody": "ستحتاج رقمك وكلمة المرور للدخول مرة أخرى.",
+  "aboutDataEntry": "عن بياناتك",
+  "aboutDataBody": "صيانتك نسخة تعمل محلياً بالكامل لأغراض مشروع دراسي. لا يوجد خادم: الحسابات والطلبات والرسائل والصور محفوظة في قاعدة بيانات على هذا الجهاز فقط، وكلمات المرور مخزنة كبصمة مشفرة لا يمكن استرجاعها. الإشعارات والمحادثات تصل فقط للحسابات المسجلة على نفس الجهاز، والدفع نقدي يُسجَّل يدوياً.",
+  "gotIt": "حسناً",
+  "tabApplication": "طلب الانضمام",
+  "errorInvalidCredentials": "رقم الموبايل أو كلمة المرور غير صحيحة.",
+  "errorPhoneTaken": "هذا الرقم له حساب بالفعل. سجّل الدخول بدلاً من ذلك.",
+  "errorTooManyAttempts": "محاولات كثيرة. حاول مرة أخرى بعد {minutes} دقيقة.",
+  "@errorTooManyAttempts": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAdminExists": "يوجد حساب مسؤول بالفعل على هذا الجهاز.",
+  "errorAccountDisabled": "هذا الحساب موقوف.",
+  "errorWrongPassword": "كلمة المرور الحالية غير صحيحة.",
+  "errorTechnicianNotApproved": "يجب أن يوافق المسؤول على طلب انضمامك أولاً."
 }

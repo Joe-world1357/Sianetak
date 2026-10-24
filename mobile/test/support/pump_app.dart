@@ -18,6 +18,7 @@ class TestHarness {
     FakeImagePicker? imagePicker,
     FakeLocationService? location,
     Locale locale = LocaleController.arabic,
+    bool signedIn = false,
   }) : catalog = catalog ?? FakeCatalogRepository(),
        authRepository = auth ?? FakeAuthRepository(),
        requests = requests ?? FakeRequestsRepository(),
@@ -28,6 +29,7 @@ class TestHarness {
        location = location ?? FakeLocationService(),
        locale = LocaleController(initial: locale) {
     authController = AuthController(repository: authRepository);
+    if (signedIn) authRepository.signedIn = authRepository.user;
   }
 
   final CatalogRepository catalog;
@@ -58,9 +60,10 @@ class TestHarness {
   );
 }
 
-/// Pumps the app and settles the initial load.
+/// Restores the session as `main` does, pumps the app and settles the initial load.
 Future<TestHarness> pumpApp(WidgetTester tester, {TestHarness? harness}) async {
   final h = harness ?? TestHarness();
+  await h.authController.restore();
   await tester.pumpWidget(h.app);
   await tester.pumpAndSettle();
   return h;

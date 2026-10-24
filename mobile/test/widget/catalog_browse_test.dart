@@ -7,8 +7,10 @@ import '../support/fakes.dart';
 import '../support/pump_app.dart';
 
 void main() {
-  testWidgets('guest sees Arabic categories in an RTL layout', (tester) async {
-    final harness = await pumpApp(tester);
+  testWidgets('a customer sees Arabic categories in an RTL layout', (
+    tester,
+  ) async {
+    await pumpApp(tester, harness: TestHarness(signedIn: true));
 
     expect(find.text('سباكة'), findsOneWidget);
     expect(find.text('ما الخدمة التي تحتاجها؟'), findsOneWidget);
@@ -16,15 +18,12 @@ void main() {
       Directionality.of(tester.element(find.text('سباكة'))),
       TextDirection.rtl,
     );
-    // Guests are not signed in and are offered sign-in.
-    expect(harness.authController.isSignedIn, isFalse);
-    expect(find.byIcon(Icons.login), findsOneWidget);
   });
 
   testWidgets('switching language re-renders in English, left to right', (
     tester,
   ) async {
-    await pumpApp(tester);
+    await pumpApp(tester, harness: TestHarness(signedIn: true));
 
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
@@ -38,7 +37,8 @@ void main() {
   });
 
   testWidgets('shows a loading indicator and then the data', (tester) async {
-    final harness = TestHarness();
+    final harness = TestHarness(signedIn: true);
+    await harness.authController.restore();
     await tester.pumpWidget(harness.app);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     await tester.pumpAndSettle();
@@ -51,7 +51,10 @@ void main() {
   ) async {
     await pumpApp(
       tester,
-      harness: TestHarness(catalog: FakeCatalogRepository(categories: [])),
+      harness: TestHarness(
+        signedIn: true,
+        catalog: FakeCatalogRepository(categories: []),
+      ),
     );
     expect(
       find.text('لا توجد خدمات متاحة حاليًا. حاول لاحقًا.'),
@@ -59,17 +62,18 @@ void main() {
     );
   });
 
-  testWidgets('shows a network error with a retry that reloads', (
-    tester,
-  ) async {
+  testWidgets('shows a load error with a retry that reloads', (tester) async {
     final catalog = FakeCatalogRepository(
       error: const ApiException(code: ApiException.network),
     );
-    await pumpApp(tester, harness: TestHarness(catalog: catalog));
+    await pumpApp(
+      tester,
+      harness: TestHarness(signedIn: true, catalog: catalog),
+    );
 
     expect(find.text('تعذّر تحميل البيانات'), findsOneWidget);
     expect(
-      find.text('تعذّر الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.'),
+      find.text('تعذّر الوصول إلى البيانات. حاول مرة أخرى.'),
       findsOneWidget,
     );
 
@@ -83,7 +87,7 @@ void main() {
   testWidgets(
     'opens a category and then a service detail with pricing guidance',
     (tester) async {
-      await pumpApp(tester);
+      await pumpApp(tester, harness: TestHarness(signedIn: true));
 
       await tester.tap(find.text('سباكة'));
       await tester.pumpAndSettle();
@@ -94,8 +98,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('التسعير'), findsOneWidget);
       expect(find.textContaining('سيعاين الفني المشكلة'), findsOneWidget);
-      // Guests are asked to sign in before requesting (FR-AUTH-03).
-      expect(find.text('سجّل الدخول لطلب الخدمة'), findsOneWidget);
+      expect(find.text('اطلب الخدمة'), findsOneWidget);
     },
   );
 
@@ -115,7 +118,10 @@ void main() {
           ),
         ],
       );
-      await pumpApp(tester, harness: TestHarness(catalog: catalog));
+      await pumpApp(
+        tester,
+        harness: TestHarness(signedIn: true, catalog: catalog),
+      );
 
       await tester.tap(find.text('سباكة'));
       await tester.pumpAndSettle();
@@ -129,7 +135,10 @@ void main() {
   ) async {
     await pumpApp(
       tester,
-      harness: TestHarness(catalog: FakeCatalogRepository(services: [])),
+      harness: TestHarness(
+        signedIn: true,
+        catalog: FakeCatalogRepository(services: []),
+      ),
     );
     await tester.tap(find.text('سباكة'));
     await tester.pumpAndSettle();
@@ -146,7 +155,8 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    final harness = TestHarness();
+    final harness = TestHarness(signedIn: true);
+    await harness.authController.restore();
     await tester.pumpWidget(
       MediaQuery(
         data: const MediaQueryData(textScaler: TextScaler.linear(1.6)),

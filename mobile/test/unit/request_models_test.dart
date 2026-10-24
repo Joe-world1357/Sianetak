@@ -6,7 +6,6 @@ final _area = {
   'id': 'a1',
   'slug': 'kima',
   'name': {'ar': 'كيما', 'en': 'Kima'},
-  'isSample': true,
 };
 
 void main() {

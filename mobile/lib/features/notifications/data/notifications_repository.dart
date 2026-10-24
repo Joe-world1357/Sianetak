@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 
 /// In-app notices for key state changes (offers, assignment, quotes, chat, verification).
 class AppNotification {
@@ -43,7 +43,7 @@ abstract class NotificationsRepository {
 class LocalNotificationsRepository implements NotificationsRepository {
   LocalNotificationsRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<List<AppNotification>> list() async => (await _backend.notifications())

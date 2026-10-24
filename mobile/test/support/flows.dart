@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Signs in through the demo account picker (the first, and with fakes only, account).
-Future<void> signIn(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.login));
-  await tester.pumpAndSettle();
-  await tester.tap(find.byIcon(Icons.chevron_right).first);
+/// Signs in from the sign-in screen with the given (by default the fake account's) details.
+Future<void> signIn(
+  WidgetTester tester, {
+  String phone = '01012345678',
+  String password = 'secret123',
+}) async {
+  await tester.enterText(find.byType(TextFormField).at(0), phone);
+  await tester.enterText(find.byType(TextFormField).at(1), password);
+  await tester.tap(find.byType(FilledButton).first);
   await tester.pumpAndSettle();
   await dismissSnackBars(tester);
 }

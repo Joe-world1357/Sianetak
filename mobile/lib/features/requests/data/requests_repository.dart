@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../domain/request_models.dart';
 
 abstract class RequestsRepository {
@@ -27,7 +27,7 @@ abstract class RequestsRepository {
 class LocalRequestsRepository implements RequestsRepository {
   LocalRequestsRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   List<Map<String, dynamic>> _items(Map<String, dynamic> json) =>
       (json['items'] as List<dynamic>).cast<Map<String, dynamic>>();

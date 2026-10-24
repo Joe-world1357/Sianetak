@@ -5,13 +5,16 @@ import 'package:path_provider/path_provider.dart';
 
 import 'local_store.dart';
 
-/// Keeps the demo database in the app's private documents folder on the device.
+/// Keeps the database in the app's private documents folder on the device.
+///
+/// The earlier demo build kept sample data in `sianetak_demo/`; that folder is left untouched
+/// (never deleted), and this version starts a clean database in `sianetak_data/`.
 class FileStorageBackend implements StorageBackend {
   Directory? _root;
 
   Future<Directory> _dir() async {
     final root = _root ??= Directory(
-      '${(await getApplicationDocumentsDirectory()).path}/sianetak_demo',
+      '${(await getApplicationDocumentsDirectory()).path}/sianetak_data',
     );
     if (!await root.exists()) await root.create(recursive: true);
     return root;
@@ -44,6 +47,13 @@ class FileStorageBackend implements StorageBackend {
   }
 
   @override
+  Future<void> backupDocument(String raw) async {
+    final stamp = DateTime.now().millisecondsSinceEpoch;
+    await File('${(await _dir()).path}/db.backup-$stamp.json')
+        .writeAsString(raw);
+  }
+
+  @override
   Future<Uint8List?> readBlob(String id) async {
     final file = await _blob(id);
     return await file.exists() ? file.readAsBytes() : null;
@@ -57,12 +67,5 @@ class FileStorageBackend implements StorageBackend {
   Future<void> deleteBlob(String id) async {
     final file = await _blob(id);
     if (await file.exists()) await file.delete();
-  }
-
-  @override
-  Future<void> clear() async {
-    final root = await _dir();
-    if (await root.exists()) await root.delete(recursive: true);
-    _root = null;
   }
 }

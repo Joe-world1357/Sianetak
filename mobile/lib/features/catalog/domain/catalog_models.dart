@@ -66,7 +66,6 @@ class ServiceCategory {
     this.description,
     this.iconKey,
     required this.serviceCount,
-    required this.isSample,
   });
 
   factory ServiceCategory.fromJson(Map<String, dynamic> json) =>
@@ -79,7 +78,6 @@ class ServiceCategory {
             : LocalizedText.fromJson(json['description']),
         iconKey: json['iconKey'] as String?,
         serviceCount: json['serviceCount'] as int? ?? 0,
-        isSample: json['isSample'] as bool? ?? false,
       );
 
   final String id;
@@ -88,7 +86,6 @@ class ServiceCategory {
   final LocalizedText? description;
   final String? iconKey;
   final int serviceCount;
-  final bool isSample;
 }
 
 class ServiceSummary {
@@ -97,7 +94,6 @@ class ServiceSummary {
     required this.slug,
     required this.name,
     required this.pricing,
-    required this.isSample,
   });
 
   factory ServiceSummary.fromJson(Map<String, dynamic> json) => ServiceSummary(
@@ -105,14 +101,12 @@ class ServiceSummary {
     slug: json['slug'] as String,
     name: LocalizedText.fromJson(json['name']),
     pricing: PricingGuidance.fromJson(json['pricing']),
-    isSample: json['isSample'] as bool? ?? false,
   );
 
   final String id;
   final String slug;
   final LocalizedText name;
   final PricingGuidance pricing;
-  final bool isSample;
 }
 
 class CategoryDetail {

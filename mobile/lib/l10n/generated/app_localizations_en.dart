@@ -29,9 +29,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchLanguageTooltip => 'Switch language to Arabic';
 
   @override
-  String get signInTooltip => 'Sign in';
-
-  @override
   String servicesCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -42,13 +39,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get sampleDataBadge => 'Sample data';
-
-  @override
-  String get sampleDataNotice =>
-      'This is sample data for demonstration only and has not been approved.';
 
   @override
   String get loading => 'Loading…';
@@ -72,8 +62,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This item doesn\'t exist or is no longer available.';
 
   @override
-  String get errorNetwork =>
-      'Couldn\'t connect. Check your internet connection and try again.';
+  String get errorNetwork => 'Couldn\'t reach the data. Please try again.';
 
   @override
   String get errorGeneric => 'Something went wrong. Please try again.';
@@ -104,14 +93,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestServiceButton => 'Request this service';
 
   @override
-  String get signInToRequest => 'Sign in to request this service';
-
-  @override
-  String get signInTitle => 'Choose a demo account';
+  String get signInTitle => 'Sign in';
 
   @override
   String get signInSubtitle =>
-      'A demo that runs entirely on your phone. Try the app in any role.';
+      'Welcome back. Use your mobile number and password.';
 
   @override
   String get errorSessionExpired =>
@@ -534,9 +520,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorCannotReviewOwn => 'You can\'t review your own application.';
 
   @override
-  String get technicianEntryApply => 'Join as a technician';
-
-  @override
   String get technicianEntryStatus => 'My technician application';
 
   @override
@@ -578,7 +561,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentsOptionalHelp =>
-      'The required documents haven\'t been decided yet. Attach anything that shows your identity or experience.';
+      'Optional: attach proof of identity or experience, such as an ID or a certificate.';
 
   @override
   String documentsMinHelp(int min) {
@@ -593,7 +576,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentsPrivacy =>
-      'Documents are private and only seen by the review team.';
+      'Documents stay on this device and only an administrator can open them.';
 
   @override
   String get documentKindLabel => 'Document type';
@@ -637,14 +620,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationPendingBody =>
-      'The team is reviewing your details. The result will appear here.';
+      'An administrator is reviewing your details. The result will appear here; sign in any time to check.';
 
   @override
   String get verificationApproved => 'Approved';
 
   @override
   String get verificationApprovedBody =>
-      'Your technician account is approved. Receiving work will be available in an upcoming update.';
+      'Your technician account is approved. Job offers and assigned jobs are on your home screen.';
 
   @override
   String get verificationRejected => 'Not accepted';
@@ -655,14 +638,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationRejectedFinal =>
-      'Resubmitting isn\'t possible right now. Contact support.';
+      'Resubmitting isn\'t possible right now. Contact the administrator.';
 
   @override
   String get verificationSuspended => 'Suspended';
 
   @override
   String get verificationSuspendedBody =>
-      'Your technician account is suspended. Contact support.';
+      'Your technician account is suspended. Contact the administrator.';
 
   @override
   String get decisionReasonLabel => 'Reason';
@@ -775,22 +758,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusCancelled => 'Cancelled';
 
   @override
-  String get demoCustomerBlurb =>
-      'Request a service, track the technician, approve the price, rate.';
-
-  @override
-  String get demoTechnicianBlurb =>
-      'Receive offers, update job status and send quotes.';
-
-  @override
-  String get demoAdminBlurb =>
-      'Monitor requests, assign technicians and review applications.';
-
-  @override
-  String get demoOfflineNote =>
-      'No internet or verification code needed. Data is saved on this device and can be reset from My account.';
-
-  @override
   String homeGreeting(String name) {
     return 'Hi $name 👋';
   }
@@ -821,19 +788,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageSetting => 'Language';
-
-  @override
-  String get switchAccountButton => 'Switch demo account';
-
-  @override
-  String get resetDemoButton => 'Reset demo data';
-
-  @override
-  String get resetDemoTitle => 'Reset demo data?';
-
-  @override
-  String get resetDemoBody =>
-      'All requests, messages and photos on this device will be deleted and the original demo data restored.';
 
   @override
   String get technicianCardTitle => 'Technician';
@@ -953,7 +907,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customerUnmatchedBody =>
-      'Our operations team will assign one for you shortly.';
+      'No technician has accepted yet. An administrator will assign one.';
 
   @override
   String get customerAssignedTitle => 'Your technician is on it';
@@ -1335,4 +1289,198 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorStateConflict =>
       'The request has changed. Refresh and try again.';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingStart => 'Get started';
+
+  @override
+  String get onboarding1Title => 'Home repairs, all in one place';
+
+  @override
+  String get onboarding1Body =>
+      'Plumbing, electrical, AC, carpentry, painting and appliances across Aswan.';
+
+  @override
+  String get onboarding2Title => 'Reviewed technicians';
+
+  @override
+  String get onboarding2Body =>
+      'Every technician applies first and takes jobs only after an administrator approves them.';
+
+  @override
+  String get onboarding3Title => 'You approve before work starts';
+
+  @override
+  String get onboarding3Body =>
+      'Review and approve the price, follow each step, then rate the job.';
+
+  @override
+  String get phoneLabel => 'Mobile number';
+
+  @override
+  String get phoneInvalid =>
+      'Enter a valid Egyptian mobile number, e.g. 01012345678.';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get passwordConfirmLabel => 'Confirm password';
+
+  @override
+  String get passwordRules =>
+      'At least 8 characters, including a letter and a number.';
+
+  @override
+  String get passwordMismatch => 'Passwords don\'t match.';
+
+  @override
+  String get passwordRequired => 'Enter your password.';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get signInButton => 'Sign in';
+
+  @override
+  String get noAccountPrompt => 'New to Sianetak?';
+
+  @override
+  String get createAccountLink => 'Create an account';
+
+  @override
+  String get haveAccountPrompt => 'Already have an account?';
+
+  @override
+  String get signInLink => 'Sign in';
+
+  @override
+  String get registerTitle => 'Create your account';
+
+  @override
+  String get registerSubtitle =>
+      'Choose an account type, then add your details.';
+
+  @override
+  String get accountTypeLabel => 'Account type';
+
+  @override
+  String get accountTypeCustomerBlurb =>
+      'Request services and follow them through.';
+
+  @override
+  String get accountTypeTechnicianBlurb =>
+      'Apply, then take jobs once approved.';
+
+  @override
+  String get registerButton => 'Create account';
+
+  @override
+  String get localDataNote =>
+      'Works offline. Accounts and data are stored only on this device and shared by every account on it.';
+
+  @override
+  String get adminSetupPrompt => 'Device owner?';
+
+  @override
+  String get adminSetupLink => 'Set up the administrator';
+
+  @override
+  String get adminSetupTitle => 'Set up the administrator';
+
+  @override
+  String get adminSetupBody =>
+      'The first administrator can be created only once on this device. After that, only an administrator can add another.';
+
+  @override
+  String get adminSetupButton => 'Create administrator';
+
+  @override
+  String get addAdminEntry => 'Add an administrator';
+
+  @override
+  String get addAdminTitle => 'Add an administrator';
+
+  @override
+  String get addAdminBody =>
+      'They\'ll be able to review technicians and manage requests. Share the password with them securely.';
+
+  @override
+  String get addAdminButton => 'Add administrator';
+
+  @override
+  String adminAdded(String name) {
+    return '$name was added as an administrator.';
+  }
+
+  @override
+  String get changePasswordEntry => 'Change password';
+
+  @override
+  String get changePasswordTitle => 'Change password';
+
+  @override
+  String get currentPasswordLabel => 'Current password';
+
+  @override
+  String get newPasswordLabel => 'New password';
+
+  @override
+  String get passwordChanged => 'Password changed.';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out?';
+
+  @override
+  String get signOutConfirmBody =>
+      'You\'ll need your number and password to sign in again.';
+
+  @override
+  String get aboutDataEntry => 'About your data';
+
+  @override
+  String get aboutDataBody =>
+      'Sianetak is a fully local build made for a school project. There is no server: accounts, requests, messages and photos are kept in a database on this device only, and passwords are stored as salted one-way hashes. Notifications and chat reach only accounts on this same device, and payment is cash, recorded in the app.';
+
+  @override
+  String get gotIt => 'Got it';
+
+  @override
+  String get tabApplication => 'Application';
+
+  @override
+  String get errorInvalidCredentials => 'Wrong mobile number or password.';
+
+  @override
+  String get errorPhoneTaken =>
+      'This number already has an account. Sign in instead.';
+
+  @override
+  String errorTooManyAttempts(int minutes) {
+    return 'Too many attempts. Try again in $minutes min.';
+  }
+
+  @override
+  String get errorAdminExists =>
+      'An administrator already exists on this device.';
+
+  @override
+  String get errorAccountDisabled => 'This account is disabled.';
+
+  @override
+  String get errorWrongPassword => 'The current password is wrong.';
+
+  @override
+  String get errorTechnicianNotApproved =>
+      'An administrator must approve your application first.';
 }

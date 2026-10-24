@@ -2,17 +2,25 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import '../core/network/api_exception.dart';
+import '../core/security/password_hasher.dart';
 import '../core/storage/local_store.dart';
-import 'demo_seed.dart';
+import '../features/auth/domain/egypt_phone.dart';
+import 'initial_data.dart';
 
-/// The rules the NestJS API used to enforce, re-implemented over [LocalStore] so the app runs
-/// standalone. Every method answers in the API's JSON shape, so the existing models parse it
-/// unchanged, and failures use the API's error codes, so the existing error copy applies.
-class DemoBackend {
-  DemoBackend(this.store, {Random? random}) : _random = random ?? Random();
+/// The app's business rules over [LocalStore]: accounts, permissions, validation and every
+/// workflow state transition. It plays the role a server would, on the device, and answers in
+/// the API's JSON shape so the models parse it unchanged; failures use stable error codes.
+///
+/// Everything is local: all roles share this one device and database. Nothing is sent
+/// anywhere, so notifications and chat reach other accounts only on this same device.
+class LocalBackend {
+  LocalBackend(this.store, {Random? random, PasswordHasher? hasher})
+    : _random = random ?? Random(),
+      _hasher = hasher ?? const PasswordHasher();
 
   final LocalStore store;
   final Random _random;
+  final PasswordHasher _hasher;
 
   DateTime get _now => store.now();
   String _iso(DateTime t) => t.toUtc().toIso8601String();
@@ -26,48 +34,208 @@ class DemoBackend {
       );
 
   // ---------------------------------------------------------------------------------------
-  // Accounts
+  // Accounts: phone + password, hashed with a per-account salt; one session per device.
 
-  static const demoAccountIds = [
-    DemoIds.customer,
-    DemoIds.technician,
-    DemoIds.admin,
-  ];
-
-  Future<List<Row>> demoAccounts() async {
-    await store.open();
-    return [
-      for (final id in demoAccountIds)
-        if (store.find('users', id) case final u?) _user(u),
-    ];
-  }
+  static const _selfServiceRoles = {'customer', 'technician'};
 
   Row _user(Row u) => {
     'id': u['id'],
     'phone': u['phone'],
     'name': u['name'],
     'role': u['role'],
+    if (u['role'] == 'technician')
+      'technicianStatus':
+          _applicationOf(u['id'] as String)?['status'] ?? 'not_submitted',
   };
 
-  Future<Row?> currentUser() async {
+  /// The signed-in account, or null when signed out or expired. [renew] (on app launch)
+  /// slides the session's expiry forward.
+  Future<Row?> currentUser({bool renew = false}) async {
     await store.open();
     final u = store.sessionUser;
+    if (renew) {
+      await store.write(() => store.setSession(u?['id'] as String?));
+    }
     return u == null ? null : _user(u);
   }
 
-  Future<Row> signIn(String userId) => store.write(() {
-    final u = store.require('users', userId, 'NOT_FOUND');
-    store.setSession(userId);
-    return _user(u);
-  });
+  /// Whether an administrator exists on this device. Until one does, the device owner can
+  /// set one up once; after that only an administrator can add another.
+  Future<bool> hasAdmin() async {
+    await store.open();
+    return store.table('users').any((u) => u['role'] == 'admin');
+  }
+
+  Future<bool> onboardingSeen() async {
+    await store.open();
+    return store.setting('onboardingSeen') == true;
+  }
+
+  Future<void> markOnboardingSeen() =>
+      store.write(() => store.setSetting('onboardingSeen', true));
+
+  String _validName(String name) {
+    final trimmed = name.trim();
+    if (trimmed.length < 2 || trimmed.length > 80) _fail('VALIDATION_FAILED');
+    return trimmed;
+  }
+
+  String _validPhone(String phone) =>
+      normalizeEgyptMobile(phone) ?? _fail('INVALID_PHONE', 422);
+
+  static bool isStrongPassword(String password) =>
+      password.length >= AppRules.minPasswordLength &&
+      password.length <= 128 &&
+      password.contains(RegExp(r'[A-Za-z\u0600-\u06FF]')) &&
+      password.contains(RegExp(r'[0-9\u0660-\u0669]'));
+
+  void _checkPassword(String password) {
+    if (!isStrongPassword(password)) _fail('WEAK_PASSWORD', 422);
+  }
+
+  Row? _userByPhone(String phone) {
+    for (final u in store.table('users')) {
+      if (u['phone'] == phone) return u;
+    }
+    return null;
+  }
+
+  /// Creates an account. Self-service sign-up offers customer and technician only.
+  Future<Row> register({
+    required String name,
+    required String phone,
+    required String password,
+    required String role,
+  }) async {
+    await store.open();
+    if (!_selfServiceRoles.contains(role)) _fail('FORBIDDEN', 403);
+    return _createAccount(name, phone, password, role, signIn: true);
+  }
+
+  /// First-run only: creates this device's first administrator and signs them in.
+  Future<Row> setupAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    if (await hasAdmin()) _fail('ADMIN_EXISTS', 409);
+    return _createAccount(name, phone, password, 'admin', signIn: true);
+  }
+
+  /// An administrator adds another administrator (they stay signed in themselves).
+  Future<Row> createAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    await store.open();
+    final me = store.requireUser({'admin'});
+    return _createAccount(
+      name,
+      phone,
+      password,
+      'admin',
+      signIn: false,
+      createdBy: me['id'] as String,
+    );
+  }
+
+  Future<Row> _createAccount(
+    String name,
+    String phone,
+    String password,
+    String role, {
+    required bool signIn,
+    String? createdBy,
+  }) async {
+    final cleanName = _validName(name);
+    final cleanPhone = _validPhone(phone);
+    _checkPassword(password);
+    if (_userByPhone(cleanPhone) != null) _fail('PHONE_TAKEN', 409);
+    // Hash outside the write: it is deliberately slow.
+    final hash = await _hasher.hash(password);
+    return store.write(() {
+      final adminExists = store.table('users').any((u) => u['role'] == 'admin');
+      if (role == 'admin' && createdBy == null && adminExists) {
+        _fail('ADMIN_EXISTS', 409);
+      }
+      if (_userByPhone(cleanPhone) != null) _fail('PHONE_TAKEN', 409);
+      final user = <String, dynamic>{
+        'id': store.newId('u'),
+        'name': cleanName,
+        'phone': cleanPhone,
+        'role': role,
+        'passwordHash': hash,
+        'createdAt': _iso(_now),
+        'createdBy': ?createdBy,
+      };
+      store.table('users').add(user);
+      if (signIn) store.setSession(user['id'] as String);
+      return _user(user);
+    });
+  }
+
+  /// Phone + password sign-in. Wrong phone and wrong password fail the same way, and
+  /// repeated failures lock that number for a few minutes.
+  Future<Row> signIn(String phone, String password) async {
+    await store.open();
+    final cleanPhone = normalizeEgyptMobile(phone);
+    if (cleanPhone == null) _fail('INVALID_CREDENTIALS', 401);
+    final attempts = store.find('signInAttempts', cleanPhone);
+    final lockedUntil = DateTime.tryParse(
+      attempts?['lockedUntil'] as String? ?? '',
+    );
+    if (lockedUntil != null && _now.isBefore(lockedUntil)) {
+      _fail('TOO_MANY_ATTEMPTS', 429, {
+        'retryAfterMinutes': lockedUntil.difference(_now).inMinutes + 1,
+      });
+    }
+    final user = _userByPhone(cleanPhone);
+    final ok =
+        user != null &&
+        await _hasher.verify(password, user['passwordHash'] as String? ?? '');
+    if (!ok) {
+      await store.write(() {
+        var row = store.find('signInAttempts', cleanPhone);
+        if (row == null) {
+          row = <String, dynamic>{'id': cleanPhone, 'failures': 0};
+          store.table('signInAttempts').add(row);
+        }
+        final failures = (row['failures'] as int) + 1;
+        row['failures'] = failures;
+        if (failures >= AppRules.maxFailedSignIns) {
+          row['failures'] = 0;
+          row['lockedUntil'] = _iso(
+            _now.add(const Duration(minutes: AppRules.signInLockMinutes)),
+          );
+        }
+      });
+      _fail('INVALID_CREDENTIALS', 401);
+    }
+    if (user['disabled'] == true) _fail('ACCOUNT_DISABLED', 403);
+    return store.write(() {
+      store.table('signInAttempts').removeWhere((a) => a['id'] == cleanPhone);
+      store.setSession(user['id'] as String);
+      return _user(user);
+    });
+  }
 
   Future<void> signOut() => store.write(() => store.setSession(null));
 
+  Future<void> changePassword(String current, String next) async {
+    await store.open();
+    final me = store.requireUser();
+    if (!await _hasher.verify(current, me['passwordHash'] as String? ?? '')) {
+      _fail('WRONG_PASSWORD', 422);
+    }
+    _checkPassword(next);
+    final hash = await _hasher.hash(next);
+    await store.write(() => store.requireUser()['passwordHash'] = hash);
+  }
+
   Future<Row> updateName(String name) => store.write(() {
     final u = store.requireUser();
-    final trimmed = name.trim();
-    if (trimmed.length < 2 || trimmed.length > 80) _fail('VALIDATION_FAILED');
-    u['name'] = trimmed;
+    u['name'] = _validName(name);
     return _user(u);
   });
 
@@ -80,7 +248,6 @@ class DemoBackend {
     'name': c['name'],
     'description': c['description'],
     'iconKey': c['iconKey'],
-    'isSample': c['isSample'] ?? false,
     if (withCount)
       'serviceCount': store
           .table('services')
@@ -93,7 +260,6 @@ class DemoBackend {
     'slug': s['slug'],
     'name': s['name'],
     'pricing': s['pricing'],
-    'isSample': s['isSample'] ?? false,
   };
 
   Row? _bySlug(String table, String slug) {
@@ -139,12 +305,7 @@ class DemoBackend {
 
   Row _area(String id) {
     final a = store.require('areas', id, 'AREA_NOT_AVAILABLE');
-    return {
-      'id': a['id'],
-      'slug': a['slug'],
-      'name': a['name'],
-      'isSample': a['isSample'] ?? false,
-    };
+    return {'id': a['id'], 'slug': a['slug'], 'name': a['name']};
   }
 
   Future<List<Row>> areas() async {
@@ -152,15 +313,15 @@ class DemoBackend {
     return [for (final a in store.table('areas')) _area(a['id'] as String)];
   }
 
-  /// Bookable local windows from today through [DemoRules.scheduleDaysAhead], after the lead.
+  /// Bookable local windows from today through [AppRules.scheduleDaysAhead], after the lead.
   List<(DateTime, DateTime)> _slots() {
     final now = _now;
     final earliest = now.add(
-      const Duration(minutes: DemoRules.scheduleLeadMinutes),
+      const Duration(minutes: AppRules.scheduleLeadMinutes),
     );
     return [
-      for (var d = 0; d <= DemoRules.scheduleDaysAhead; d++)
-        for (final (from, to) in DemoRules.slotWindows)
+      for (var d = 0; d <= AppRules.scheduleDaysAhead; d++)
+        for (final (from, to) in AppRules.slotWindows)
           if (DateTime(now.year, now.month, now.day + d, 0, from)
               case final start when !start.isBefore(earliest))
             (start, DateTime(now.year, now.month, now.day + d, 0, to)),
@@ -172,8 +333,8 @@ class DemoBackend {
     return {
       'description': {'minLength': 10, 'maxLength': 1000},
       'photos': {
-        'max': DemoRules.maxPhotos,
-        'maxBytes': DemoRules.maxPhotoBytes,
+        'max': AppRules.maxPhotos,
+        'maxBytes': AppRules.maxPhotoBytes,
         'uploadsAvailable': true,
       },
       'schedule': {
@@ -239,8 +400,8 @@ class DemoBackend {
       _fail('UNSUPPORTED_FILE_TYPE', 415);
     }
     final limit = type.startsWith('image/')
-        ? DemoRules.maxPhotoBytes
-        : 2 * DemoRules.maxPhotoBytes;
+        ? AppRules.maxPhotoBytes
+        : 2 * AppRules.maxPhotoBytes;
     if (bytes.length > limit) _fail('FILE_TOO_LARGE', 413);
     final id = store.newId('media');
     await store.writeBlob(id, bytes);
@@ -436,13 +597,13 @@ class DemoBackend {
               !parseStatusFinal(r['status'] as String),
         )
         .length;
-    if (open >= DemoRules.maxOpenRequests) {
+    if (open >= AppRules.maxOpenRequests) {
       _fail('TOO_MANY_OPEN_REQUESTS', 409);
     }
 
     final photoIds = (body['photoIds'] as List<dynamic>? ?? const [])
         .cast<String>();
-    if (photoIds.length > DemoRules.maxPhotos) _fail('MEDIA_TOO_MANY', 422);
+    if (photoIds.length > AppRules.maxPhotos) _fail('MEDIA_TOO_MANY', 422);
     for (final id in photoIds) {
       final m = store.find('media', id);
       if (m == null || m['ownerId'] != me['id'] || m['attached'] == true) {
@@ -698,7 +859,7 @@ class DemoBackend {
         'status': 'pending',
         'createdAt': _iso(now),
         'expiresAt': _iso(
-          now.add(const Duration(minutes: DemoRules.offerMinutes)),
+          now.add(const Duration(minutes: AppRules.offerMinutes)),
         ),
       });
       _notify(t, 'new_offer', request: r);
@@ -752,7 +913,7 @@ class DemoBackend {
 
   Future<List<Row>> offers() async {
     await _expireOffers();
-    final me = store.requireUser({'technician'});
+    final me = _requireTechnician();
     final rows =
         store
             .table('offers')
@@ -777,7 +938,7 @@ class DemoBackend {
   Future<Row> respondToOffer(String offerId, {required bool accept}) async {
     await _expireOffers();
     return store.write(() {
-      final me = store.requireUser({'technician'});
+      final me = _requireTechnician();
       final o = store.find('offers', offerId);
       if (o == null || o['technicianId'] != me['id']) {
         _fail('NOT_FOUND', 404);
@@ -809,7 +970,7 @@ class DemoBackend {
 
   Future<Row> jobs({required bool active}) async {
     await _expireOffers();
-    final me = store.requireUser({'technician'});
+    final me = _requireTechnician();
     final rows =
         store
             .table('requests')
@@ -827,6 +988,15 @@ class DemoBackend {
     return _page(rows, null, size: 100);
   }
 
+  /// A technician whose application an administrator approved (and has not suspended).
+  Row _requireTechnician() {
+    final me = store.requireUser({'technician'});
+    if (_applicationOf(me['id'] as String)?['status'] != 'approved') {
+      _fail('TECHNICIAN_NOT_APPROVED', 403);
+    }
+    return me;
+  }
+
   static const _technicianSteps = {
     'en_route': {'assigned'},
     'arrived': {'en_route'},
@@ -835,7 +1005,7 @@ class DemoBackend {
 
   /// Moves an assigned job forward: on the way → arrived → (quote) → completed.
   Future<Row> advanceJob(String id, String to) => store.write(() {
-    final me = store.requireUser({'technician'});
+    final me = _requireTechnician();
     final r = _requireRequest(me, id);
     final from = _technicianSteps[to];
     if (r['technicianId'] != me['id'] ||
@@ -847,7 +1017,7 @@ class DemoBackend {
       final amount = (r['quote'] as Map<String, dynamic>)['amountMinor'] as int;
       r['payment'] = {
         'amountMinor': amount,
-        'commissionMinor': (amount * DemoRules.commissionPercent / 100).round(),
+        'commissionMinor': (amount * AppRules.commissionPercent / 100).round(),
         'at': _iso(_now),
       };
     }
@@ -858,7 +1028,7 @@ class DemoBackend {
 
   Future<Row> sendQuote(String id, int amountMinor, String? note) =>
       store.write(() {
-        final me = store.requireUser({'technician'});
+        final me = _requireTechnician();
         final r = _requireRequest(me, id);
         if (r['technicianId'] != me['id'] ||
             !const {'arrived', 'quote_rejected'}.contains(r['status'])) {
@@ -882,7 +1052,7 @@ class DemoBackend {
   /// Collected cash and commission owed, from completed jobs.
   Future<Row> earnings() async {
     await store.open();
-    final me = store.requireUser({'technician'});
+    final me = _requireTechnician();
     var collected = 0;
     var commission = 0;
     var count = 0;
@@ -1050,7 +1220,7 @@ class DemoBackend {
 
   Future<Row> ownApplication() async {
     await store.open();
-    final me = store.requireUser({'customer', 'technician'});
+    final me = store.requireUser({'technician'});
     final a = _applicationOf(me['id'] as String);
     return {
       'application': a == null ? null : _application(a),
@@ -1059,7 +1229,7 @@ class DemoBackend {
   }
 
   Future<Row> submitApplication(Row body) => store.write(() {
-    final me = store.requireUser({'customer', 'technician'});
+    final me = store.requireUser({'technician'});
     final existing = _applicationOf(me['id'] as String);
     if (existing != null && existing['status'] != 'rejected') {
       _fail('APPLICATION_ALREADY_SUBMITTED', 409);
