@@ -4,14 +4,16 @@ import 'package:flutter/foundation.dart';
 
 import '../network/api_exception.dart';
 
-/// Where the demo database and its files live: a JSON document plus binary blobs.
+/// Where the local database and its files live: a JSON document plus binary blobs.
 abstract class StorageBackend {
   Future<String?> readDocument();
   Future<void> writeDocument(String json);
+
+  /// Keeps a copy of a document this version cannot read, instead of deleting it.
+  Future<void> backupDocument(String raw);
   Future<Uint8List?> readBlob(String id);
   Future<void> writeBlob(String id, Uint8List bytes);
   Future<void> deleteBlob(String id);
-  Future<void> clear();
 }
 
 /// Volatile storage, used by tests.
@@ -19,8 +21,13 @@ class MemoryStorageBackend implements StorageBackend {
   String? document;
   final Map<String, Uint8List> blobs = {};
 
+  final List<String> backups = [];
+
   @override
   Future<String?> readDocument() async => document;
+
+  @override
+  Future<void> backupDocument(String raw) async => backups.add(raw);
 
   @override
   Future<void> writeDocument(String json) async => document = json;
@@ -33,28 +40,29 @@ class MemoryStorageBackend implements StorageBackend {
 
   @override
   Future<void> deleteBlob(String id) async => blobs.remove(id);
-
-  @override
-  Future<void> clear() async {
-    document = null;
-    blobs.clear();
-  }
 }
 
 typedef Row = Map<String, dynamic>;
 
-/// The standalone demo's database: a JSON document kept in memory and written through to
-/// [StorageBackend] after every change. Repositories play the server's role on top of it,
-/// including permission checks, so the screens behave as they did against the API.
+/// The app's on-device database: a JSON document kept in memory and written through to
+/// [StorageBackend] after every change (atomically, on the device). [LocalBackend] plays the
+/// server's role on top of it, including validation and permission checks.
+///
+/// A fresh database holds only the service catalog and service areas: no accounts, requests
+/// or other records exist until people create them in the app.
 class LocalStore extends ChangeNotifier {
   LocalStore(this._backend, {required this.seed, DateTime Function()? clock})
     : now = clock ?? DateTime.now;
 
-  static const schemaVersion = 3;
+  /// 4: real accounts (password hashes, sessions) and no sample records.
+  static const schemaVersion = 4;
+
+  /// [Proposed] How long a sign-in stays valid without being used.
+  static const sessionLifetime = Duration(days: 30);
 
   final StorageBackend _backend;
 
-  /// Builds a fresh database (demo accounts, catalog, sample records).
+  /// Builds a fresh database (catalog and service areas only).
   final Row Function(DateTime now) seed;
   final DateTime Function() now;
   Row _data = {};
@@ -73,10 +81,14 @@ class LocalStore extends ChangeNotifier {
           return;
         }
       } on FormatException {
-        // Corrupt file: start over with fresh demo data.
+        // Unreadable: kept as a backup below, never silently deleted.
+      } on TypeError {
+        // Not a JSON object: same as above.
       }
+      // An older or unknown format (such as the earlier demo build's sample data): keep a
+      // copy, then start with a clean database.
+      await _backend.backupDocument(raw);
     }
-    await _backend.clear();
     _data = _fresh();
     await _persist();
   }
@@ -108,13 +120,24 @@ class LocalStore extends ChangeNotifier {
 
   Object? setting(String key) => _data[key];
 
-  /// Signed-in demo account, or null for a guest.
-  String? get sessionUserId => _data['session'] as String?;
+  void setSetting(String key, Object? value) => _data[key] = value;
 
-  Row? get sessionUser =>
-      sessionUserId == null ? null : find('users', sessionUserId!);
+  /// The account signed in on this device, or null when signed out or the session lapsed.
+  String? get sessionUserId {
+    final session = _data['session'];
+    if (session is! Map<String, dynamic>) return null;
+    final expires = DateTime.tryParse(session['expiresAt'] as String? ?? '');
+    if (expires == null || !now().isBefore(expires)) return null;
+    return session['userId'] as String?;
+  }
 
-  /// The signed-in user, or UNAUTHENTICATED.
+  Row? get sessionUser {
+    final id = sessionUserId;
+    final user = id == null ? null : find('users', id);
+    return user == null || user['disabled'] == true ? null : user;
+  }
+
+  /// The signed-in user, or UNAUTHENTICATED; FORBIDDEN when the role is not in [roles].
   Row requireUser([Set<String>? roles]) {
     final user = sessionUser;
     if (user == null) {
@@ -142,7 +165,13 @@ class LocalStore extends ChangeNotifier {
     return result;
   }
 
-  void setSession(String? userId) => _data['session'] = userId;
+  /// Starts (or with null, ends) the device session. Sliding: renewed on each launch.
+  void setSession(String? userId) => _data['session'] = userId == null
+      ? null
+      : {
+          'userId': userId,
+          'expiresAt': now().add(sessionLifetime).toUtc().toIso8601String(),
+        };
 
   Future<void> _persist() {
     final json = jsonEncode(_data);
@@ -153,14 +182,4 @@ class LocalStore extends ChangeNotifier {
   Future<void> writeBlob(String id, Uint8List bytes) =>
       _backend.writeBlob(id, bytes);
   Future<void> deleteBlob(String id) => _backend.deleteBlob(id);
-
-  /// Wipes everything and re-seeds the demo data. Keeps nobody signed in.
-  Future<void> reset() async {
-    await open();
-    await _writes;
-    await _backend.clear();
-    _data = _fresh();
-    await _persist();
-    notifyListeners();
-  }
 }

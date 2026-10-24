@@ -28,7 +28,6 @@ class AppScope extends InheritedWidget {
     required this.jobs,
     required this.notifications,
     required this.changes,
-    this.resetDemo,
     required super.child,
   });
 
@@ -46,9 +45,6 @@ class AppScope extends InheritedWidget {
 
   /// Fires whenever local data changes, so open screens can refresh.
   final Listenable changes;
-
-  /// Wipes local data back to the demo seed; null where not supported (tests with fakes).
-  final Future<void> Function()? resetDemo;
 
   static AppScope of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppScope>();

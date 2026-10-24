@@ -48,7 +48,7 @@ class ErrorView extends StatelessWidget {
     final isNotFound =
         error is ApiException && (error as ApiException).isNotFound;
     return _CenteredMessage(
-      icon: isNotFound ? Icons.search_off : Icons.wifi_off_rounded,
+      icon: isNotFound ? Icons.search_off : Icons.error_outline_rounded,
       title: isNotFound ? l10n.errorNotFound : l10n.errorLoadTitle,
       body: isNotFound ? null : messageForError(l10n, error),
       action: isNotFound
@@ -177,6 +177,26 @@ String messageForError(AppLocalizations l10n, Object error) {
       return l10n.errorOfferTaken;
     case 'REQUEST_STATE_CONFLICT':
       return l10n.errorStateConflict;
+    case 'INVALID_CREDENTIALS':
+      return l10n.errorInvalidCredentials;
+    case 'INVALID_PHONE':
+      return l10n.phoneInvalid;
+    case 'WEAK_PASSWORD':
+      return l10n.passwordRules;
+    case 'PHONE_TAKEN':
+      return l10n.errorPhoneTaken;
+    case 'TOO_MANY_ATTEMPTS':
+      return l10n.errorTooManyAttempts(
+        error.intDetail('retryAfterMinutes') ?? 1,
+      );
+    case 'ADMIN_EXISTS':
+      return l10n.errorAdminExists;
+    case 'ACCOUNT_DISABLED':
+      return l10n.errorAccountDisabled;
+    case 'WRONG_PASSWORD':
+      return l10n.errorWrongPassword;
+    case 'TECHNICIAN_NOT_APPROVED':
+      return l10n.errorTechnicianNotApproved;
     default:
       return l10n.errorGeneric;
   }

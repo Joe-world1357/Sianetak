@@ -4,24 +4,17 @@ library;
 import '../../catalog/domain/catalog_models.dart';
 
 class ServiceArea {
-  const ServiceArea({
-    required this.id,
-    required this.slug,
-    required this.name,
-    this.isSample = false,
-  });
+  const ServiceArea({required this.id, required this.slug, required this.name});
 
   factory ServiceArea.fromJson(Map<String, dynamic> json) => ServiceArea(
     id: json['id'] as String,
     slug: json['slug'] as String,
     name: LocalizedText.fromJson(json['name']),
-    isSample: json['isSample'] as bool? ?? false,
   );
 
   final String id;
   final String slug;
   final LocalizedText name;
-  final bool isSample;
 }
 
 class GeoPoint {

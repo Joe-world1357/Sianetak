@@ -8,17 +8,17 @@ import 'core/storage/file_storage_backend.dart';
 import 'core/storage/local_store.dart';
 import 'local/local_app.dart';
 
-/// Standalone demo: all data lives on the device; no server, network or SMS needed.
+/// Standalone app: all data lives in a database on the device; no server or network needed.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
 
-  final demo = LocalApp(
+  final app = LocalApp(
     // The browser build (handy for previews) keeps data in memory only.
     kIsWeb ? MemoryStorageBackend() : FileStorageBackend(),
     imagePicker: DeviceImagePicker(),
     location: DeviceLocationService(),
   );
-  await demo.start();
-  runApp(demo.build());
+  await app.start();
+  runApp(app.build());
 }

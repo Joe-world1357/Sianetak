@@ -1,18 +1,13 @@
-/// Seed data for the standalone demo: three sign-in accounts (customer, technician, admin),
-/// the sample Aswan catalog, and a few records so every screen has something to show.
+/// What a brand-new database contains: the service catalog and the Aswan service areas.
 ///
-/// Everything here is sample data for a school project. Prices are illustrative only.
+/// There are deliberately no accounts, requests, reviews, chats or notifications here; those
+/// only ever come from people using the app. Indicative prices are guidance shown to the
+/// customer before a technician inspects and quotes; the quote is what is agreed.
 library;
 
 import '../core/storage/local_store.dart';
 
-abstract final class DemoIds {
-  static const customer = 'u-customer';
-  static const technician = 'u-technician';
-  static const admin = 'u-admin';
-}
-
-/// Tunable demo rules, stored with the data so they could be edited in one place.
+/// Business rules in one place. Values marked [Proposed] await product sign-off.
 abstract final class AppRules {
   /// [Proposed] How long a technician has to accept an offer.
   static const offerMinutes = 15;
@@ -22,6 +17,13 @@ abstract final class AppRules {
   static const maxPhotos = 5;
   static const maxPhotoBytes = 5 * 1024 * 1024;
   static const maxOpenRequests = 5;
+
+  /// Password policy: at least this many characters, with a letter and a digit.
+  static const minPasswordLength = 8;
+
+  /// [Proposed] Failed sign-ins allowed per phone number before a short lock-out.
+  static const maxFailedSignIns = 5;
+  static const signInLockMinutes = 5;
   static const scheduleLeadMinutes = 120;
   static const scheduleDaysAhead = 7;
 
@@ -229,9 +231,7 @@ const List<_Category> _catalog = [
   ),
 ];
 
-String _iso(DateTime t) => t.toUtc().toIso8601String();
-
-/// A fresh demo database relative to [now].
+/// A fresh database: catalog and service areas only.
 Row buildInitialData(DateTime now) {
   final categories = <Row>[];
   final services = <Row>[];
@@ -243,7 +243,6 @@ Row buildInitialData(DateTime now) {
       'description': _text(c.$4, c.$5),
       'iconKey': c.$1 == 'air-conditioning' ? 'air_conditioning' : c.$1,
       'sortOrder': i,
-      'isSample': true,
     });
     for (final s in c.$6) {
       services.add({
@@ -253,247 +252,29 @@ Row buildInitialData(DateTime now) {
         'name': _text(s.$2, s.$3),
         'description': _text(s.$4, s.$5),
         'pricing': _price(s.$6, s.$7),
-        'isSample': true,
       });
     }
   }
-  final areas = [
-    for (final a in _areas)
-      {
-        'id': 'area-${a.$1}',
-        'slug': a.$1,
-        'name': _text(a.$2, a.$3),
-        'isSample': true,
-      },
-  ];
-
-  Row user(String id, String phone, String name, String role) => {
-    'id': id,
-    'phone': phone,
-    'name': name,
-    'role': role,
-  };
-
-  final ago = now.subtract;
-  Row application(
-    String id,
-    String userId,
-    String status,
-    String fullName,
-    int years,
-    String bio,
-    List<String> categorySlugs,
-    List<String> areaSlugs,
-    DateTime submittedAt,
-  ) => {
-    'id': id,
-    'userId': userId,
-    'status': status,
-    'fullName': fullName,
-    'yearsOfExperience': years,
-    'bio': bio,
-    'specialtyIds': [for (final s in categorySlugs) 'cat-$s'],
-    'areaIds': [for (final s in areaSlugs) 'area-$s'],
-    'documents': <Row>[],
-    'submittedAt': _iso(submittedAt),
-    'reviewedAt': status == 'approved'
-        ? _iso(submittedAt.add(const Duration(days: 1)))
-        : null,
-    'decisionReason': null,
-    'history': [
-      {'action': 'submitted', 'at': _iso(submittedAt)},
-      if (status == 'approved')
-        {
-          'action': 'approved',
-          'at': _iso(submittedAt.add(const Duration(days: 1))),
-        },
-    ],
-  };
-
-  final allCategories = [for (final c in _catalog) c.$1];
-  final allAreas = [for (final a in _areas) a.$1];
-
-  // A finished job (rated) and an open request waiting on the demo technician.
-  final doneAt = ago(const Duration(days: 3));
-  Row event(String status, DateTime at) => {'status': status, 'at': _iso(at)};
-  final completed = <String, dynamic>{
-    'id': 'req-demo-1',
-    'reference': 'SN-DEMO-0001',
-    'customerId': DemoIds.customer,
-    'serviceId': 'svc-ac-cleaning',
-    'description': 'التكييف يحتاج تنظيف قبل الصيف، والفلتر عليه أتربة كثيرة.',
-    'photoIds': <String>[],
-    'areaId': 'area-aswan-city-centre',
-    'details': 'شارع كورنيش النيل، عمارة ١٢، الدور الثالث',
-    'landmark': 'بجوار فندق كتراكت',
-    'schedule': {'type': 'asap'},
-    'status': 'completed',
-    'submittedAt': _iso(doneAt),
-    'technicianId': DemoIds.technician,
-    'quote': {
-      'amountMinor': 35000,
-      'note': 'تنظيف كامل للوحدتين وتغيير فلتر.',
-      'status': 'approved',
-      'at': _iso(doneAt.add(const Duration(hours: 2))),
-    },
-    'payment': {
-      'amountMinor': 35000,
-      'commissionMinor': 3500,
-      'at': _iso(doneAt.add(const Duration(hours: 4))),
-    },
-    'rating': {
-      'stars': 5,
-      'comment': 'فني محترم وشغله نظيف.',
-      'at': _iso(doneAt.add(const Duration(hours: 5))),
-    },
-    'timeline': [
-      event('submitted', doneAt),
-      event('assigned', doneAt.add(const Duration(minutes: 6))),
-      event('en_route', doneAt.add(const Duration(minutes: 40))),
-      event('arrived', doneAt.add(const Duration(hours: 1, minutes: 30))),
-      event('quoted', doneAt.add(const Duration(hours: 2))),
-      event('in_progress', doneAt.add(const Duration(hours: 2, minutes: 5))),
-      event('completed', doneAt.add(const Duration(hours: 4))),
-    ],
-  };
-  final openAt = ago(const Duration(minutes: 3));
-  final open = <String, dynamic>{
-    'id': 'req-demo-2',
-    'reference': 'SN-DEMO-0002',
-    'customerId': DemoIds.customer,
-    'serviceId': 'svc-plumbing-leak-repair',
-    'description': 'في تسريب مياه تحت حوض المطبخ والأرضية بتتبل باستمرار.',
-    'photoIds': <String>[],
-    'areaId': 'area-el-sahary',
-    'details': 'الصحاري، شارع المدارس، منزل ٤',
-    'landmark': null,
-    'schedule': {'type': 'asap'},
-    'status': 'submitted',
-    'submittedAt': _iso(openAt),
-    'technicianId': null,
-    'timeline': [event('submitted', openAt)],
-  };
-
   return {
     'version': LocalStore.schemaVersion,
+    'createdAt': now.toUtc().toIso8601String(),
     'session': null,
     'seq': 0,
-    'users': [
-      user(DemoIds.customer, '+201001234567', 'أحمد محمود', 'customer'),
-      user(DemoIds.technician, '+201112345678', 'محمد علي', 'technician'),
-      user(DemoIds.admin, '+201223456789', 'منى حسن', 'admin'),
-      user('u-karim', '+201098765432', 'كريم فؤاد', 'technician'),
-      user('u-sami', '+201155544433', 'سامي يوسف', 'customer'),
-      user('u-khaled', '+201277788899', 'خالد عبد الرحمن', 'customer'),
-    ],
+    'onboardingSeen': false,
+    'users': <Row>[],
     'categories': categories,
     'services': services,
-    'areas': areas,
-    'addresses': [
-      {
-        'id': 'addr-demo-1',
-        'userId': DemoIds.customer,
-        'label': 'البيت',
-        'areaId': 'area-aswan-city-centre',
-        'details': 'شارع كورنيش النيل، عمارة ١٢، الدور الثالث',
-        'landmark': 'بجوار فندق كتراكت',
-      },
+    'areas': [
+      for (final a in _areas)
+        {'id': 'area-${a.$1}', 'slug': a.$1, 'name': _text(a.$2, a.$3)},
     ],
+    'addresses': <Row>[],
     'media': <Row>[],
-    'applications': [
-      application(
-        'app-technician',
-        DemoIds.technician,
-        'approved',
-        'محمد علي حسن',
-        8,
-        'فني صيانة منزلية متعدد الخبرات في أسوان.',
-        allCategories,
-        allAreas,
-        ago(const Duration(days: 30)),
-      ),
-      application(
-        'app-karim',
-        'u-karim',
-        'approved',
-        'كريم فؤاد',
-        5,
-        'سباك ونقاش.',
-        ['plumbing', 'painting'],
-        ['aswan-city-centre', 'el-sahary'],
-        ago(const Duration(days: 20)),
-      ),
-      application(
-        'app-sami',
-        'u-sami',
-        'pending_review',
-        'سامي يوسف',
-        3,
-        'كهربائي منازل، خبرة في التأسيس والإنارة.',
-        ['electrical'],
-        ['kima', 'el-seil'],
-        ago(const Duration(hours: 20)),
-      ),
-      application(
-        'app-khaled',
-        'u-khaled',
-        'pending_review',
-        'خالد عبد الرحمن',
-        6,
-        'فني تكييف وتبريد.',
-        ['air-conditioning', 'appliances'],
-        ['atlas', 'west-aswan', 'aswan-city-centre'],
-        ago(const Duration(hours: 5)),
-      ),
-    ],
-    'requests': [completed, open],
-    'offers': [
-      for (final tech in [DemoIds.technician, 'u-karim'])
-        {
-          'id': 'offer-demo-$tech',
-          'requestId': 'req-demo-2',
-          'technicianId': tech,
-          'status': 'pending',
-          'createdAt': _iso(openAt),
-          'expiresAt': _iso(
-            openAt.add(const Duration(minutes: AppRules.offerMinutes)),
-          ),
-        },
-    ],
-    'messages': [
-      {
-        'id': 'msg-demo-1',
-        'requestId': 'req-demo-1',
-        'senderId': DemoIds.technician,
-        'text': 'أنا في الطريق، حوالي ٢٠ دقيقة.',
-        'at': _iso(doneAt.add(const Duration(minutes: 41))),
-      },
-      {
-        'id': 'msg-demo-2',
-        'requestId': 'req-demo-1',
-        'senderId': DemoIds.customer,
-        'text': 'تمام، في انتظارك.',
-        'at': _iso(doneAt.add(const Duration(minutes: 43))),
-      },
-    ],
-    'notifications': [
-      {
-        'id': 'ntf-demo-1',
-        'userId': DemoIds.technician,
-        'type': 'new_offer',
-        'requestId': 'req-demo-2',
-        'reference': 'SN-DEMO-0002',
-        'at': _iso(openAt),
-        'read': false,
-      },
-      {
-        'id': 'ntf-demo-2',
-        'userId': DemoIds.admin,
-        'type': 'application_submitted',
-        'applicationId': 'app-khaled',
-        'at': _iso(ago(const Duration(hours: 5))),
-        'read': false,
-      },
-    ],
+    'applications': <Row>[],
+    'requests': <Row>[],
+    'offers': <Row>[],
+    'messages': <Row>[],
+    'notifications': <Row>[],
+    'idempotency': <Row>[],
   };
 }

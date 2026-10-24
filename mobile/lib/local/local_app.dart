@@ -4,6 +4,7 @@ import '../app.dart';
 import '../core/device/image_picker_service.dart';
 import '../core/device/location_service.dart';
 import '../core/locale/locale_controller.dart';
+import '../core/security/password_hasher.dart';
 import '../core/storage/local_store.dart';
 import '../features/admin/data/admin_repository.dart';
 import '../features/auth/application/auth_controller.dart';
@@ -17,7 +18,7 @@ import '../features/technician/data/technician_repository.dart';
 import 'local_backend.dart';
 import 'initial_data.dart';
 
-/// Wires the app to the on-device demo database. Used by `main` and by end-to-end tests.
+/// Wires the app to the on-device database. Used by `main` and by end-to-end tests.
 class LocalApp {
   LocalApp(
     StorageBackend storage, {
@@ -25,10 +26,13 @@ class LocalApp {
     required this.location,
     Locale locale = LocaleController.arabic,
     DateTime Function()? clock,
+    PasswordHasher? hasher,
   }) : store = LocalStore(storage, seed: buildInitialData, clock: clock),
        locale = LocaleController(initial: locale) {
-    backend = LocalBackend(store);
+    backend = LocalBackend(store, hasher: hasher);
     auth = AuthController(repository: LocalAuthRepository(backend));
+    // Keeps the signed-in account current (for example a technician's review status).
+    store.addListener(auth.refresh);
   }
 
   final LocalStore store;
@@ -57,6 +61,5 @@ class LocalApp {
     jobs: LocalJobsRepository(backend),
     notifications: LocalNotificationsRepository(backend),
     changes: store,
-    resetDemo: store.reset,
   );
 }

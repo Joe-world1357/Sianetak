@@ -7,7 +7,7 @@ abstract class CatalogRepository {
   Future<ServiceDetail> getService(String slug);
 }
 
-/// Guest-accessible catalog, read from the on-device demo database.
+/// The service catalog, read from the on-device database.
 class LocalCatalogRepository implements CatalogRepository {
   LocalCatalogRepository(this._backend);
 

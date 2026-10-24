@@ -134,29 +134,11 @@ abstract class AppLocalizations {
   /// **'تغيير اللغة إلى الإنجليزية'**
   String get switchLanguageTooltip;
 
-  /// No description provided for @signInTooltip.
-  ///
-  /// In ar, this message translates to:
-  /// **'تسجيل الدخول'**
-  String get signInTooltip;
-
   /// No description provided for @servicesCount.
   ///
   /// In ar, this message translates to:
   /// **'{count, plural, =0{لا توجد خدمات} =1{خدمة واحدة} =2{خدمتان} few{{count} خدمات} many{{count} خدمة} other{{count} خدمة}}'**
   String servicesCount(int count);
-
-  /// No description provided for @sampleDataBadge.
-  ///
-  /// In ar, this message translates to:
-  /// **'بيانات تجريبية'**
-  String get sampleDataBadge;
-
-  /// No description provided for @sampleDataNotice.
-  ///
-  /// In ar, this message translates to:
-  /// **'هذه بيانات تجريبية للعرض فقط ولم تُعتمد بعد.'**
-  String get sampleDataNotice;
 
   /// No description provided for @loading.
   ///
@@ -197,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorNetwork.
   ///
   /// In ar, this message translates to:
-  /// **'تعذّر الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.'**
+  /// **'تعذّر الوصول إلى البيانات. حاول مرة أخرى.'**
   String get errorNetwork;
 
   /// No description provided for @errorGeneric.
@@ -248,22 +230,16 @@ abstract class AppLocalizations {
   /// **'اطلب الخدمة'**
   String get requestServiceButton;
 
-  /// No description provided for @signInToRequest.
-  ///
-  /// In ar, this message translates to:
-  /// **'سجّل الدخول لطلب الخدمة'**
-  String get signInToRequest;
-
   /// No description provided for @signInTitle.
   ///
   /// In ar, this message translates to:
-  /// **'اختر حساب التجربة'**
+  /// **'تسجيل الدخول'**
   String get signInTitle;
 
   /// No description provided for @signInSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'نسخة عرض تعمل بالكامل على جهازك. جرّب التطبيق بأي دور.'**
+  /// **'أهلاً بعودتك. ادخل برقم موبايلك وكلمة المرور.'**
   String get signInSubtitle;
 
   /// No description provided for @errorSessionExpired.
@@ -968,12 +944,6 @@ abstract class AppLocalizations {
   /// **'لا يمكنك مراجعة طلبك الشخصي.'**
   String get errorCannotReviewOwn;
 
-  /// No description provided for @technicianEntryApply.
-  ///
-  /// In ar, this message translates to:
-  /// **'انضم كفني'**
-  String get technicianEntryApply;
-
   /// No description provided for @technicianEntryStatus.
   ///
   /// In ar, this message translates to:
@@ -1145,7 +1115,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationPendingBody.
   ///
   /// In ar, this message translates to:
-  /// **'تراجع الإدارة بياناتك، وستظهر النتيجة هنا.'**
+  /// **'يراجع المسؤول بياناتك، وستظهر النتيجة هنا. يمكنك الدخول لاحقاً لمتابعتها.'**
   String get verificationPendingBody;
 
   /// No description provided for @verificationApproved.
@@ -1157,7 +1127,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationApprovedBody.
   ///
   /// In ar, this message translates to:
-  /// **'تم اعتماد حسابك كفني. استقبال طلبات العمل سيتاح في تحديث قادم.'**
+  /// **'تم اعتماد حسابك كفني. ستجد عروض العمل والأعمال المسندة إليك في الشاشة الرئيسية.'**
   String get verificationApprovedBody;
 
   /// No description provided for @verificationRejected.
@@ -1175,7 +1145,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationRejectedFinal.
   ///
   /// In ar, this message translates to:
-  /// **'لا يمكن إعادة الإرسال حاليًا. تواصل مع الدعم.'**
+  /// **'لا يمكن إعادة الإرسال حالياً. تواصل مع المسؤول.'**
   String get verificationRejectedFinal;
 
   /// No description provided for @verificationSuspended.
@@ -1187,7 +1157,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationSuspendedBody.
   ///
   /// In ar, this message translates to:
-  /// **'تم إيقاف حسابك كفني مؤقتًا. تواصل مع الدعم.'**
+  /// **'تم إيقاف حسابك كفني مؤقتاً. تواصل مع المسؤول.'**
   String get verificationSuspendedBody;
 
   /// No description provided for @decisionReasonLabel.
@@ -1400,30 +1370,6 @@ abstract class AppLocalizations {
   /// **'ملغي'**
   String get statusCancelled;
 
-  /// No description provided for @demoCustomerBlurb.
-  ///
-  /// In ar, this message translates to:
-  /// **'اطلب خدمة، تابع الفني، وافق على السعر وقيّم.'**
-  String get demoCustomerBlurb;
-
-  /// No description provided for @demoTechnicianBlurb.
-  ///
-  /// In ar, this message translates to:
-  /// **'استقبل العروض، حدّث حالة العمل وأرسل عرض السعر.'**
-  String get demoTechnicianBlurb;
-
-  /// No description provided for @demoAdminBlurb.
-  ///
-  /// In ar, this message translates to:
-  /// **'تابع الطلبات، عيّن الفنيين وراجع طلبات الانضمام.'**
-  String get demoAdminBlurb;
-
-  /// No description provided for @demoOfflineNote.
-  ///
-  /// In ar, this message translates to:
-  /// **'لا حاجة لإنترنت أو رمز تحقق. تُحفظ البيانات على هذا الجهاز ويمكن إعادة ضبطها من حسابي.'**
-  String get demoOfflineNote;
-
   /// No description provided for @homeGreeting.
   ///
   /// In ar, this message translates to:
@@ -1483,30 +1429,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اللغة'**
   String get languageSetting;
-
-  /// No description provided for @switchAccountButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'التبديل إلى حساب آخر'**
-  String get switchAccountButton;
-
-  /// No description provided for @resetDemoButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'إعادة ضبط بيانات التجربة'**
-  String get resetDemoButton;
-
-  /// No description provided for @resetDemoTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'إعادة ضبط البيانات؟'**
-  String get resetDemoTitle;
-
-  /// No description provided for @resetDemoBody.
-  ///
-  /// In ar, this message translates to:
-  /// **'ستُحذف كل الطلبات والرسائل والصور على هذا الجهاز وتعود بيانات التجربة الأصلية.'**
-  String get resetDemoBody;
 
   /// No description provided for @technicianCardTitle.
   ///
@@ -2347,6 +2269,354 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى.'**
   String get errorStateConflict;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطي'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الآن'**
+  String get onboardingStart;
+
+  /// No description provided for @onboarding1Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة بيتك في مكان واحد'**
+  String get onboarding1Title;
+
+  /// No description provided for @onboarding1Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'سباكة وكهرباء وتكييف ونجارة ونقاشة وأجهزة منزلية في أسوان.'**
+  String get onboarding1Body;
+
+  /// No description provided for @onboarding2Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'فنيون تتم مراجعتهم'**
+  String get onboarding2Title;
+
+  /// No description provided for @onboarding2Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل فني يقدّم طلب انضمام، ولا يستقبل أي عمل إلا بعد موافقة المسؤول.'**
+  String get onboarding2Body;
+
+  /// No description provided for @onboarding3Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت تقرر قبل البدء'**
+  String get onboarding3Title;
+
+  /// No description provided for @onboarding3Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع عرض السعر ووافق عليه، وتابع الحالة لحظة بلحظة، ثم قيّم الخدمة.'**
+  String get onboarding3Body;
+
+  /// No description provided for @phoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الموبايل'**
+  String get phoneLabel;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم موبايل مصري صحيح، مثل 01012345678.'**
+  String get phoneInvalid;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get passwordLabel;
+
+  /// No description provided for @passwordConfirmLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور'**
+  String get passwordConfirmLabel;
+
+  /// No description provided for @passwordRules.
+  ///
+  /// In ar, this message translates to:
+  /// **'٨ أحرف على الأقل، منها حرف ورقم.'**
+  String get passwordRules;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمتا المرور غير متطابقتين.'**
+  String get passwordMismatch;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور.'**
+  String get passwordRequired;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار كلمة المرور'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء كلمة المرور'**
+  String get hidePassword;
+
+  /// No description provided for @signInButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول'**
+  String get signInButton;
+
+  /// No description provided for @noAccountPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديد على صيانتك؟'**
+  String get noAccountPrompt;
+
+  /// No description provided for @createAccountLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنشئ حساباً'**
+  String get createAccountLink;
+
+  /// No description provided for @haveAccountPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديك حساب؟'**
+  String get haveAccountPrompt;
+
+  /// No description provided for @signInLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول'**
+  String get signInLink;
+
+  /// No description provided for @registerTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء حساب'**
+  String get registerTitle;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر نوع الحساب ثم أكمل بياناتك.'**
+  String get registerSubtitle;
+
+  /// No description provided for @accountTypeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الحساب'**
+  String get accountTypeLabel;
+
+  /// No description provided for @accountTypeCustomerBlurb.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب خدمة وتابعها حتى تنتهي.'**
+  String get accountTypeCustomerBlurb;
+
+  /// No description provided for @accountTypeTechnicianBlurb.
+  ///
+  /// In ar, this message translates to:
+  /// **'قدّم طلب انضمام واستقبل الأعمال بعد الموافقة.'**
+  String get accountTypeTechnicianBlurb;
+
+  /// No description provided for @registerButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء الحساب'**
+  String get registerButton;
+
+  /// No description provided for @localDataNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يعمل التطبيق بدون إنترنت. الحسابات والبيانات محفوظة على هذا الجهاز فقط، وتتشاركها كل الحسابات المسجلة عليه.'**
+  String get localDataNote;
+
+  /// No description provided for @adminSetupPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'مالك الجهاز؟'**
+  String get adminSetupPrompt;
+
+  /// No description provided for @adminSetupLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعداد حساب المسؤول'**
+  String get adminSetupLink;
+
+  /// No description provided for @adminSetupTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعداد حساب المسؤول'**
+  String get adminSetupTitle;
+
+  /// No description provided for @adminSetupBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكن إنشاء أول حساب مسؤول مرة واحدة فقط على هذا الجهاز. بعدها لا يضيف مسؤولاً جديداً إلا مسؤول.'**
+  String get adminSetupBody;
+
+  /// No description provided for @adminSetupButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء حساب المسؤول'**
+  String get adminSetupButton;
+
+  /// No description provided for @addAdminEntry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة مسؤول'**
+  String get addAdminEntry;
+
+  /// No description provided for @addAdminTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة مسؤول'**
+  String get addAdminTitle;
+
+  /// No description provided for @addAdminBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتمكن من مراجعة الفنيين وإدارة الطلبات. أبلغه بكلمة المرور بطريقة آمنة.'**
+  String get addAdminBody;
+
+  /// No description provided for @addAdminButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة المسؤول'**
+  String get addAdminButton;
+
+  /// No description provided for @adminAdded.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إضافة المسؤول {name}.'**
+  String adminAdded(String name);
+
+  /// No description provided for @changePasswordEntry.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordEntry;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordTitle;
+
+  /// No description provided for @currentPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية'**
+  String get currentPasswordLabel;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get newPasswordLabel;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير كلمة المرور.'**
+  String get passwordChanged;
+
+  /// No description provided for @signOutConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج؟'**
+  String get signOutConfirmTitle;
+
+  /// No description provided for @signOutConfirmBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستحتاج رقمك وكلمة المرور للدخول مرة أخرى.'**
+  String get signOutConfirmBody;
+
+  /// No description provided for @aboutDataEntry.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن بياناتك'**
+  String get aboutDataEntry;
+
+  /// No description provided for @aboutDataBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانتك نسخة تعمل محلياً بالكامل لأغراض مشروع دراسي. لا يوجد خادم: الحسابات والطلبات والرسائل والصور محفوظة في قاعدة بيانات على هذا الجهاز فقط، وكلمات المرور مخزنة كبصمة مشفرة لا يمكن استرجاعها. الإشعارات والمحادثات تصل فقط للحسابات المسجلة على نفس الجهاز، والدفع نقدي يُسجَّل يدوياً.'**
+  String get aboutDataBody;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسناً'**
+  String get gotIt;
+
+  /// No description provided for @tabApplication.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب الانضمام'**
+  String get tabApplication;
+
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الموبايل أو كلمة المرور غير صحيحة.'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorPhoneTaken.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الرقم له حساب بالفعل. سجّل الدخول بدلاً من ذلك.'**
+  String get errorPhoneTaken;
+
+  /// No description provided for @errorTooManyAttempts.
+  ///
+  /// In ar, this message translates to:
+  /// **'محاولات كثيرة. حاول مرة أخرى بعد {minutes} دقيقة.'**
+  String errorTooManyAttempts(int minutes);
+
+  /// No description provided for @errorAdminExists.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوجد حساب مسؤول بالفعل على هذا الجهاز.'**
+  String get errorAdminExists;
+
+  /// No description provided for @errorAccountDisabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحساب موقوف.'**
+  String get errorAccountDisabled;
+
+  /// No description provided for @errorWrongPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية غير صحيحة.'**
+  String get errorWrongPassword;
+
+  /// No description provided for @errorTechnicianNotApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن يوافق المسؤول على طلب انضمامك أولاً.'**
+  String get errorTechnicianNotApproved;
 }
 
 class _AppLocalizationsDelegate

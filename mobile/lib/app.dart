@@ -32,7 +32,6 @@ class SianetakApp extends StatelessWidget {
     required this.jobs,
     required this.notifications,
     required this.changes,
-    this.resetDemo,
   });
 
   final CatalogRepository catalog;
@@ -47,7 +46,6 @@ class SianetakApp extends StatelessWidget {
   final JobsRepository jobs;
   final NotificationsRepository notifications;
   final Listenable changes;
-  final Future<void> Function()? resetDemo;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +62,6 @@ class SianetakApp extends StatelessWidget {
       jobs: jobs,
       notifications: notifications,
       changes: changes,
-      resetDemo: resetDemo,
       child: ListenableBuilder(
         listenable: locale,
         builder: (context, _) => MaterialApp(

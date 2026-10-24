@@ -49,7 +49,6 @@ void main() {
       'name': {'ar': 'سباكة', 'en': 'Plumbing'},
     });
     expect(c.serviceCount, 0);
-    expect(c.isSample, isFalse);
     expect(c.description, isNull);
   });
 }

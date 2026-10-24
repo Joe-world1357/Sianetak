@@ -28,9 +28,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get switchLanguageTooltip => 'تغيير اللغة إلى الإنجليزية';
 
   @override
-  String get signInTooltip => 'تسجيل الدخول';
-
-  @override
   String servicesCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -44,12 +41,6 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get sampleDataBadge => 'بيانات تجريبية';
-
-  @override
-  String get sampleDataNotice => 'هذه بيانات تجريبية للعرض فقط ولم تُعتمد بعد.';
 
   @override
   String get loading => 'جارٍ التحميل…';
@@ -70,8 +61,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorNotFound => 'العنصر المطلوب غير موجود أو لم يعد متاحًا.';
 
   @override
-  String get errorNetwork =>
-      'تعذّر الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.';
+  String get errorNetwork => 'تعذّر الوصول إلى البيانات. حاول مرة أخرى.';
 
   @override
   String get errorGeneric => 'حدث خطأ غير متوقع. حاول مرة أخرى.';
@@ -102,14 +92,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestServiceButton => 'اطلب الخدمة';
 
   @override
-  String get signInToRequest => 'سجّل الدخول لطلب الخدمة';
+  String get signInTitle => 'تسجيل الدخول';
 
   @override
-  String get signInTitle => 'اختر حساب التجربة';
-
-  @override
-  String get signInSubtitle =>
-      'نسخة عرض تعمل بالكامل على جهازك. جرّب التطبيق بأي دور.';
+  String get signInSubtitle => 'أهلاً بعودتك. ادخل برقم موبايلك وكلمة المرور.';
 
   @override
   String get errorSessionExpired => 'انتهت جلستك. سجّل الدخول مرة أخرى.';
@@ -524,9 +510,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorCannotReviewOwn => 'لا يمكنك مراجعة طلبك الشخصي.';
 
   @override
-  String get technicianEntryApply => 'انضم كفني';
-
-  @override
   String get technicianEntryStatus => 'طلب الانضمام كفني';
 
   @override
@@ -627,14 +610,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationPendingBody =>
-      'تراجع الإدارة بياناتك، وستظهر النتيجة هنا.';
+      'يراجع المسؤول بياناتك، وستظهر النتيجة هنا. يمكنك الدخول لاحقاً لمتابعتها.';
 
   @override
   String get verificationApproved => 'معتمد';
 
   @override
   String get verificationApprovedBody =>
-      'تم اعتماد حسابك كفني. استقبال طلبات العمل سيتاح في تحديث قادم.';
+      'تم اعتماد حسابك كفني. ستجد عروض العمل والأعمال المسندة إليك في الشاشة الرئيسية.';
 
   @override
   String get verificationRejected => 'لم يُقبل';
@@ -644,14 +627,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationRejectedFinal =>
-      'لا يمكن إعادة الإرسال حاليًا. تواصل مع الدعم.';
+      'لا يمكن إعادة الإرسال حالياً. تواصل مع المسؤول.';
 
   @override
   String get verificationSuspended => 'موقوف';
 
   @override
   String get verificationSuspendedBody =>
-      'تم إيقاف حسابك كفني مؤقتًا. تواصل مع الدعم.';
+      'تم إيقاف حسابك كفني مؤقتاً. تواصل مع المسؤول.';
 
   @override
   String get decisionReasonLabel => 'سبب القرار';
@@ -763,22 +746,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get statusCancelled => 'ملغي';
 
   @override
-  String get demoCustomerBlurb =>
-      'اطلب خدمة، تابع الفني، وافق على السعر وقيّم.';
-
-  @override
-  String get demoTechnicianBlurb =>
-      'استقبل العروض، حدّث حالة العمل وأرسل عرض السعر.';
-
-  @override
-  String get demoAdminBlurb =>
-      'تابع الطلبات، عيّن الفنيين وراجع طلبات الانضمام.';
-
-  @override
-  String get demoOfflineNote =>
-      'لا حاجة لإنترنت أو رمز تحقق. تُحفظ البيانات على هذا الجهاز ويمكن إعادة ضبطها من حسابي.';
-
-  @override
   String homeGreeting(String name) {
     return 'أهلًا $name 👋';
   }
@@ -809,19 +776,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get languageSetting => 'اللغة';
-
-  @override
-  String get switchAccountButton => 'التبديل إلى حساب آخر';
-
-  @override
-  String get resetDemoButton => 'إعادة ضبط بيانات التجربة';
-
-  @override
-  String get resetDemoTitle => 'إعادة ضبط البيانات؟';
-
-  @override
-  String get resetDemoBody =>
-      'ستُحذف كل الطلبات والرسائل والصور على هذا الجهاز وتعود بيانات التجربة الأصلية.';
 
   @override
   String get technicianCardTitle => 'الفني';
@@ -1326,4 +1280,193 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get errorStateConflict =>
       'تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى.';
+
+  @override
+  String get onboardingSkip => 'تخطي';
+
+  @override
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingStart => 'ابدأ الآن';
+
+  @override
+  String get onboarding1Title => 'صيانة بيتك في مكان واحد';
+
+  @override
+  String get onboarding1Body =>
+      'سباكة وكهرباء وتكييف ونجارة ونقاشة وأجهزة منزلية في أسوان.';
+
+  @override
+  String get onboarding2Title => 'فنيون تتم مراجعتهم';
+
+  @override
+  String get onboarding2Body =>
+      'كل فني يقدّم طلب انضمام، ولا يستقبل أي عمل إلا بعد موافقة المسؤول.';
+
+  @override
+  String get onboarding3Title => 'أنت تقرر قبل البدء';
+
+  @override
+  String get onboarding3Body =>
+      'راجع عرض السعر ووافق عليه، وتابع الحالة لحظة بلحظة، ثم قيّم الخدمة.';
+
+  @override
+  String get phoneLabel => 'رقم الموبايل';
+
+  @override
+  String get phoneInvalid => 'أدخل رقم موبايل مصري صحيح، مثل 01012345678.';
+
+  @override
+  String get passwordLabel => 'كلمة المرور';
+
+  @override
+  String get passwordConfirmLabel => 'تأكيد كلمة المرور';
+
+  @override
+  String get passwordRules => '٨ أحرف على الأقل، منها حرف ورقم.';
+
+  @override
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get passwordRequired => 'أدخل كلمة المرور.';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get signInButton => 'دخول';
+
+  @override
+  String get noAccountPrompt => 'جديد على صيانتك؟';
+
+  @override
+  String get createAccountLink => 'أنشئ حساباً';
+
+  @override
+  String get haveAccountPrompt => 'لديك حساب؟';
+
+  @override
+  String get signInLink => 'سجّل الدخول';
+
+  @override
+  String get registerTitle => 'إنشاء حساب';
+
+  @override
+  String get registerSubtitle => 'اختر نوع الحساب ثم أكمل بياناتك.';
+
+  @override
+  String get accountTypeLabel => 'نوع الحساب';
+
+  @override
+  String get accountTypeCustomerBlurb => 'اطلب خدمة وتابعها حتى تنتهي.';
+
+  @override
+  String get accountTypeTechnicianBlurb =>
+      'قدّم طلب انضمام واستقبل الأعمال بعد الموافقة.';
+
+  @override
+  String get registerButton => 'إنشاء الحساب';
+
+  @override
+  String get localDataNote =>
+      'يعمل التطبيق بدون إنترنت. الحسابات والبيانات محفوظة على هذا الجهاز فقط، وتتشاركها كل الحسابات المسجلة عليه.';
+
+  @override
+  String get adminSetupPrompt => 'مالك الجهاز؟';
+
+  @override
+  String get adminSetupLink => 'إعداد حساب المسؤول';
+
+  @override
+  String get adminSetupTitle => 'إعداد حساب المسؤول';
+
+  @override
+  String get adminSetupBody =>
+      'يمكن إنشاء أول حساب مسؤول مرة واحدة فقط على هذا الجهاز. بعدها لا يضيف مسؤولاً جديداً إلا مسؤول.';
+
+  @override
+  String get adminSetupButton => 'إنشاء حساب المسؤول';
+
+  @override
+  String get addAdminEntry => 'إضافة مسؤول';
+
+  @override
+  String get addAdminTitle => 'إضافة مسؤول';
+
+  @override
+  String get addAdminBody =>
+      'سيتمكن من مراجعة الفنيين وإدارة الطلبات. أبلغه بكلمة المرور بطريقة آمنة.';
+
+  @override
+  String get addAdminButton => 'إضافة المسؤول';
+
+  @override
+  String adminAdded(String name) {
+    return 'تمت إضافة المسؤول $name.';
+  }
+
+  @override
+  String get changePasswordEntry => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get currentPasswordLabel => 'كلمة المرور الحالية';
+
+  @override
+  String get newPasswordLabel => 'كلمة المرور الجديدة';
+
+  @override
+  String get passwordChanged => 'تم تغيير كلمة المرور.';
+
+  @override
+  String get signOutConfirmTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get signOutConfirmBody => 'ستحتاج رقمك وكلمة المرور للدخول مرة أخرى.';
+
+  @override
+  String get aboutDataEntry => 'عن بياناتك';
+
+  @override
+  String get aboutDataBody =>
+      'صيانتك نسخة تعمل محلياً بالكامل لأغراض مشروع دراسي. لا يوجد خادم: الحسابات والطلبات والرسائل والصور محفوظة في قاعدة بيانات على هذا الجهاز فقط، وكلمات المرور مخزنة كبصمة مشفرة لا يمكن استرجاعها. الإشعارات والمحادثات تصل فقط للحسابات المسجلة على نفس الجهاز، والدفع نقدي يُسجَّل يدوياً.';
+
+  @override
+  String get gotIt => 'حسناً';
+
+  @override
+  String get tabApplication => 'طلب الانضمام';
+
+  @override
+  String get errorInvalidCredentials =>
+      'رقم الموبايل أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get errorPhoneTaken =>
+      'هذا الرقم له حساب بالفعل. سجّل الدخول بدلاً من ذلك.';
+
+  @override
+  String errorTooManyAttempts(int minutes) {
+    return 'محاولات كثيرة. حاول مرة أخرى بعد $minutes دقيقة.';
+  }
+
+  @override
+  String get errorAdminExists => 'يوجد حساب مسؤول بالفعل على هذا الجهاز.';
+
+  @override
+  String get errorAccountDisabled => 'هذا الحساب موقوف.';
+
+  @override
+  String get errorWrongPassword => 'كلمة المرور الحالية غير صحيحة.';
+
+  @override
+  String get errorTechnicianNotApproved =>
+      'يجب أن يوافق المسؤول على طلب انضمامك أولاً.';
 }

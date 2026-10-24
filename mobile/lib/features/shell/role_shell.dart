@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_scope.dart';
+import '../../core/theme/app_theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../admin/presentation/admin_applications_screen.dart';
 import '../admin/presentation/admin_dashboard_screen.dart';
 import '../auth/domain/auth_models.dart';
+import '../auth/presentation/onboarding_screen.dart';
 import '../auth/presentation/profile_screen.dart';
+import '../auth/presentation/sign_in_screen.dart';
 import '../catalog/presentation/home_screen.dart';
 import '../jobs/presentation/my_jobs_screen.dart';
 import '../jobs/presentation/offers_screen.dart';
 import '../notifications/presentation/notifications_screen.dart';
 import '../requests/presentation/my_requests_screen.dart';
+import '../technician/presentation/technician_application_screen.dart';
 
-/// Guests browse the catalog; each demo role gets its own bottom navigation.
+/// First launch shows the welcome pages, then sign-in. Each signed-in role gets its own
+/// bottom navigation; a technician sees only their application until it is approved.
 class RootScreen extends StatelessWidget {
   const RootScreen({super.key});
 
@@ -22,10 +27,18 @@ class RootScreen extends StatelessWidget {
     return ListenableBuilder(
       listenable: auth,
       builder: (context, _) {
-        final role = auth.user?.role;
-        if (role == null || role == UserRole.unknown) return const HomeScreen();
-        // Keyed by role so tabs reset when a different account signs in.
-        return RoleShell(key: ValueKey(auth.user!.id), role: role);
+        final user = auth.user;
+        if (user == null || user.role == UserRole.unknown) {
+          return auth.onboardingSeen
+              ? const SignInScreen()
+              : const OnboardingScreen();
+        }
+        // Keyed so tabs reset when another account signs in or a technician is approved.
+        return RoleShell(
+          key: ValueKey('${user.id}:${user.canWork}'),
+          role: user.role,
+          canWork: user.canWork,
+        );
       },
     );
   }
@@ -41,9 +54,12 @@ class _Tab {
 }
 
 class RoleShell extends StatefulWidget {
-  const RoleShell({super.key, required this.role});
+  const RoleShell({super.key, required this.role, this.canWork = false});
 
   final UserRole role;
+
+  /// Technicians only: approved to take jobs.
+  final bool canWork;
 
   @override
   State<RoleShell> createState() => _RoleShellState();
@@ -66,6 +82,16 @@ class _RoleShellState extends State<RoleShell> {
       const ProfileScreen(),
     );
     return switch (widget.role) {
+      UserRole.technician when !widget.canWork => [
+        _Tab(
+          Icons.badge_outlined,
+          Icons.badge_rounded,
+          l10n.tabApplication,
+          const TechnicianApplicationScreen(),
+        ),
+        notifications,
+        account,
+      ],
       UserRole.technician => [
         _Tab(
           Icons.local_offer_outlined,
@@ -130,7 +156,7 @@ class _RoleShellState extends State<RoleShell> {
       ),
       bottomNavigationBar: DecoratedBox(
         decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Color(0xFFE6E1DA))),
+          border: Border(top: BorderSide(color: AppColors.line)),
         ),
         child: ListenableBuilder(
           listenable: scope.changes,

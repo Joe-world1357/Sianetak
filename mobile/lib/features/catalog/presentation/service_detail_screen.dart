@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/app_scope.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/async_view.dart';
-import '../../../core/widgets/sample_badge.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../auth/domain/auth_models.dart';
-import '../../auth/presentation/sign_in_screen.dart';
 import '../../requests/presentation/create_request_screen.dart';
 import '../domain/catalog_models.dart';
 import 'price_guidance_text.dart';
@@ -45,11 +43,6 @@ class _ServiceDetailBody extends StatelessWidget {
   Future<void> _onRequest(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final auth = AppScope.of(context).auth;
-    if (!auth.isSignedIn) {
-      final signedIn = await Navigator.of(context)
-          .push<bool>(MaterialPageRoute(builder: (_) => const SignInScreen()));
-      if (signedIn != true || !context.mounted) return;
-    }
     if (auth.user?.role != UserRole.customer) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -71,7 +64,6 @@ class _ServiceDetailBody extends StatelessWidget {
     final service = detail.summary;
     final description = detail.description?.resolve(lang);
     final pricing = service.pricing;
-    final auth = AppScope.of(context).auth;
 
     return Column(
       children: [
@@ -93,21 +85,6 @@ class _ServiceDetailBody extends StatelessWidget {
                   ),
                 ),
               ),
-              if (service.isSample) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Row(
-                  children: [
-                    const SampleBadge(),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Text(
-                        l10n.sampleDataNotice,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
               if (description != null && description.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.lg),
                 Text(
@@ -158,16 +135,9 @@ class _ServiceDetailBody extends StatelessWidget {
           top: false,
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
-            child: ListenableBuilder(
-              listenable: auth,
-              builder: (context, _) => FilledButton(
-                onPressed: () => _onRequest(context),
-                child: Text(
-                  auth.isSignedIn
-                      ? l10n.requestServiceButton
-                      : l10n.signInToRequest,
-                ),
-              ),
+            child: FilledButton(
+              onPressed: () => _onRequest(context),
+              child: Text(l10n.requestServiceButton),
             ),
           ),
         ),

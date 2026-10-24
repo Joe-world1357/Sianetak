@@ -22,8 +22,6 @@ abstract final class AppColors {
   /// Aswan sandstone accent, used sparingly for highlights.
   static const accent = Color(0xFFC77D2E);
   static const surface = Color(0xFFF7F5F2);
-  static const sampleBadge = Color(0xFF7A4A00);
-  static const sampleBadgeBackground = Color(0xFFFFF0D6);
   static const ink = Color(0xFF14212B);
   static const muted = Color(0xFF5E6B75);
   static const line = Color(0xFFE6E1DA);
