@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import '../core/network/api_exception.dart';
 import '../core/storage/local_store.dart';
-import 'demo_seed.dart';
+import 'initial_data.dart';
 
 /// The rules the NestJS API used to enforce, re-implemented over [LocalStore] so the app runs
 /// standalone. Every method answers in the API's JSON shape, so the existing models parse it
 /// unchanged, and failures use the API's error codes, so the existing error copy applies.
-class DemoBackend {
-  DemoBackend(this.store, {Random? random}) : _random = random ?? Random();
+class LocalBackend {
+  LocalBackend(this.store, {Random? random}) : _random = random ?? Random();
 
   final LocalStore store;
   final Random _random;
@@ -152,15 +152,15 @@ class DemoBackend {
     return [for (final a in store.table('areas')) _area(a['id'] as String)];
   }
 
-  /// Bookable local windows from today through [DemoRules.scheduleDaysAhead], after the lead.
+  /// Bookable local windows from today through [AppRules.scheduleDaysAhead], after the lead.
   List<(DateTime, DateTime)> _slots() {
     final now = _now;
     final earliest = now.add(
-      const Duration(minutes: DemoRules.scheduleLeadMinutes),
+      const Duration(minutes: AppRules.scheduleLeadMinutes),
     );
     return [
-      for (var d = 0; d <= DemoRules.scheduleDaysAhead; d++)
-        for (final (from, to) in DemoRules.slotWindows)
+      for (var d = 0; d <= AppRules.scheduleDaysAhead; d++)
+        for (final (from, to) in AppRules.slotWindows)
           if (DateTime(now.year, now.month, now.day + d, 0, from)
               case final start when !start.isBefore(earliest))
             (start, DateTime(now.year, now.month, now.day + d, 0, to)),
@@ -172,8 +172,8 @@ class DemoBackend {
     return {
       'description': {'minLength': 10, 'maxLength': 1000},
       'photos': {
-        'max': DemoRules.maxPhotos,
-        'maxBytes': DemoRules.maxPhotoBytes,
+        'max': AppRules.maxPhotos,
+        'maxBytes': AppRules.maxPhotoBytes,
         'uploadsAvailable': true,
       },
       'schedule': {
@@ -239,8 +239,8 @@ class DemoBackend {
       _fail('UNSUPPORTED_FILE_TYPE', 415);
     }
     final limit = type.startsWith('image/')
-        ? DemoRules.maxPhotoBytes
-        : 2 * DemoRules.maxPhotoBytes;
+        ? AppRules.maxPhotoBytes
+        : 2 * AppRules.maxPhotoBytes;
     if (bytes.length > limit) _fail('FILE_TOO_LARGE', 413);
     final id = store.newId('media');
     await store.writeBlob(id, bytes);
@@ -436,13 +436,13 @@ class DemoBackend {
               !parseStatusFinal(r['status'] as String),
         )
         .length;
-    if (open >= DemoRules.maxOpenRequests) {
+    if (open >= AppRules.maxOpenRequests) {
       _fail('TOO_MANY_OPEN_REQUESTS', 409);
     }
 
     final photoIds = (body['photoIds'] as List<dynamic>? ?? const [])
         .cast<String>();
-    if (photoIds.length > DemoRules.maxPhotos) _fail('MEDIA_TOO_MANY', 422);
+    if (photoIds.length > AppRules.maxPhotos) _fail('MEDIA_TOO_MANY', 422);
     for (final id in photoIds) {
       final m = store.find('media', id);
       if (m == null || m['ownerId'] != me['id'] || m['attached'] == true) {
@@ -698,7 +698,7 @@ class DemoBackend {
         'status': 'pending',
         'createdAt': _iso(now),
         'expiresAt': _iso(
-          now.add(const Duration(minutes: DemoRules.offerMinutes)),
+          now.add(const Duration(minutes: AppRules.offerMinutes)),
         ),
       });
       _notify(t, 'new_offer', request: r);
@@ -847,7 +847,7 @@ class DemoBackend {
       final amount = (r['quote'] as Map<String, dynamic>)['amountMinor'] as int;
       r['payment'] = {
         'amountMinor': amount,
-        'commissionMinor': (amount * DemoRules.commissionPercent / 100).round(),
+        'commissionMinor': (amount * AppRules.commissionPercent / 100).round(),
         'at': _iso(_now),
       };
     }

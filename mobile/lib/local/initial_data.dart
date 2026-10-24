@@ -13,7 +13,7 @@ abstract final class DemoIds {
 }
 
 /// Tunable demo rules, stored with the data so they could be edited in one place.
-abstract final class DemoRules {
+abstract final class AppRules {
   /// [Proposed] How long a technician has to accept an offer.
   static const offerMinutes = 15;
 
@@ -232,7 +232,7 @@ const List<_Category> _catalog = [
 String _iso(DateTime t) => t.toUtc().toIso8601String();
 
 /// A fresh demo database relative to [now].
-Row buildDemoSeed(DateTime now) {
+Row buildInitialData(DateTime now) {
   final categories = <Row>[];
   final services = <Row>[];
   for (final (i, c) in _catalog.indexed) {
@@ -456,7 +456,7 @@ Row buildDemoSeed(DateTime now) {
           'status': 'pending',
           'createdAt': _iso(openAt),
           'expiresAt': _iso(
-            openAt.add(const Duration(minutes: DemoRules.offerMinutes)),
+            openAt.add(const Duration(minutes: AppRules.offerMinutes)),
           ),
         },
     ],

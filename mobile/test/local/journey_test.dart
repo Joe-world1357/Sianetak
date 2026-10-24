@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sianetak_customer/core/storage/local_store.dart';
-import 'package:sianetak_customer/demo/demo_app.dart';
+import 'package:sianetak_customer/local/local_app.dart';
 
 import '../support/fakes.dart';
 import '../support/flows.dart';
 
 /// End-to-end journeys through the real screens and the on-device demo database.
-Future<DemoApp> startDemo(WidgetTester tester) async {
-  final demo = DemoApp(
+Future<LocalApp> startDemo(WidgetTester tester) async {
+  final demo = LocalApp(
     MemoryStorageBackend(),
     imagePicker: FakeImagePicker(),
     location: FakeLocationService(),

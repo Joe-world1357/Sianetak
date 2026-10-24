@@ -14,20 +14,20 @@ import '../features/media/data/media_repository.dart';
 import '../features/notifications/data/notifications_repository.dart';
 import '../features/requests/data/requests_repository.dart';
 import '../features/technician/data/technician_repository.dart';
-import 'demo_backend.dart';
-import 'demo_seed.dart';
+import 'local_backend.dart';
+import 'initial_data.dart';
 
 /// Wires the app to the on-device demo database. Used by `main` and by end-to-end tests.
-class DemoApp {
-  DemoApp(
+class LocalApp {
+  LocalApp(
     StorageBackend storage, {
     required this.imagePicker,
     required this.location,
     Locale locale = LocaleController.arabic,
     DateTime Function()? clock,
-  }) : store = LocalStore(storage, seed: buildDemoSeed, clock: clock),
+  }) : store = LocalStore(storage, seed: buildInitialData, clock: clock),
        locale = LocaleController(initial: locale) {
-    backend = DemoBackend(store);
+    backend = LocalBackend(store);
     auth = AuthController(repository: LocalAuthRepository(backend));
   }
 
@@ -35,7 +35,7 @@ class DemoApp {
   final LocaleController locale;
   final ImagePickerService imagePicker;
   final LocationService location;
-  late final DemoBackend backend;
+  late final LocalBackend backend;
   late final AuthController auth;
 
   /// Opens the database and restores the last signed-in account.

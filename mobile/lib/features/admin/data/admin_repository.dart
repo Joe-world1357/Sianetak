@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../../requests/domain/request_models.dart';
 import '../../technician/domain/technician_models.dart';
 
@@ -53,7 +53,7 @@ abstract class AdminRepository {
 class LocalAdminRepository implements AdminRepository {
   LocalAdminRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<List<ApplicationSummary>> listApplications(

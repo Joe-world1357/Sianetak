@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sianetak_customer/core/network/api_exception.dart';
 import 'package:sianetak_customer/core/storage/local_store.dart';
-import 'package:sianetak_customer/demo/demo_backend.dart';
-import 'package:sianetak_customer/demo/demo_seed.dart';
+import 'package:sianetak_customer/local/local_backend.dart';
+import 'package:sianetak_customer/local/initial_data.dart';
 
 import '../support/fakes.dart';
 
@@ -12,10 +12,10 @@ import '../support/fakes.dart';
 void main() {
   late MemoryStorageBackend storage;
   late DateTime now;
-  late DemoBackend backend;
+  late LocalBackend backend;
 
-  DemoBackend open() =>
-      DemoBackend(LocalStore(storage, seed: buildDemoSeed, clock: () => now));
+  LocalBackend open() =>
+      LocalBackend(LocalStore(storage, seed: buildInitialData, clock: () => now));
 
   setUp(() {
     storage = MemoryStorageBackend();
@@ -127,7 +127,7 @@ void main() {
     'expired offers fall back to operations, who can assign manually',
     () async {
       final id = await submit();
-      now = now.add(const Duration(minutes: DemoRules.offerMinutes + 1));
+      now = now.add(const Duration(minutes: AppRules.offerMinutes + 1));
       await backend.signIn(DemoIds.admin);
       expect((await backend.getRequest(id))['status'], 'unmatched');
       final notices = await backend.notifications();

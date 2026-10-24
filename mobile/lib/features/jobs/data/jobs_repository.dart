@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../../requests/domain/request_models.dart';
 import '../domain/job_models.dart';
 
@@ -20,7 +20,7 @@ abstract class JobsRepository {
 class LocalJobsRepository implements JobsRepository {
   LocalJobsRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<List<OfferedJob>> offers() async => (await _backend.offers())

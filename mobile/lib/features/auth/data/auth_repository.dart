@@ -1,4 +1,4 @@
-import '../../../demo/demo_backend.dart';
+import '../../../local/local_backend.dart';
 import '../domain/auth_models.dart';
 
 /// Demo sign-in: pick one of the seeded accounts. No phone verification in the standalone demo.
@@ -15,7 +15,7 @@ abstract class AuthRepository {
 class LocalAuthRepository implements AuthRepository {
   LocalAuthRepository(this._backend);
 
-  final DemoBackend _backend;
+  final LocalBackend _backend;
 
   @override
   Future<List<AppUser>> demoAccounts() async => (await _backend.demoAccounts())
