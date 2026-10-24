@@ -181,12 +181,57 @@ class RequestOptions {
   final List<ServiceArea> areas;
 }
 
-enum RequestStatus { submitted, unknown }
+/// Service journey: submitted (offers out) → assigned → en route → arrived → quoted →
+/// in progress (only after the customer approves the quote) → completed. A request can be
+/// cancelled before work starts; with no taker it waits for operations as `unmatched`.
+enum RequestStatus {
+  submitted,
+  unmatched,
+  assigned,
+  enRoute,
+  arrived,
+  quoted,
+  quoteRejected,
+  inProgress,
+  completed,
+  cancelled,
+  unknown;
 
-RequestStatus parseRequestStatus(Object? value) => switch (value) {
-  'submitted' => RequestStatus.submitted,
-  _ => RequestStatus.unknown,
+  bool get isFinal => this == completed || this == cancelled;
+
+  /// The customer may cancel until work has started.
+  bool get isCancellable => switch (this) {
+    submitted || unmatched || assigned || enRoute || arrived => true,
+    quoted || quoteRejected => true,
+    _ => false,
+  };
+
+  /// A technician is attached and the two parties can chat.
+  bool get hasTechnician =>
+      this != submitted && this != unmatched && this != unknown;
+}
+
+const _statusWire = {
+  RequestStatus.submitted: 'submitted',
+  RequestStatus.unmatched: 'unmatched',
+  RequestStatus.assigned: 'assigned',
+  RequestStatus.enRoute: 'en_route',
+  RequestStatus.arrived: 'arrived',
+  RequestStatus.quoted: 'quoted',
+  RequestStatus.quoteRejected: 'quote_rejected',
+  RequestStatus.inProgress: 'in_progress',
+  RequestStatus.completed: 'completed',
+  RequestStatus.cancelled: 'cancelled',
 };
+
+RequestStatus parseRequestStatus(Object? value) => _statusWire.entries
+    .firstWhere(
+      (e) => e.value == value,
+      orElse: () => const MapEntry(RequestStatus.unknown, ''),
+    )
+    .key;
+
+String requestStatusWire(RequestStatus status) => _statusWire[status] ?? '';
 
 enum ScheduleType { asap, scheduled }
 
@@ -284,10 +329,139 @@ class RequestPage {
 }
 
 class RequestTimelineEntry {
-  const RequestTimelineEntry({required this.status, required this.at});
+  const RequestTimelineEntry({
+    required this.status,
+    required this.at,
+    this.note,
+  });
 
   final RequestStatus status;
   final DateTime at;
+  final String? note;
+}
+
+/// The other party on a request, as far as the viewer may see them.
+class PersonRef {
+  const PersonRef({
+    required this.id,
+    required this.name,
+    required this.phone,
+    this.rating,
+    this.ratingCount = 0,
+  });
+
+  factory PersonRef.fromJson(Map<String, dynamic> json) => PersonRef(
+    id: json['id'] as String,
+    name: json['name'] as String? ?? '',
+    phone: json['phone'] as String? ?? '',
+    rating: (json['rating'] as num?)?.toDouble(),
+    ratingCount: json['ratingCount'] as int? ?? 0,
+  );
+
+  final String id;
+  final String name;
+  final String phone;
+
+  /// Average stars for a technician; null until rated.
+  final double? rating;
+  final int ratingCount;
+}
+
+enum QuoteStatus { pending, approved, rejected }
+
+/// The technician's price after inspection; work starts only once it is approved.
+class Quote {
+  const Quote({
+    required this.amountMinor,
+    this.note,
+    required this.status,
+    required this.at,
+  });
+
+  static Quote? fromJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    return Quote(
+      amountMinor: json['amountMinor'] as int,
+      note: json['note'] as String?,
+      status: switch (json['status']) {
+        'approved' => QuoteStatus.approved,
+        'rejected' => QuoteStatus.rejected,
+        _ => QuoteStatus.pending,
+      },
+      at: DateTime.parse(json['at'] as String),
+    );
+  }
+
+  final int amountMinor;
+  final String? note;
+  final QuoteStatus status;
+  final DateTime at;
+}
+
+/// Cash collected at closeout, with the platform commission owed by the technician.
+class PaymentRecord {
+  const PaymentRecord({
+    required this.amountMinor,
+    required this.commissionMinor,
+    required this.at,
+  });
+
+  static PaymentRecord? fromJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    return PaymentRecord(
+      amountMinor: json['amountMinor'] as int,
+      commissionMinor: json['commissionMinor'] as int? ?? 0,
+      at: DateTime.parse(json['at'] as String),
+    );
+  }
+
+  final int amountMinor;
+  final int commissionMinor;
+  final DateTime at;
+}
+
+class RequestRating {
+  const RequestRating({required this.stars, this.comment, required this.at});
+
+  static RequestRating? fromJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    return RequestRating(
+      stars: json['stars'] as int,
+      comment: json['comment'] as String?,
+      at: DateTime.parse(json['at'] as String),
+    );
+  }
+
+  final int stars;
+  final String? comment;
+  final DateTime at;
+}
+
+enum OfferStatus { pending, accepted, declined, expired, taken }
+
+/// A dispatch offer, as the receiving technician sees it.
+class JobOffer {
+  const JobOffer({
+    required this.id,
+    required this.status,
+    required this.expiresAt,
+  });
+
+  static JobOffer? fromJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    return JobOffer(
+      id: json['id'] as String,
+      status: OfferStatus.values.firstWhere(
+        (s) => s.name == json['status'],
+        orElse: () => OfferStatus.expired,
+      ),
+      expiresAt: DateTime.parse(json['expiresAt'] as String),
+    );
+  }
+
+  final String id;
+  final OfferStatus status;
+  final DateTime expiresAt;
 }
 
 class RequestDetail {
@@ -302,6 +476,13 @@ class RequestDetail {
     required this.pricing,
     this.inspectionFee,
     required this.timeline,
+    this.customer,
+    this.technician,
+    this.quote,
+    this.payment,
+    this.rating,
+    this.cancelReason,
+    this.offer,
   });
 
   factory RequestDetail.fromJson(Map<String, dynamic> json) {
@@ -327,9 +508,21 @@ class RequestDetail {
             (e) => RequestTimelineEntry(
               status: parseRequestStatus(e['status']),
               at: DateTime.parse(e['at'] as String),
+              note: e['note'] as String?,
             ),
           )
           .toList(growable: false),
+      customer: json['customer'] == null
+          ? null
+          : PersonRef.fromJson(json['customer'] as Map<String, dynamic>),
+      technician: json['technician'] == null
+          ? null
+          : PersonRef.fromJson(json['technician'] as Map<String, dynamic>),
+      quote: Quote.fromJson(json['quote']),
+      payment: PaymentRecord.fromJson(json['payment']),
+      rating: RequestRating.fromJson(json['rating']),
+      cancelReason: json['cancelReason'] as String?,
+      offer: JobOffer.fromJson(json['offer']),
     );
   }
 
@@ -343,6 +536,17 @@ class RequestDetail {
   final PricingGuidance pricing;
   final Money? inspectionFee;
   final List<RequestTimelineEntry> timeline;
+
+  /// Shown to the assigned technician and to admins.
+  final PersonRef? customer;
+  final PersonRef? technician;
+  final Quote? quote;
+  final PaymentRecord? payment;
+  final RequestRating? rating;
+  final String? cancelReason;
+
+  /// Set when the viewer is a technician holding an offer for this request.
+  final JobOffer? offer;
 }
 
 /// Everything sent to POST /requests.
@@ -374,4 +578,30 @@ class RequestSubmission {
     if (address != null && saveAddress) 'saveAddress': true,
     'schedule': schedule.toJson(),
   };
+}
+
+class ChatMessage {
+  const ChatMessage({
+    required this.id,
+    required this.text,
+    required this.at,
+    required this.mine,
+    required this.senderRole,
+  });
+
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+    id: json['id'] as String,
+    text: json['text'] as String,
+    at: DateTime.parse(json['at'] as String),
+    mine: json['mine'] as bool? ?? false,
+    senderRole: json['senderRole'] as String? ?? '',
+  );
+
+  final String id;
+  final String text;
+  final DateTime at;
+  final bool mine;
+
+  /// `customer` or `technician`; lets an admin reader tell the two apart.
+  final String senderRole;
 }

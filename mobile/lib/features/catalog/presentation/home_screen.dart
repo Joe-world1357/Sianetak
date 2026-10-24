@@ -5,8 +5,8 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_bar_actions.dart';
 import '../../../core/widgets/async_view.dart';
 import '../../../core/widgets/category_icon.dart';
-import '../../../core/widgets/sample_badge.dart';
 import '../../../core/widgets/state_views.dart';
+import '../../../core/widgets/ui.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../domain/catalog_models.dart';
 import 'category_screen.dart';
@@ -21,9 +21,22 @@ class HomeScreen extends StatelessWidget {
     final catalog = AppScope.of(context).catalog;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          l10n.appTitle,
-          style: const TextStyle(fontWeight: FontWeight.w700),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const AppMark(size: 32),
+            const SizedBox(width: AppSpacing.sm),
+            Flexible(
+              child: Text(
+                l10n.appTitle,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
         ),
         actions: const [AppBarActions()],
       ),
@@ -65,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSpacing: AppSpacing.md,
                           crossAxisSpacing: AppSpacing.md,
                           // Tall enough for two lines of text at larger text scales.
-                          mainAxisExtent: 168,
+                          mainAxisExtent: 148,
                         ),
                     itemCount: categories.length,
                     itemBuilder: (context, i) =>
@@ -92,21 +105,62 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Semantics(
-          header: true,
-          child: Text(
-            l10n.homeHeadline,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+    final auth = AppScope.of(context).auth;
+    final name = auth.user?.name?.trim();
+    final white70 = Colors.white.withValues(alpha: 0.8);
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg - 4),
+      decoration: BoxDecoration(
+        gradient: AppColors.heroGradient,
+        borderRadius: BorderRadius.circular(AppRadius.card),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (name != null && name.isNotEmpty)
+                  Text(
+                    l10n.homeGreeting(name.split(' ').first),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: white70),
+                  ),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    l10n.homeHeadline,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l10n.homeSubtitle,
+                  style: theme.textTheme.bodyMedium?.copyWith(color: white70),
+                ),
+              ],
             ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(l10n.homeSubtitle, style: theme.textTheme.bodyMedium),
-      ],
+          const SizedBox(width: AppSpacing.md),
+          ExcludeSemantics(
+            child: Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.handyman_rounded,
+                color: Colors.white,
+                size: 34,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -135,28 +189,7 @@ class CategoryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    child: ExcludeSemantics(
-                      child: Icon(
-                        iconForCategory(category.iconKey),
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  if (category.isSample)
-                    const Flexible(
-                      child: Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: SampleBadge(),
-                      ),
-                    ),
-                ],
-              ),
+              IconBadge(icon: iconForCategory(category.iconKey), size: 48),
               const Spacer(),
               Text(
                 name,
@@ -168,7 +201,9 @@ class CategoryCard extends StatelessWidget {
               ),
               Text(
                 l10n.servicesCount(category.serviceCount),
-                style: theme.textTheme.bodySmall,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.muted,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

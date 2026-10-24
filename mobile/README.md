@@ -1,50 +1,63 @@
-# Sianetak customer app
+# Sianetak app (standalone demo)
 
-Flutter customer app. Sprint 1 scope: guest catalog browsing, service details with pricing
-guidance, phone OTP sign-in, and a profile foundation.
+Flutter app for Android and iOS. It runs entirely on the device: there is no server, no OTP and
+no network dependency. Data lives in a local JSON database that is seeded with demo accounts, a
+sample catalog for Aswan and a couple of sample requests.
+
+## Demo accounts
+
+Sign in by picking an account on the sign-in screen. Switch accounts from the Account tab.
+
+| Role | Name | What it can do |
+|------|------|----------------|
+| Customer | أحمد محمود | Browse services, submit and track requests, approve or reject quotes, chat, pay cash, rate |
+| Technician | محمد علي | Accept or decline offers, move a job through en route / arrived / quote / complete, see earnings |
+| Admin | منى حسن | Dashboard KPIs, assign unmatched requests, review technician applications |
+
+Account > "Reset demo data" wipes the database and restores the seed.
 
 ## Layout
 
 ```
 lib/
-  core/        config, API client, theme tokens, shared state widgets, localization plumbing
+  core/
+    storage/   LocalStore (JSON document + change notifications) and the file backend
+    theme/     design tokens; widgets/ shared UI pieces and loading/empty/error states
+  demo/        seed data, DemoBackend (the business rules the server used to own), DemoApp wiring
   features/
-    catalog/   domain models, repository, home / category / service detail screens
-    auth/      phone rules, auth models, token store, AuthController, sign-in / OTP / profile
-  l10n/        app_ar.arb (template) and app_en.arb; generated code is not committed
+    auth/      demo sign-in, AuthController, Account screen
+    catalog/   home, category and service detail screens
+    requests/  request form, list, detail, quote/cancel/rating sheets, chat
+    jobs/      technician offers, jobs and earnings
+    technician/ application and verification status
+    admin/     dashboard, technician review, manual assignment
+    notifications/ in-app alerts
+    shell/     role-based bottom navigation
+  l10n/        app_ar.arb (template) and app_en.arb
 ```
 
-Presentation, domain and data are kept separate (NFR-MNT-01). Business rules live on the server;
-the app validates input for fast feedback and renders what the API returns. Dependencies are
-provided through `AppScope`, so tests inject fakes instead of hitting the network.
+Presentation, domain and data stay separate. Each repository keeps its abstract interface; the
+`Local*` implementations call `DemoBackend`, which returns the same JSON shapes and error codes as
+the old API, so models and screens did not need to change. Screens refresh themselves when the
+store changes (`AsyncView.refreshOn`).
+
+Demo rules (in `demo/demo_seed.dart`, marked [Proposed] in the requirements): offers go to up to 3
+matching technicians and expire after 15 minutes, the first to accept wins, work starts only after
+the customer approves the quote, payment is cash with a 10% commission.
 
 ## Running
 
 ```bash
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://localhost:3000/api/v1
+flutter run            # Android device or emulator
+flutter build apk      # release APK in build/app/outputs/flutter-apk/
 ```
-
-`API_BASE_URL` defaults to `http://localhost:3000/api/v1`. On an Android emulator the host machine
-is `10.0.2.2`. Generated localizations are produced by `flutter gen-l10n` (run automatically by
-`flutter run` and `flutter test`).
 
 ## Language and layout
 
-Arabic is the default locale and the UI mirrors to RTL automatically; English is one tap away in
-the app bar. Layout uses directional spacing (`EdgeInsetsDirectional`, `AlignmentDirectional`), so
-nothing is hard-coded to the left or right. Phone numbers and OTP codes are wrapped in Unicode
-isolate marks and forced LTR so they read correctly inside Arabic text. Cairo is bundled
-(SIL OFL, see `assets/fonts/OFL.txt`) so Arabic renders consistently offline.
-
-New user-facing strings go in `lib/l10n/app_ar.arb` **and** `lib/l10n/app_en.arb`; never hard-code
-display text in a widget.
-
-## Error handling
-
-The API's stable error codes are mapped to localized copy in one place,
-`core/widgets/state_views.dart` (`messageForError`). Every screen that loads data handles loading,
-empty and error states, with retry where a retry makes sense.
+Arabic is the default locale and the UI mirrors to RTL; English is one tap away in the app bar.
+Layout uses directional spacing, phone numbers are forced LTR inside Arabic text, and Cairo is
+bundled (SIL OFL) so Arabic renders consistently offline. New strings go in both ARB files.
 
 ## Tests
 
@@ -53,7 +66,6 @@ flutter analyze
 flutter test
 ```
 
-`test/unit` covers phone normalization, money formatting, model parsing, the API client and the
-auth controller. `test/widget` drives the real screens through fakes: Arabic RTL rendering,
-language switching, loading/empty/error states, the full OTP sign-in flow, wrong and expired
-codes, the resend countdown, profile editing and sign-out.
+`test/demo` covers the local backend rules (dispatch, offer races, quote gate, payment, permissions)
+and two full Customer → Technician → Admin journeys through the real UI. `test/unit` and
+`test/widget` cover formatting, models, the auth controller and each screen through fakes.

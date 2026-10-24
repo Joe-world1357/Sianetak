@@ -1,5 +1,4 @@
-import '../../../core/network/api_client.dart';
-import '../../../core/network/api_exception.dart';
+import '../../../demo/demo_backend.dart';
 import '../domain/request_models.dart';
 
 abstract class RequestsRepository {
@@ -14,56 +13,49 @@ abstract class RequestsRepository {
   });
   Future<RequestPage> list({String? cursor});
   Future<RequestDetail> get(String id);
+
+  /// Customer (or admin) cancels before work starts.
+  Future<RequestDetail> cancel(String id, String reason);
+  Future<RequestDetail> decideQuote(String id, {required bool approve});
+  Future<RequestDetail> rate(String id, int stars, {String? comment});
+
+  /// Order-bound chat between the customer and the assigned technician.
+  Future<List<ChatMessage>> messages(String id);
+  Future<void> sendMessage(String id, String text);
 }
 
-class HttpRequestsRepository implements RequestsRepository {
-  HttpRequestsRepository(this._api);
+class LocalRequestsRepository implements RequestsRepository {
+  LocalRequestsRepository(this._backend);
 
-  final ApiClient _api;
+  final DemoBackend _backend;
 
-  List<Map<String, dynamic>> _items(Map<String, dynamic> json) {
-    final items = json['items'];
-    if (items is! List) {
-      throw const ApiException(code: ApiException.badResponse);
-    }
-    return items.cast<Map<String, dynamic>>();
-  }
+  List<Map<String, dynamic>> _items(Map<String, dynamic> json) =>
+      (json['items'] as List<dynamic>).cast<Map<String, dynamic>>();
 
   @override
   Future<RequestOptions> options() async =>
-      RequestOptions.fromJson(await _api.get('/requests/options'));
+      RequestOptions.fromJson(await _backend.requestOptions());
 
   @override
   Future<List<SavedAddress>> savedAddresses() async =>
-      _items(await _api.get('/me/addresses', authenticated: true))
+      (await _backend.addresses())
           .map(SavedAddress.fromJson)
           .toList(growable: false);
 
   @override
-  Future<void> deleteAddress(String id) => _api.delete(
-    '/me/addresses/${Uri.encodeComponent(id)}',
-    authenticated: true,
-  );
+  Future<void> deleteAddress(String id) => _backend.deleteAddress(id);
 
   @override
   Future<RequestDetail> submit(
     RequestSubmission submission, {
     required String idempotencyKey,
   }) async => RequestDetail.fromJson(
-    await _api.post(
-      '/requests',
-      body: submission.toJson(),
-      headers: {'Idempotency-Key': idempotencyKey},
-      authenticated: true,
-    ),
+    await _backend.submitRequest(submission.toJson(), idempotencyKey),
   );
 
   @override
   Future<RequestPage> list({String? cursor}) async {
-    final query = cursor == null
-        ? ''
-        : '?cursor=${Uri.encodeQueryComponent(cursor)}';
-    final json = await _api.get('/requests$query', authenticated: true);
+    final json = await _backend.listRequests(cursor: cursor);
     return RequestPage(
       items: _items(json).map(RequestSummary.fromJson).toList(growable: false),
       nextCursor: json['nextCursor'] as String?,
@@ -71,7 +63,28 @@ class HttpRequestsRepository implements RequestsRepository {
   }
 
   @override
-  Future<RequestDetail> get(String id) async => RequestDetail.fromJson(
-    await _api.get('/requests/${Uri.encodeComponent(id)}', authenticated: true),
-  );
+  Future<RequestDetail> get(String id) async =>
+      RequestDetail.fromJson(await _backend.getRequest(id));
+
+  @override
+  Future<RequestDetail> cancel(String id, String reason) async =>
+      RequestDetail.fromJson(await _backend.cancelRequest(id, reason));
+
+  @override
+  Future<RequestDetail> decideQuote(String id, {required bool approve}) async =>
+      RequestDetail.fromJson(await _backend.decideQuote(id, approve: approve));
+
+  @override
+  Future<RequestDetail> rate(String id, int stars, {String? comment}) async =>
+      RequestDetail.fromJson(await _backend.rate(id, stars, comment));
+
+  @override
+  Future<List<ChatMessage>> messages(String id) async =>
+      (await _backend.messages(id))
+          .map(ChatMessage.fromJson)
+          .toList(growable: false);
+
+  @override
+  Future<void> sendMessage(String id, String text) =>
+      _backend.sendMessage(id, text);
 }

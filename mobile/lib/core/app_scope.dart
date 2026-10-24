@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import '../features/admin/data/admin_repository.dart';
 import '../features/auth/application/auth_controller.dart';
 import '../features/catalog/data/catalog_repository.dart';
+import '../features/jobs/data/jobs_repository.dart';
 import '../features/media/data/media_repository.dart';
+import '../features/notifications/data/notifications_repository.dart';
 import '../features/requests/data/requests_repository.dart';
 import '../features/technician/data/technician_repository.dart';
 import 'device/image_picker_service.dart';
@@ -23,6 +25,10 @@ class AppScope extends InheritedWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    required this.jobs,
+    required this.notifications,
+    required this.changes,
+    this.resetDemo,
     required super.child,
   });
 
@@ -35,6 +41,14 @@ class AppScope extends InheritedWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final JobsRepository jobs;
+  final NotificationsRepository notifications;
+
+  /// Fires whenever local data changes, so open screens can refresh.
+  final Listenable changes;
+
+  /// Wipes local data back to the demo seed; null where not supported (tests with fakes).
+  final Future<void> Function()? resetDemo;
 
   static AppScope of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppScope>();
@@ -52,5 +66,8 @@ class AppScope extends InheritedWidget {
       technician != oldWidget.technician ||
       admin != oldWidget.admin ||
       imagePicker != oldWidget.imagePicker ||
-      location != oldWidget.location;
+      location != oldWidget.location ||
+      jobs != oldWidget.jobs ||
+      notifications != oldWidget.notifications ||
+      changes != oldWidget.changes;
 }

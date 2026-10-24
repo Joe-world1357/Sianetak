@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/app_scope.dart';
-import '../../../core/format/dates.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../auth/domain/egypt_phone.dart';
 import '../domain/request_models.dart';
-import 'request_detail_screen.dart';
-import 'widgets/request_status_chip.dart';
+import 'widgets/request_card.dart';
 
 /// The customer's submitted requests, newest first.
 class MyRequestsScreen extends StatefulWidget {
@@ -26,10 +23,39 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
   Object? _error;
   Object? _moreError;
 
+  Listenable? _changes;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_loading && _items.isEmpty && _error == null) _load();
+    final changes = AppScope.of(context).changes;
+    if (changes != _changes) {
+      _changes?.removeListener(_refresh);
+      _changes = changes..addListener(_refresh);
+    }
+  }
+
+  @override
+  void dispose() {
+    _changes?.removeListener(_refresh);
+    super.dispose();
+  }
+
+  /// Picks up changes made elsewhere (a technician accepting, a status update).
+  Future<void> _refresh() async {
+    try {
+      final page = await AppScope.of(context).requests.list();
+      if (!mounted) return;
+      setState(() {
+        _items
+          ..clear()
+          ..addAll(page.items);
+        _cursor = page.nextCursor;
+      });
+    } catch (_) {
+      // Keep what is on screen; pull-to-refresh shows errors.
+    }
   }
 
   Future<void> _load() async {
@@ -102,7 +128,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
                           const SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, i) {
                         if (i < _items.length) {
-                          return _RequestCard(request: _items[i]);
+                          return RequestCard(request: _items[i]);
                         }
                         if (_cursor == null) return const SizedBox.shrink();
                         return Column(
@@ -118,63 +144,6 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
                       },
                     ),
             ),
-    );
-  }
-}
-
-class _RequestCard extends StatelessWidget {
-  const _RequestCard({required this.request});
-
-  final RequestSummary request;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final lang = Localizations.localeOf(context).languageCode;
-    final theme = Theme.of(context);
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => RequestDetailScreen(requestId: request.id),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      request.service.name.resolve(lang),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  RequestStatusChip(status: request.status),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                '${l10n.requestReferenceLabel}: ${isolateLtr(request.reference)}',
-                style: theme.textTheme.bodyMedium,
-              ),
-              Text(
-                '${request.area.name.resolve(lang)} · ${scheduleLabel(l10n, request.schedule, lang)}',
-                style: theme.textTheme.bodySmall,
-              ),
-              Text(
-                l10n.submittedOn(formatDateTime(request.submittedAt, lang)),
-                style: theme.textTheme.bodySmall,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

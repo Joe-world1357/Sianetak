@@ -1,0 +1,99 @@
+name: Android APK
+
+# Builds the standalone demo as a debug APK, checks it installs and launches on an emulator,
+# and publishes it as Sianetak-debug.apk on the "demo-debug" prerelease for direct download.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'claude/**']
+    paths: ['mobile/**', '.github/workflows/android-apk.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.8
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build apk --debug
+      - name: Verify APK
+        run: |
+          apk=build/app/outputs/flutter-apk/app-debug.apk
+          test -s "$apk"
+          tools="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          "$tools/aapt2" dump badging "$apk" | head -3
+          "$tools/apksigner" verify --print-certs "$apk" | head -2
+          cp "$apk" ../Sianetak-debug.apk
+          ls -l ../Sianetak-debug.apk
+          sha256sum ../Sianetak-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sianetak-debug
+          path: Sianetak-debug.apk
+
+  install-check:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Sianetak-debug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install -r Sianetak-debug.apk
+            adb shell monkey -p eg.sianetak.sianetak_customer -c android.intent.category.LAUNCHER 1
+            sleep 20
+            adb shell pidof eg.sianetak.sianetak_customer
+            adb exec-out screencap -p > launch.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: emulator-launch-screenshot
+          path: launch.png
+
+  publish:
+    needs: install-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Sianetak-debug
+      - name: Publish to the demo-debug prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="Debug build of ${GITHUB_REF_NAME} at ${GITHUB_SHA::7}. Download Sianetak-debug.apk on your phone and open it to install."
+          if gh release view demo-debug >/dev/null 2>&1; then
+            gh release edit demo-debug --target "$GITHUB_SHA" --notes "$notes"
+          else
+            gh release create demo-debug --prerelease --target "$GITHUB_SHA" --title "Sianetak demo (debug APK)" --notes "$notes"
+          fi
+          gh release upload demo-debug Sianetak-debug.apk --clobber

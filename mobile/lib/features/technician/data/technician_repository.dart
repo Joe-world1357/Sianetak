@@ -1,4 +1,4 @@
-import '../../../core/network/api_client.dart';
+import '../../../demo/demo_backend.dart';
 import '../../requests/domain/request_models.dart';
 import '../domain/technician_models.dart';
 
@@ -8,34 +8,25 @@ abstract class TechnicianRepository {
   Future<List<ServiceArea>> serviceAreas();
 }
 
-class HttpTechnicianRepository implements TechnicianRepository {
-  HttpTechnicianRepository(this._api);
+class LocalTechnicianRepository implements TechnicianRepository {
+  LocalTechnicianRepository(this._backend);
 
-  final ApiClient _api;
+  final DemoBackend _backend;
 
   @override
-  Future<OwnApplicationState> getOwn() async => OwnApplicationState.fromJson(
-    await _api.get('/technician/application', authenticated: true),
-  );
+  Future<OwnApplicationState> getOwn() async =>
+      OwnApplicationState.fromJson(await _backend.ownApplication());
 
   @override
   Future<TechnicianApplication> submit(ApplicationSubmission submission) async {
-    final json = await _api.put(
-      '/technician/application',
-      body: submission.toJson(),
-      authenticated: true,
-    );
+    final json = await _backend.submitApplication(submission.toJson());
     return TechnicianApplication.fromJson(
       json['application'] as Map<String, dynamic>,
     );
   }
 
   @override
-  Future<List<ServiceArea>> serviceAreas() async {
-    final json = await _api.get('/service-areas');
-    return (json['items'] as List<dynamic>? ?? const [])
-        .cast<Map<String, dynamic>>()
-        .map(ServiceArea.fromJson)
-        .toList(growable: false);
-  }
+  Future<List<ServiceArea>> serviceAreas() async => (await _backend.areas())
+      .map(ServiceArea.fromJson)
+      .toList(growable: false);
 }

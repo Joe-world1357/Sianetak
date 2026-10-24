@@ -8,8 +8,11 @@ import 'package:sianetak_customer/features/auth/data/auth_repository.dart';
 import 'package:sianetak_customer/features/auth/domain/auth_models.dart';
 import 'package:sianetak_customer/features/catalog/data/catalog_repository.dart';
 import 'package:sianetak_customer/features/catalog/domain/catalog_models.dart';
+import 'package:sianetak_customer/features/jobs/data/jobs_repository.dart';
+import 'package:sianetak_customer/features/jobs/domain/job_models.dart';
 import 'package:sianetak_customer/features/media/data/media_repository.dart';
 import 'package:sianetak_customer/features/media/domain/media_models.dart';
+import 'package:sianetak_customer/features/notifications/data/notifications_repository.dart';
 import 'package:sianetak_customer/features/requests/data/requests_repository.dart';
 import 'package:sianetak_customer/features/requests/domain/request_models.dart';
 import 'package:sianetak_customer/features/technician/data/technician_repository.dart';
@@ -90,86 +93,41 @@ class FakeCatalogRepository implements CatalogRepository {
   );
 }
 
-/// Scriptable auth backend: records calls and returns queued answers.
+/// Demo-account auth with one scriptable user per role.
 class FakeAuthRepository implements AuthRepository {
-  FakeAuthRepository({this.codeLength = 6, this.resendAfterSeconds = 60});
-
-  final int codeLength;
-  final int resendAfterSeconds;
-
-  /// The code the fake server accepts.
-  String validCode = '123456';
-  Object? requestError;
-  Object? verifyError;
-  Object? refreshError = const ApiException(
-    code: 'REFRESH_TOKEN_INVALID',
-    statusCode: 401,
-  );
-  String? devCode;
-  int requestCount = 0;
-  int verifyCount = 0;
-  int logoutCount = 0;
-  String? lastName;
-  AppUser user = const AppUser(
-    id: 'u1',
-    phone: '+201012345678',
-    name: null,
-    role: UserRole.customer,
-  );
-
-  @override
-  Future<OtpChallenge> requestOtp(String phoneE164) async {
-    requestCount++;
-    if (requestError != null) throw requestError!;
-    return OtpChallenge(
-      challengeId: 'challenge-$requestCount',
-      phone: phoneE164,
-      codeLength: codeLength,
-      resendAfterSeconds: resendAfterSeconds,
-      expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      devCode: devCode,
-    );
-  }
-
-  @override
-  Future<AuthSession> verifyOtp(OtpChallenge challenge, String code) async {
-    verifyCount++;
-    if (verifyError != null) throw verifyError!;
-    if (code != validCode) {
-      throw const ApiException(
-        code: 'OTP_INVALID',
-        statusCode: 400,
-        details: {'attemptsRemaining': 4},
+  FakeAuthRepository({UserRole role = UserRole.customer})
+    : user = AppUser(
+        id: 'u1',
+        phone: '+201012345678',
+        name: 'أحمد',
+        role: role,
       );
-    }
-    return AuthSession(
-      accessToken: 'access-$verifyCount',
-      refreshToken: 'refresh-$verifyCount',
-      user: user,
-    );
+
+  AppUser user;
+  AppUser? signedIn;
+  String? lastName;
+  int signOutCount = 0;
+
+  @override
+  Future<List<AppUser>> demoAccounts() async => [user];
+
+  @override
+  Future<AppUser> signInAs(String userId) async => signedIn = user;
+
+  @override
+  Future<AppUser?> currentUser() async => signedIn;
+
+  @override
+  Future<void> signOut() async {
+    signOutCount++;
+    signedIn = null;
   }
-
-  @override
-  Future<AuthSession> refresh(String refreshToken) async {
-    if (refreshError != null) throw refreshError!;
-    return AuthSession(
-      accessToken: 'access-refreshed',
-      refreshToken: 'refresh-rotated',
-      user: user,
-    );
-  }
-
-  @override
-  Future<void> logout(String refreshToken) async => logoutCount++;
-
-  @override
-  Future<AppUser> fetchMe() async => user;
 
   @override
   Future<AppUser> updateName(String name) async {
     lastName = name;
     user = AppUser(id: user.id, phone: user.phone, name: name, role: user.role);
-    return user;
+    return signedIn = user;
   }
 }
 
@@ -292,6 +250,24 @@ class FakeRequestsRepository implements RequestsRepository {
     _byKey[idempotencyKey] = detail;
     return detail;
   }
+
+  @override
+  Future<RequestDetail> cancel(String id, String reason) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> decideQuote(String id, {required bool approve}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> rate(String id, int stars, {String? comment}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<List<ChatMessage>> messages(String id) async => const [];
+
+  @override
+  Future<void> sendMessage(String id, String text) async {}
 
   @override
   Future<RequestPage> list({String? cursor}) async {
@@ -595,6 +571,71 @@ class FakeAdminRepository implements AdminRepository {
     applications[i] = updated;
     return updated;
   }
+
+  @override
+  Future<AdminOverview> overview() async => const AdminOverview(
+    statusCounts: {},
+    pendingApplications: 0,
+    approvedTechnicians: 0,
+    commissionMinor: 0,
+  );
+
+  @override
+  Future<List<RequestSummary>> requests(Set<RequestStatus> statuses) async =>
+      const [];
+
+  @override
+  Future<List<PersonRef>> assignableTechnicians(String requestId) async =>
+      const [];
+
+  @override
+  Future<RequestDetail> assign(String requestId, String technicianId) =>
+      throw UnimplementedError();
+}
+
+/// Technician dispatch with no offers or jobs.
+class FakeJobsRepository implements JobsRepository {
+  @override
+  Future<List<OfferedJob>> offers() async => const [];
+
+  @override
+  Future<RequestDetail> accept(String offerId) => throw UnimplementedError();
+
+  @override
+  Future<void> decline(String offerId) async {}
+
+  @override
+  Future<List<RequestSummary>> jobs({required bool active}) async => const [];
+
+  @override
+  Future<RequestDetail> advance(String requestId, JobStep step) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> sendQuote(
+    String requestId,
+    int amountMinor, {
+    String? note,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Earnings> earnings() async => const Earnings(
+    jobs: 0,
+    collectedMinor: 0,
+    commissionMinor: 0,
+    ratingCount: 0,
+  );
+}
+
+class FakeNotificationsRepository implements NotificationsRepository {
+  @override
+  Future<List<AppNotification>> list() async => const [];
+
+  @override
+  Future<void> markAllRead() async {}
+
+  @override
+  int unreadCount() => 0;
 }
 
 ReviewApplication reviewApplication({

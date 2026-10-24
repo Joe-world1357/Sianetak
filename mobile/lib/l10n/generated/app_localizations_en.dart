@@ -29,9 +29,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchLanguageTooltip => 'Switch language to Arabic';
 
   @override
-  String get accountTooltip => 'My account';
-
-  @override
   String get signInTooltip => 'Sign in';
 
   @override
@@ -110,115 +107,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInToRequest => 'Sign in to request this service';
 
   @override
-  String get signInTitle => 'Sign in';
+  String get signInTitle => 'Choose a demo account';
 
   @override
   String get signInSubtitle =>
-      'Enter your mobile number and we\'ll text you a verification code.';
-
-  @override
-  String get phoneLabel => 'Mobile number';
-
-  @override
-  String get phoneHint => '01XXXXXXXXX';
-
-  @override
-  String get phoneInvalid =>
-      'Enter a valid Egyptian mobile number (e.g. 01012345678).';
-
-  @override
-  String get sendCodeButton => 'Send code';
-
-  @override
-  String get otpTitle => 'Enter verification code';
-
-  @override
-  String otpSubtitle(int length, String phone) {
-    return 'We sent a $length-digit code to $phone.';
-  }
-
-  @override
-  String get otpLabel => 'Verification code';
-
-  @override
-  String otpInvalidFormat(int length) {
-    return 'Enter the full $length-digit code.';
-  }
-
-  @override
-  String get verifyButton => 'Verify';
-
-  @override
-  String resendIn(int seconds) {
-    return 'Resend in ${seconds}s';
-  }
-
-  @override
-  String get resendButton => 'Resend code';
-
-  @override
-  String get changeNumber => 'Change number';
-
-  @override
-  String get codeResent => 'A new code has been sent.';
-
-  @override
-  String devCodeBanner(String code) {
-    return 'Development only — no SMS was sent. Code: $code';
-  }
-
-  @override
-  String errorOtpInvalid(int attempts) {
-    String _temp0 = intl.Intl.pluralLogic(
-      attempts,
-      locale: localeName,
-      other: '$attempts attempts left.',
-      one: '1 attempt left.',
-      zero: 'No attempts left.',
-    );
-    return 'Incorrect code. $_temp0';
-  }
-
-  @override
-  String get errorOtpInvalidNoCount => 'Incorrect code.';
-
-  @override
-  String get errorOtpExpired => 'This code has expired. Request a new one.';
-
-  @override
-  String get errorOtpTooManyAttempts =>
-      'Too many incorrect attempts. Request a new code.';
-
-  @override
-  String errorResendTooSoon(int seconds) {
-    return 'Wait $seconds seconds before requesting a new code.';
-  }
-
-  @override
-  String get errorOtpRateLimited =>
-      'Too many codes were requested for this number. Try again later.';
-
-  @override
-  String get errorRateLimited =>
-      'Too many requests. Wait a moment and try again.';
-
-  @override
-  String get errorOtpUnavailable => 'SMS sign-in isn\'t available right now.';
-
-  @override
-  String get errorOtpDeliveryFailed =>
-      'Couldn\'t send the code. Please try again.';
-
-  @override
-  String get errorAccountSuspended =>
-      'This account has been suspended. Please contact support.';
+      'A demo that runs entirely on your phone. Try the app in any role.';
 
   @override
   String get errorSessionExpired =>
       'Your session has ended. Please sign in again.';
-
-  @override
-  String get signedInWelcome => 'Welcome! You\'re signed in.';
 
   @override
   String get profileTitle => 'My account';
@@ -231,12 +128,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileNameInvalid => 'Enter a name with at least 2 letters.';
-
-  @override
-  String get profilePhoneLabel => 'Mobile number';
-
-  @override
-  String get profileRoleLabel => 'Account type';
 
   @override
   String get roleCustomer => 'Customer';
@@ -530,7 +421,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backToHomeButton => 'Back to home';
 
   @override
-  String get statusSubmitted => 'Received';
+  String get statusSubmitted => 'Finding a technician';
 
   @override
   String get statusUnknown => 'Unknown';
@@ -643,16 +534,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorCannotReviewOwn => 'You can\'t review your own application.';
 
   @override
-  String get myRequestsEntry => 'My requests';
-
-  @override
   String get technicianEntryApply => 'Join as a technician';
 
   @override
   String get technicianEntryStatus => 'My technician application';
-
-  @override
-  String get adminReviewEntry => 'Review technician applications';
 
   @override
   String get technicianApplyTitle => 'Join as a technician';
@@ -861,4 +746,593 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminDecisionSaved => 'Decision saved.';
+
+  @override
+  String get statusUnmatched => 'Waiting for operations';
+
+  @override
+  String get statusAssigned => 'Technician assigned';
+
+  @override
+  String get statusEnRoute => 'On the way';
+
+  @override
+  String get statusArrived => 'Technician arrived';
+
+  @override
+  String get statusQuoted => 'Awaiting quote approval';
+
+  @override
+  String get statusQuoteRejected => 'Quote declined';
+
+  @override
+  String get statusInProgress => 'Work in progress';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get demoCustomerBlurb =>
+      'Request a service, track the technician, approve the price, rate.';
+
+  @override
+  String get demoTechnicianBlurb =>
+      'Receive offers, update job status and send quotes.';
+
+  @override
+  String get demoAdminBlurb =>
+      'Monitor requests, assign technicians and review applications.';
+
+  @override
+  String get demoOfflineNote =>
+      'No internet or verification code needed. Data is saved on this device and can be reset from My account.';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hi $name 👋';
+  }
+
+  @override
+  String get tabHome => 'Home';
+
+  @override
+  String get tabRequests => 'Requests';
+
+  @override
+  String get tabNotifications => 'Alerts';
+
+  @override
+  String get tabAccount => 'Account';
+
+  @override
+  String get tabOffers => 'Offers';
+
+  @override
+  String get tabJobs => 'My jobs';
+
+  @override
+  String get tabDashboard => 'Dashboard';
+
+  @override
+  String get tabTechnicians => 'Technicians';
+
+  @override
+  String get languageSetting => 'Language';
+
+  @override
+  String get switchAccountButton => 'Switch demo account';
+
+  @override
+  String get resetDemoButton => 'Reset demo data';
+
+  @override
+  String get resetDemoTitle => 'Reset demo data?';
+
+  @override
+  String get resetDemoBody =>
+      'All requests, messages and photos on this device will be deleted and the original demo data restored.';
+
+  @override
+  String get technicianCardTitle => 'Technician';
+
+  @override
+  String get customerCardTitle => 'Customer';
+
+  @override
+  String get ratingNone => 'No ratings yet';
+
+  @override
+  String ratingSummary(String avg, int count) {
+    return '$avg ($count)';
+  }
+
+  @override
+  String ratingStars(int stars) {
+    return '$stars out of 5 stars';
+  }
+
+  @override
+  String get ratingTitle => 'Your rating';
+
+  @override
+  String get etaEstimate => 'Estimated arrival in about 20–30 minutes';
+
+  @override
+  String get chatOpenButton => 'Message about this request';
+
+  @override
+  String get chatViewButton => 'View conversation';
+
+  @override
+  String get chatTitle => 'Conversation';
+
+  @override
+  String get chatEmpty => 'No messages yet. Say hello.';
+
+  @override
+  String get chatHint => 'Write a message…';
+
+  @override
+  String get chatSend => 'Send';
+
+  @override
+  String get chatReadOnly => 'This conversation is read-only.';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentCashCollected => 'Cash collected';
+
+  @override
+  String get paymentCommission => 'Platform commission';
+
+  @override
+  String get paymentRecordedAt => 'Recorded at';
+
+  @override
+  String get cancelReasonTitle => 'Cancellation reason';
+
+  @override
+  String get addressHiddenUntilAccepted =>
+      'The full address appears once you accept.';
+
+  @override
+  String get byOperations => 'by operations';
+
+  @override
+  String get quoteTitle => 'Quote';
+
+  @override
+  String get quotePending => 'Awaiting approval';
+
+  @override
+  String get quoteApproved => 'Approved';
+
+  @override
+  String get quoteRejected => 'Declined';
+
+  @override
+  String journeyStep(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get cancelRequestButton => 'Cancel request';
+
+  @override
+  String get cancelSheetTitle => 'Why are you cancelling?';
+
+  @override
+  String get cancelReasonChangedMind => 'I no longer need the service';
+
+  @override
+  String get cancelReasonFixed => 'The problem got fixed';
+
+  @override
+  String get cancelReasonTooLong => 'It\'s taking too long';
+
+  @override
+  String get cancelReasonOther => 'Another reason';
+
+  @override
+  String get requestCancelledToast => 'Request cancelled.';
+
+  @override
+  String get customerSearchingTitle => 'Finding you a technician';
+
+  @override
+  String get customerSearchingBody =>
+      'We\'ve sent your request to approved technicians in your area. You\'ll be notified as soon as one accepts.';
+
+  @override
+  String get customerUnmatchedTitle => 'No technician has accepted yet';
+
+  @override
+  String get customerUnmatchedBody =>
+      'Our operations team will assign one for you shortly.';
+
+  @override
+  String get customerAssignedTitle => 'Your technician is on it';
+
+  @override
+  String get customerAssignedBody =>
+      'The technician will inspect the problem and send you a quote before any work starts.';
+
+  @override
+  String customerQuoteTitle(String amount) {
+    return 'Quote: $amount';
+  }
+
+  @override
+  String get customerQuoteBody =>
+      'Work starts only after you approve. Pay in cash when it\'s done.';
+
+  @override
+  String get customerQuoteRejectedTitle => 'You declined the quote';
+
+  @override
+  String get customerQuoteRejectedBody =>
+      'The technician can send a new quote, or you can cancel.';
+
+  @override
+  String get customerInProgressTitle => 'Work is underway';
+
+  @override
+  String get customerInProgressBody =>
+      'The technician will confirm completion and collect the agreed amount.';
+
+  @override
+  String get customerCompletedTitle => 'Service completed';
+
+  @override
+  String get customerCompletedBody => 'Tell us how it went to help others.';
+
+  @override
+  String get approveQuoteButton => 'Approve quote';
+
+  @override
+  String get rejectQuoteButton => 'Decline';
+
+  @override
+  String get quoteApprovedToast => 'Approved. The technician can start.';
+
+  @override
+  String get rateButton => 'Rate the service';
+
+  @override
+  String get rateSheetTitle => 'How was the service?';
+
+  @override
+  String get rateCommentLabel => 'Comment (optional)';
+
+  @override
+  String get rateSubmitButton => 'Submit rating';
+
+  @override
+  String get ratingThanks => 'Thanks for your rating!';
+
+  @override
+  String get offerForYouTitle => 'A new job for you';
+
+  @override
+  String offerExpiresIn(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Expires in $minutes minutes',
+      one: 'Expires in 1 minute',
+      zero: 'Expires now',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get acceptOfferButton => 'Accept job';
+
+  @override
+  String get declineOfferButton => 'Decline';
+
+  @override
+  String get offerAcceptedToast => 'Job accepted. The customer has been told.';
+
+  @override
+  String get techAssignedTitle => 'This job is yours';
+
+  @override
+  String get techAssignedBody => 'Let the customer know when you set off.';
+
+  @override
+  String get onMyWayButton => 'I\'m on my way';
+
+  @override
+  String get arrivedButton => 'I\'ve arrived';
+
+  @override
+  String get customerNotifiedToast => 'The customer has been notified.';
+
+  @override
+  String get techQuoteNeededTitle => 'Inspect and send a quote';
+
+  @override
+  String get techQuoteRejectedTitle => 'The customer declined your quote';
+
+  @override
+  String get techQuoteNeededBody =>
+      'Work can\'t start until the customer approves the price.';
+
+  @override
+  String get sendQuoteButton => 'Send quote';
+
+  @override
+  String get techAwaitingApprovalTitle => 'Waiting for the customer';
+
+  @override
+  String get techAwaitingApprovalBody =>
+      'We\'ll tell you as soon as they respond.';
+
+  @override
+  String get techWorkingTitle => 'Approved: start the work';
+
+  @override
+  String techWorkingBody(String amount) {
+    return 'When finished, collect $amount in cash and confirm.';
+  }
+
+  @override
+  String get completeJobButton => 'Finish & record cash';
+
+  @override
+  String get completeJobTitle => 'Confirm completion';
+
+  @override
+  String completeJobBody(String amount) {
+    return 'Is the work done and $amount collected in cash?';
+  }
+
+  @override
+  String get jobCompletedToast => 'Completion and payment recorded.';
+
+  @override
+  String get quoteSheetTitle => 'Your quote';
+
+  @override
+  String get quoteSheetHint =>
+      'Enter the total price (labour and parts) after inspection.';
+
+  @override
+  String get quoteAmountLabel => 'Amount';
+
+  @override
+  String get quoteAmountInvalid => 'Enter a valid amount.';
+
+  @override
+  String get quoteNoteLabel => 'Work details (optional)';
+
+  @override
+  String get currencyEgpShort => 'EGP';
+
+  @override
+  String get quoteSentToast => 'Quote sent to the customer.';
+
+  @override
+  String get adminSearchingTitle => 'Offers are out';
+
+  @override
+  String get adminUnmatchedTitle => 'Needs manual assignment';
+
+  @override
+  String get adminAssignBody =>
+      'You can assign an approved technician who covers this service and area.';
+
+  @override
+  String get assignTechnicianButton => 'Assign technician';
+
+  @override
+  String get assignSheetTitle => 'Choose a technician';
+
+  @override
+  String get assignNoneEligible =>
+      'No approved technician covers this service and area.';
+
+  @override
+  String get assignedToast => 'Technician assigned.';
+
+  @override
+  String get offersTitle => 'Job offers';
+
+  @override
+  String get offersIntro =>
+      'Requests matching your skills and areas. The first to accept gets the job.';
+
+  @override
+  String get offersEmpty => 'No new offers right now. We\'ll let you know.';
+
+  @override
+  String get myJobsTitle => 'My jobs';
+
+  @override
+  String get jobsActiveTab => 'Active';
+
+  @override
+  String get jobsHistoryTab => 'History';
+
+  @override
+  String get jobsEmptyActive => 'No active jobs. Accept an offer to start.';
+
+  @override
+  String get jobsEmptyHistory => 'No finished jobs yet.';
+
+  @override
+  String get earningsTitle => 'Your net earnings';
+
+  @override
+  String get earningsNetHint => 'After the platform commission (10%, proposed)';
+
+  @override
+  String get earningsJobs => 'Jobs';
+
+  @override
+  String get earningsCollected => 'Collected';
+
+  @override
+  String get earningsCommission => 'Commission';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsEmpty => 'No notifications yet.';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String ntfNewOffer(String ref) {
+    return 'New job offer $ref';
+  }
+
+  @override
+  String ntfAssignedByAdmin(String ref) {
+    return 'Operations assigned you to $ref';
+  }
+
+  @override
+  String ntfAssigned(String ref) {
+    return 'A technician was assigned to $ref';
+  }
+
+  @override
+  String ntfEnRoute(String ref) {
+    return 'Your technician is on the way $ref';
+  }
+
+  @override
+  String ntfArrived(String ref) {
+    return 'Your technician has arrived $ref';
+  }
+
+  @override
+  String ntfQuoted(String ref) {
+    return 'You have a quote for $ref';
+  }
+
+  @override
+  String ntfQuoteApproved(String ref) {
+    return 'The customer approved your quote $ref';
+  }
+
+  @override
+  String ntfQuoteRejected(String ref) {
+    return 'The customer declined your quote $ref';
+  }
+
+  @override
+  String ntfCompleted(String ref) {
+    return 'Service completed $ref. Rate your technician';
+  }
+
+  @override
+  String ntfRated(String ref) {
+    return 'You received a new rating $ref';
+  }
+
+  @override
+  String ntfMessage(String ref) {
+    return 'New message about $ref';
+  }
+
+  @override
+  String ntfCancelled(String ref) {
+    return 'Request $ref was cancelled';
+  }
+
+  @override
+  String ntfUnmatched(String ref) {
+    return 'Request $ref needs a technician';
+  }
+
+  @override
+  String get ntfApplicationSubmitted =>
+      'A new technician application is waiting for review';
+
+  @override
+  String get ntfApplicationApproved =>
+      'Your technician application was approved';
+
+  @override
+  String get ntfApplicationRejected =>
+      'Your technician application was not approved';
+
+  @override
+  String get ntfApplicationSuspended => 'Your technician account was suspended';
+
+  @override
+  String get adminDashboardTitle => 'Operations';
+
+  @override
+  String get kpiNeedsAttention => 'Need attention';
+
+  @override
+  String get kpiInProgress => 'In progress';
+
+  @override
+  String get kpiCompleted => 'Completed';
+
+  @override
+  String get kpiCommission => 'Commission earned';
+
+  @override
+  String kpiPendingApplications(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count applications waiting for review',
+      one: '1 application waiting for review',
+      zero: 'No applications waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kpiApprovedTechnicians(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count approved technicians',
+      one: '1 approved technician',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminRequestsTitle => 'Requests';
+
+  @override
+  String get adminFilterAttention => 'Needs attention';
+
+  @override
+  String get adminFilterActive => 'Active';
+
+  @override
+  String get adminFilterDone => 'Closed';
+
+  @override
+  String get adminFilterAll => 'All';
+
+  @override
+  String get adminRequestsEmpty => 'Nothing here.';
+
+  @override
+  String get errorOfferExpired => 'This offer has expired.';
+
+  @override
+  String get errorOfferTaken => 'Another technician already took this job.';
+
+  @override
+  String get errorStateConflict =>
+      'The request has changed. Refresh and try again.';
 }

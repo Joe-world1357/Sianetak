@@ -134,12 +134,6 @@ abstract class AppLocalizations {
   /// **'تغيير اللغة إلى الإنجليزية'**
   String get switchLanguageTooltip;
 
-  /// No description provided for @accountTooltip.
-  ///
-  /// In ar, this message translates to:
-  /// **'حسابي'**
-  String get accountTooltip;
-
   /// No description provided for @signInTooltip.
   ///
   /// In ar, this message translates to:
@@ -263,170 +257,20 @@ abstract class AppLocalizations {
   /// No description provided for @signInTitle.
   ///
   /// In ar, this message translates to:
-  /// **'تسجيل الدخول'**
+  /// **'اختر حساب التجربة'**
   String get signInTitle;
 
   /// No description provided for @signInSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'أدخل رقم الموبايل وسنرسل إليك رمز تحقق في رسالة نصية.'**
+  /// **'نسخة عرض تعمل بالكامل على جهازك. جرّب التطبيق بأي دور.'**
   String get signInSubtitle;
-
-  /// No description provided for @phoneLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'رقم الموبايل'**
-  String get phoneLabel;
-
-  /// No description provided for @phoneHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'01XXXXXXXXX'**
-  String get phoneHint;
-
-  /// No description provided for @phoneInvalid.
-  ///
-  /// In ar, this message translates to:
-  /// **'أدخل رقم موبايل مصري صحيح (مثال: 01012345678).'**
-  String get phoneInvalid;
-
-  /// No description provided for @sendCodeButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'إرسال الرمز'**
-  String get sendCodeButton;
-
-  /// No description provided for @otpTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'أدخل رمز التحقق'**
-  String get otpTitle;
-
-  /// No description provided for @otpSubtitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'أرسلنا رمزًا من {length} أرقام إلى {phone}.'**
-  String otpSubtitle(int length, String phone);
-
-  /// No description provided for @otpLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'رمز التحقق'**
-  String get otpLabel;
-
-  /// No description provided for @otpInvalidFormat.
-  ///
-  /// In ar, this message translates to:
-  /// **'أدخل الرمز كاملًا ({length} أرقام).'**
-  String otpInvalidFormat(int length);
-
-  /// No description provided for @verifyButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'تأكيد'**
-  String get verifyButton;
-
-  /// No description provided for @resendIn.
-  ///
-  /// In ar, this message translates to:
-  /// **'إعادة الإرسال بعد {seconds} ث'**
-  String resendIn(int seconds);
-
-  /// No description provided for @resendButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'إعادة إرسال الرمز'**
-  String get resendButton;
-
-  /// No description provided for @changeNumber.
-  ///
-  /// In ar, this message translates to:
-  /// **'تغيير الرقم'**
-  String get changeNumber;
-
-  /// No description provided for @codeResent.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم إرسال رمز جديد.'**
-  String get codeResent;
-
-  /// No description provided for @devCodeBanner.
-  ///
-  /// In ar, this message translates to:
-  /// **'وضع التطوير فقط — لم تُرسل رسالة. الرمز: {code}'**
-  String devCodeBanner(String code);
-
-  /// No description provided for @errorOtpInvalid.
-  ///
-  /// In ar, this message translates to:
-  /// **'الرمز غير صحيح. {attempts, plural, =0{لا توجد محاولات متبقية.} =1{تبقّت محاولة واحدة.} =2{تبقّت محاولتان.} few{تبقّت {attempts} محاولات.} other{تبقّت {attempts} محاولة.}}'**
-  String errorOtpInvalid(int attempts);
-
-  /// No description provided for @errorOtpInvalidNoCount.
-  ///
-  /// In ar, this message translates to:
-  /// **'الرمز غير صحيح.'**
-  String get errorOtpInvalidNoCount;
-
-  /// No description provided for @errorOtpExpired.
-  ///
-  /// In ar, this message translates to:
-  /// **'انتهت صلاحية الرمز. اطلب رمزًا جديدًا.'**
-  String get errorOtpExpired;
-
-  /// No description provided for @errorOtpTooManyAttempts.
-  ///
-  /// In ar, this message translates to:
-  /// **'محاولات خاطئة كثيرة. اطلب رمزًا جديدًا.'**
-  String get errorOtpTooManyAttempts;
-
-  /// No description provided for @errorResendTooSoon.
-  ///
-  /// In ar, this message translates to:
-  /// **'انتظر {seconds} ثانية قبل طلب رمز جديد.'**
-  String errorResendTooSoon(int seconds);
-
-  /// No description provided for @errorOtpRateLimited.
-  ///
-  /// In ar, this message translates to:
-  /// **'طلبت رموزًا كثيرة لهذا الرقم. حاول مرة أخرى بعد قليل.'**
-  String get errorOtpRateLimited;
-
-  /// No description provided for @errorRateLimited.
-  ///
-  /// In ar, this message translates to:
-  /// **'طلبات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.'**
-  String get errorRateLimited;
-
-  /// No description provided for @errorOtpUnavailable.
-  ///
-  /// In ar, this message translates to:
-  /// **'تسجيل الدخول برسائل SMS غير متاح حاليًا.'**
-  String get errorOtpUnavailable;
-
-  /// No description provided for @errorOtpDeliveryFailed.
-  ///
-  /// In ar, this message translates to:
-  /// **'تعذّر إرسال الرمز. حاول مرة أخرى.'**
-  String get errorOtpDeliveryFailed;
-
-  /// No description provided for @errorAccountSuspended.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم إيقاف هذا الحساب. تواصل مع الدعم.'**
-  String get errorAccountSuspended;
 
   /// No description provided for @errorSessionExpired.
   ///
   /// In ar, this message translates to:
   /// **'انتهت جلستك. سجّل الدخول مرة أخرى.'**
   String get errorSessionExpired;
-
-  /// No description provided for @signedInWelcome.
-  ///
-  /// In ar, this message translates to:
-  /// **'أهلًا بك! تم تسجيل الدخول.'**
-  String get signedInWelcome;
 
   /// No description provided for @profileTitle.
   ///
@@ -451,18 +295,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'أدخل اسمًا من حرفين على الأقل.'**
   String get profileNameInvalid;
-
-  /// No description provided for @profilePhoneLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'رقم الموبايل'**
-  String get profilePhoneLabel;
-
-  /// No description provided for @profileRoleLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'نوع الحساب'**
-  String get profileRoleLabel;
 
   /// No description provided for @roleCustomer.
   ///
@@ -965,7 +797,7 @@ abstract class AppLocalizations {
   /// No description provided for @statusSubmitted.
   ///
   /// In ar, this message translates to:
-  /// **'تم الاستلام'**
+  /// **'بانتظار فني'**
   String get statusSubmitted;
 
   /// No description provided for @statusUnknown.
@@ -1136,12 +968,6 @@ abstract class AppLocalizations {
   /// **'لا يمكنك مراجعة طلبك الشخصي.'**
   String get errorCannotReviewOwn;
 
-  /// No description provided for @myRequestsEntry.
-  ///
-  /// In ar, this message translates to:
-  /// **'طلباتي'**
-  String get myRequestsEntry;
-
   /// No description provided for @technicianEntryApply.
   ///
   /// In ar, this message translates to:
@@ -1153,12 +979,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'طلب الانضمام كفني'**
   String get technicianEntryStatus;
-
-  /// No description provided for @adminReviewEntry.
-  ///
-  /// In ar, this message translates to:
-  /// **'مراجعة طلبات الفنيين'**
-  String get adminReviewEntry;
 
   /// No description provided for @technicianApplyTitle.
   ///
@@ -1525,6 +1345,1008 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تم حفظ القرار.'**
   String get adminDecisionSaved;
+
+  /// No description provided for @statusUnmatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الإدارة'**
+  String get statusUnmatched;
+
+  /// No description provided for @statusAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعيين فني'**
+  String get statusAssigned;
+
+  /// No description provided for @statusEnRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني في الطريق'**
+  String get statusEnRoute;
+
+  /// No description provided for @statusArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصل الفني'**
+  String get statusArrived;
+
+  /// No description provided for @statusQuoted.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار موافقة السعر'**
+  String get statusQuoted;
+
+  /// No description provided for @statusQuoteRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'العرض مرفوض'**
+  String get statusQuoteRejected;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التنفيذ'**
+  String get statusInProgress;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get statusCancelled;
+
+  /// No description provided for @demoCustomerBlurb.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب خدمة، تابع الفني، وافق على السعر وقيّم.'**
+  String get demoCustomerBlurb;
+
+  /// No description provided for @demoTechnicianBlurb.
+  ///
+  /// In ar, this message translates to:
+  /// **'استقبل العروض، حدّث حالة العمل وأرسل عرض السعر.'**
+  String get demoTechnicianBlurb;
+
+  /// No description provided for @demoAdminBlurb.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع الطلبات، عيّن الفنيين وراجع طلبات الانضمام.'**
+  String get demoAdminBlurb;
+
+  /// No description provided for @demoOfflineNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا حاجة لإنترنت أو رمز تحقق. تُحفظ البيانات على هذا الجهاز ويمكن إعادة ضبطها من حسابي.'**
+  String get demoOfflineNote;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلًا {name} 👋'**
+  String homeGreeting(String name);
+
+  /// No description provided for @tabHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get tabHome;
+
+  /// No description provided for @tabRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get tabRequests;
+
+  /// No description provided for @tabNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get tabNotifications;
+
+  /// No description provided for @tabAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get tabAccount;
+
+  /// No description provided for @tabOffers.
+  ///
+  /// In ar, this message translates to:
+  /// **'العروض'**
+  String get tabOffers;
+
+  /// No description provided for @tabJobs.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعمالي'**
+  String get tabJobs;
+
+  /// No description provided for @tabDashboard.
+  ///
+  /// In ar, this message translates to:
+  /// **'لوحة التحكم'**
+  String get tabDashboard;
+
+  /// No description provided for @tabTechnicians.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفنيون'**
+  String get tabTechnicians;
+
+  /// No description provided for @languageSetting.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get languageSetting;
+
+  /// No description provided for @switchAccountButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'التبديل إلى حساب آخر'**
+  String get switchAccountButton;
+
+  /// No description provided for @resetDemoButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة ضبط بيانات التجربة'**
+  String get resetDemoButton;
+
+  /// No description provided for @resetDemoTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة ضبط البيانات؟'**
+  String get resetDemoTitle;
+
+  /// No description provided for @resetDemoBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستُحذف كل الطلبات والرسائل والصور على هذا الجهاز وتعود بيانات التجربة الأصلية.'**
+  String get resetDemoBody;
+
+  /// No description provided for @technicianCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني'**
+  String get technicianCardTitle;
+
+  /// No description provided for @customerCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العميل'**
+  String get customerCardTitle;
+
+  /// No description provided for @ratingNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تقييمات بعد'**
+  String get ratingNone;
+
+  /// No description provided for @ratingSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'{avg} ({count})'**
+  String ratingSummary(String avg, int count);
+
+  /// No description provided for @ratingStars.
+  ///
+  /// In ar, this message translates to:
+  /// **'{stars} من ٥ نجوم'**
+  String ratingStars(int stars);
+
+  /// No description provided for @ratingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييمك'**
+  String get ratingTitle;
+
+  /// No description provided for @etaEstimate.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوصول المتوقع خلال ٢٠–٣٠ دقيقة تقريبًا'**
+  String get etaEstimate;
+
+  /// No description provided for @chatOpenButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثة الطلب'**
+  String get chatOpenButton;
+
+  /// No description provided for @chatViewButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض المحادثة'**
+  String get chatViewButton;
+
+  /// No description provided for @chatTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحادثة'**
+  String get chatTitle;
+
+  /// No description provided for @chatEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رسائل بعد. اكتب أول رسالة.'**
+  String get chatEmpty;
+
+  /// No description provided for @chatHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالة…'**
+  String get chatHint;
+
+  /// No description provided for @chatSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get chatSend;
+
+  /// No description provided for @chatReadOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحادثة للعرض فقط.'**
+  String get chatReadOnly;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentCashCollected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحصيل نقدًا'**
+  String get paymentCashCollected;
+
+  /// No description provided for @paymentCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولة المنصة'**
+  String get paymentCommission;
+
+  /// No description provided for @paymentRecordedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقت التسجيل'**
+  String get paymentRecordedAt;
+
+  /// No description provided for @cancelReasonTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإلغاء'**
+  String get cancelReasonTitle;
+
+  /// No description provided for @addressHiddenUntilAccepted.
+  ///
+  /// In ar, this message translates to:
+  /// **'يظهر العنوان بالتفصيل بعد قبول الطلب.'**
+  String get addressHiddenUntilAccepted;
+
+  /// No description provided for @byOperations.
+  ///
+  /// In ar, this message translates to:
+  /// **'بواسطة الإدارة'**
+  String get byOperations;
+
+  /// No description provided for @quoteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض السعر'**
+  String get quoteTitle;
+
+  /// No description provided for @quotePending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الموافقة'**
+  String get quotePending;
+
+  /// No description provided for @quoteApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة'**
+  String get quoteApproved;
+
+  /// No description provided for @quoteRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get quoteRejected;
+
+  /// No description provided for @journeyStep.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرحلة {step} من {total}'**
+  String journeyStep(int step, int total);
+
+  /// No description provided for @cancelRequestButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get cancelRequestButton;
+
+  /// No description provided for @cancelSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لماذا تريد إلغاء الطلب؟'**
+  String get cancelSheetTitle;
+
+  /// No description provided for @cancelReasonChangedMind.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم أعد بحاجة للخدمة'**
+  String get cancelReasonChangedMind;
+
+  /// No description provided for @cancelReasonFixed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حل المشكلة'**
+  String get cancelReasonFixed;
+
+  /// No description provided for @cancelReasonTooLong.
+  ///
+  /// In ar, this message translates to:
+  /// **'الانتظار طويل'**
+  String get cancelReasonTooLong;
+
+  /// No description provided for @cancelReasonOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب آخر'**
+  String get cancelReasonOther;
+
+  /// No description provided for @requestCancelledToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إلغاء الطلب.'**
+  String get requestCancelledToast;
+
+  /// No description provided for @customerSearchingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نبحث لك عن فني مناسب'**
+  String get customerSearchingTitle;
+
+  /// No description provided for @customerSearchingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسلنا طلبك للفنيين المعتمدين في منطقتك. ستصلك رسالة فور قبول أحدهم.'**
+  String get customerSearchingBody;
+
+  /// No description provided for @customerUnmatchedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يقبل أي فني بعد'**
+  String get customerUnmatchedTitle;
+
+  /// No description provided for @customerUnmatchedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق التشغيل سيعيّن لك فنيًا يدويًا في أقرب وقت.'**
+  String get customerUnmatchedBody;
+
+  /// No description provided for @customerAssignedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فنيك جاهز'**
+  String get customerAssignedTitle;
+
+  /// No description provided for @customerAssignedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيعاين الفني المشكلة ثم يرسل لك عرض سعر قبل بدء أي عمل.'**
+  String get customerAssignedBody;
+
+  /// No description provided for @customerQuoteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض سعر: {amount}'**
+  String customerQuoteTitle(String amount);
+
+  /// No description provided for @customerQuoteBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن يبدأ العمل إلا بعد موافقتك. الدفع نقدًا عند الانتهاء.'**
+  String get customerQuoteBody;
+
+  /// No description provided for @customerQuoteRejectedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفضت عرض السعر'**
+  String get customerQuoteRejectedTitle;
+
+  /// No description provided for @customerQuoteRejectedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكن للفني إرسال عرض جديد، أو يمكنك إلغاء الطلب.'**
+  String get customerQuoteRejectedBody;
+
+  /// No description provided for @customerInProgressTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمل جارٍ الآن'**
+  String get customerInProgressTitle;
+
+  /// No description provided for @customerInProgressBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيؤكد الفني الانتهاء وتحصيل المبلغ المتفق عليه.'**
+  String get customerInProgressBody;
+
+  /// No description provided for @customerCompletedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتملت الخدمة'**
+  String get customerCompletedTitle;
+
+  /// No description provided for @customerCompletedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'شاركنا رأيك في الفني لمساعدة الآخرين.'**
+  String get customerCompletedBody;
+
+  /// No description provided for @approveQuoteButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموافقة على السعر'**
+  String get approveQuoteButton;
+
+  /// No description provided for @rejectQuoteButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض العرض'**
+  String get rejectQuoteButton;
+
+  /// No description provided for @quoteApprovedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة. أبلغنا الفني ليبدأ العمل.'**
+  String get quoteApprovedToast;
+
+  /// No description provided for @rateButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم الخدمة'**
+  String get rateButton;
+
+  /// No description provided for @rateSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف كانت الخدمة؟'**
+  String get rateSheetTitle;
+
+  /// No description provided for @rateCommentLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق (اختياري)'**
+  String get rateCommentLabel;
+
+  /// No description provided for @rateSubmitButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال التقييم'**
+  String get rateSubmitButton;
+
+  /// No description provided for @ratingThanks.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكرًا لتقييمك!'**
+  String get ratingThanks;
+
+  /// No description provided for @offerForYouTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب جديد لك'**
+  String get offerForYouTitle;
+
+  /// No description provided for @offerExpiresIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutes, plural, =0{ينتهي العرض الآن} =1{ينتهي خلال دقيقة} =2{ينتهي خلال دقيقتين} few{ينتهي خلال {minutes} دقائق} other{ينتهي خلال {minutes} دقيقة}}'**
+  String offerExpiresIn(int minutes);
+
+  /// No description provided for @acceptOfferButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول الطلب'**
+  String get acceptOfferButton;
+
+  /// No description provided for @declineOfferButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتذار'**
+  String get declineOfferButton;
+
+  /// No description provided for @offerAcceptedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم قبول الطلب وأبلغنا العميل.'**
+  String get offerAcceptedToast;
+
+  /// No description provided for @techAssignedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلب لك'**
+  String get techAssignedTitle;
+
+  /// No description provided for @techAssignedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبلغ العميل عندما تتحرك إليه.'**
+  String get techAssignedBody;
+
+  /// No description provided for @onMyWayButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنا في الطريق'**
+  String get onMyWayButton;
+
+  /// No description provided for @arrivedButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت'**
+  String get arrivedButton;
+
+  /// No description provided for @customerNotifiedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إبلاغ العميل.'**
+  String get customerNotifiedToast;
+
+  /// No description provided for @techQuoteNeededTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاين وأرسل عرض السعر'**
+  String get techQuoteNeededTitle;
+
+  /// No description provided for @techQuoteRejectedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض العميل العرض'**
+  String get techQuoteRejectedTitle;
+
+  /// No description provided for @techQuoteNeededBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يبدأ العمل قبل موافقة العميل على السعر.'**
+  String get techQuoteNeededBody;
+
+  /// No description provided for @sendQuoteButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال عرض السعر'**
+  String get sendQuoteButton;
+
+  /// No description provided for @techAwaitingApprovalTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار موافقة العميل'**
+  String get techAwaitingApprovalTitle;
+
+  /// No description provided for @techAwaitingApprovalBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سنبلغك فور الموافقة على العرض أو رفضه.'**
+  String get techAwaitingApprovalBody;
+
+  /// No description provided for @techWorkingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة، ابدأ العمل'**
+  String get techWorkingTitle;
+
+  /// No description provided for @techWorkingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'عند الانتهاء حصّل {amount} نقدًا وأكّد الإنجاز.'**
+  String techWorkingBody(String amount);
+
+  /// No description provided for @completeJobButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الانتهاء وتحصيل المبلغ'**
+  String get completeJobButton;
+
+  /// No description provided for @completeJobTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الانتهاء'**
+  String get completeJobTitle;
+
+  /// No description provided for @completeJobBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل انتهى العمل وتم تحصيل {amount} نقدًا من العميل؟'**
+  String completeJobBody(String amount);
+
+  /// No description provided for @jobCompletedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل الإنجاز والدفع.'**
+  String get jobCompletedToast;
+
+  /// No description provided for @quoteSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض السعر'**
+  String get quoteSheetTitle;
+
+  /// No description provided for @quoteSheetHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل السعر الإجمالي (مصنعية وقطع غيار) بعد المعاينة.'**
+  String get quoteSheetHint;
+
+  /// No description provided for @quoteAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get quoteAmountLabel;
+
+  /// No description provided for @quoteAmountInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغًا صحيحًا.'**
+  String get quoteAmountInvalid;
+
+  /// No description provided for @quoteNoteLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل العمل (اختياري)'**
+  String get quoteNoteLabel;
+
+  /// No description provided for @currencyEgpShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'ج.م'**
+  String get currencyEgpShort;
+
+  /// No description provided for @quoteSentToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال العرض للعميل.'**
+  String get quoteSentToast;
+
+  /// No description provided for @adminSearchingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العروض مرسلة للفنيين'**
+  String get adminSearchingTitle;
+
+  /// No description provided for @adminUnmatchedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يحتاج تعيينًا يدويًا'**
+  String get adminUnmatchedTitle;
+
+  /// No description provided for @adminAssignBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك تعيين فني معتمد يغطي الخدمة والمنطقة.'**
+  String get adminAssignBody;
+
+  /// No description provided for @assignTechnicianButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعيين فني'**
+  String get assignTechnicianButton;
+
+  /// No description provided for @assignSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر فنيًا'**
+  String get assignSheetTitle;
+
+  /// No description provided for @assignNoneEligible.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد فني معتمد يغطي هذه الخدمة والمنطقة.'**
+  String get assignNoneEligible;
+
+  /// No description provided for @assignedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعيين الفني.'**
+  String get assignedToast;
+
+  /// No description provided for @offersTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عروض العمل'**
+  String get offersTitle;
+
+  /// No description provided for @offersIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات تناسب تخصصك ومنطقتك. أول من يقبل يحصل على الطلب.'**
+  String get offersIntro;
+
+  /// No description provided for @offersEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا عروض جديدة الآن. سنبلغك عند وصول طلب.'**
+  String get offersEmpty;
+
+  /// No description provided for @myJobsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعمالي'**
+  String get myJobsTitle;
+
+  /// No description provided for @jobsActiveTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالية'**
+  String get jobsActiveTab;
+
+  /// No description provided for @jobsHistoryTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'السابقة'**
+  String get jobsHistoryTab;
+
+  /// No description provided for @jobsEmptyActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أعمال حالية. اقبل عرضًا لتبدأ.'**
+  String get jobsEmptyActive;
+
+  /// No description provided for @jobsEmptyHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أعمال منتهية بعد.'**
+  String get jobsEmptyHistory;
+
+  /// No description provided for @earningsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'صافي أرباحك'**
+  String get earningsTitle;
+
+  /// No description provided for @earningsNetHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد خصم عمولة المنصة (١٠٪ — قيمة مقترحة)'**
+  String get earningsNetHint;
+
+  /// No description provided for @earningsJobs.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعمال'**
+  String get earningsJobs;
+
+  /// No description provided for @earningsCollected.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحصّل'**
+  String get earningsCollected;
+
+  /// No description provided for @earningsCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمولة'**
+  String get earningsCommission;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا إشعارات بعد.'**
+  String get notificationsEmpty;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الكل كمقروء'**
+  String get markAllRead;
+
+  /// No description provided for @ntfNewOffer.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب جديد يناسبك {ref}'**
+  String ntfNewOffer(String ref);
+
+  /// No description provided for @ntfAssignedByAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'عيّنتك الإدارة على الطلب {ref}'**
+  String ntfAssignedByAdmin(String ref);
+
+  /// No description provided for @ntfAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعيين فني لطلبك {ref}'**
+  String ntfAssigned(String ref);
+
+  /// No description provided for @ntfEnRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني في الطريق إليك {ref}'**
+  String ntfEnRoute(String ref);
+
+  /// No description provided for @ntfArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصل الفني {ref}'**
+  String ntfArrived(String ref);
+
+  /// No description provided for @ntfQuoted.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلك عرض سعر للطلب {ref}'**
+  String ntfQuoted(String ref);
+
+  /// No description provided for @ntfQuoteApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'وافق العميل على عرضك {ref}'**
+  String ntfQuoteApproved(String ref);
+
+  /// No description provided for @ntfQuoteRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض العميل عرضك {ref}'**
+  String ntfQuoteRejected(String ref);
+
+  /// No description provided for @ntfCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتملت الخدمة {ref}. قيّم الفني'**
+  String ntfCompleted(String ref);
+
+  /// No description provided for @ntfRated.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلك تقييم جديد {ref}'**
+  String ntfRated(String ref);
+
+  /// No description provided for @ntfMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة جديدة بخصوص {ref}'**
+  String ntfMessage(String ref);
+
+  /// No description provided for @ntfCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إلغاء الطلب {ref}'**
+  String ntfCancelled(String ref);
+
+  /// No description provided for @ntfUnmatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلب {ref} يحتاج تعيين فني'**
+  String ntfUnmatched(String ref);
+
+  /// No description provided for @ntfApplicationSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب انضمام فني جديد بانتظار المراجعة'**
+  String get ntfApplicationSubmitted;
+
+  /// No description provided for @ntfApplicationApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة على طلب انضمامك كفني'**
+  String get ntfApplicationApproved;
+
+  /// No description provided for @ntfApplicationRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تتم الموافقة على طلب انضمامك'**
+  String get ntfApplicationRejected;
+
+  /// No description provided for @ntfApplicationSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إيقاف حسابك كفني مؤقتًا'**
+  String get ntfApplicationSuspended;
+
+  /// No description provided for @adminDashboardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لوحة التشغيل'**
+  String get adminDashboardTitle;
+
+  /// No description provided for @kpiNeedsAttention.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحاجة لمتابعة'**
+  String get kpiNeedsAttention;
+
+  /// No description provided for @kpiInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التنفيذ'**
+  String get kpiInProgress;
+
+  /// No description provided for @kpiCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتملة'**
+  String get kpiCompleted;
+
+  /// No description provided for @kpiCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي العمولات'**
+  String get kpiCommission;
+
+  /// No description provided for @kpiPendingApplications.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{لا طلبات انضمام معلّقة} =1{طلب انضمام واحد بانتظار المراجعة} =2{طلبا انضمام بانتظار المراجعة} few{{count} طلبات انضمام بانتظار المراجعة} other{{count} طلب انضمام بانتظار المراجعة}}'**
+  String kpiPendingApplications(int count);
+
+  /// No description provided for @kpiApprovedTechnicians.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{لا فنيين معتمدين} =1{فني معتمد واحد} =2{فنيان معتمدان} few{{count} فنيين معتمدين} other{{count} فني معتمد}}'**
+  String kpiApprovedTechnicians(int count);
+
+  /// No description provided for @adminRequestsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get adminRequestsTitle;
+
+  /// No description provided for @adminFilterAttention.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحاجة لمتابعة'**
+  String get adminFilterAttention;
+
+  /// No description provided for @adminFilterActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التنفيذ'**
+  String get adminFilterActive;
+
+  /// No description provided for @adminFilterDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتهية'**
+  String get adminFilterDone;
+
+  /// No description provided for @adminFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get adminFilterAll;
+
+  /// No description provided for @adminRequestsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا طلبات هنا.'**
+  String get adminRequestsEmpty;
+
+  /// No description provided for @errorOfferExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت مهلة هذا العرض.'**
+  String get errorOfferExpired;
+
+  /// No description provided for @errorOfferTaken.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل فني آخر هذا الطلب بالفعل.'**
+  String get errorOfferTaken;
+
+  /// No description provided for @errorStateConflict.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى.'**
+  String get errorStateConflict;
 }
 
 class _AppLocalizationsDelegate

@@ -12,7 +12,6 @@ void main() {
 
     expect(find.text('سباكة'), findsOneWidget);
     expect(find.text('ما الخدمة التي تحتاجها؟'), findsOneWidget);
-    expect(find.text('بيانات تجريبية'), findsOneWidget);
     expect(
       Directionality.of(tester.element(find.text('سباكة'))),
       TextDirection.rtl,

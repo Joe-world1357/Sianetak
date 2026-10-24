@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Signs in through the real OTP screens with the fake backend's valid code.
+/// Signs in through the demo account picker (the first, and with fakes only, account).
 Future<void> signIn(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.login));
   await tester.pumpAndSettle();
-  await tester.enterText(find.byType(TextFormField), '01012345678');
-  await tester.tap(find.text('إرسال الرمز'));
-  await tester.pumpAndSettle();
-  await tester.enterText(find.byType(TextFormField), '123456');
+  await tester.tap(find.byIcon(Icons.chevron_right).first);
   await tester.pumpAndSettle();
   await dismissSnackBars(tester);
 }
@@ -20,8 +17,9 @@ Future<void> dismissSnackBars(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// Opens the Account tab of the signed-in navigation.
 Future<void> openProfile(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.account_circle));
+  await tester.tap(find.byIcon(Icons.person_outline_rounded));
   await tester.pumpAndSettle();
 }
 
