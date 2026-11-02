@@ -884,7 +884,7 @@ class LocalBackend {
     return candidates;
   }
 
-  /// [Proposed] Offers go to the top three eligible technicians at once; the first to
+  /// Approved policy: offers go to the top three eligible technicians at once; the first to
   /// accept wins. With nobody eligible the request goes to operations as `unmatched`.
   void _dispatch(Row r) {
     final technicians = eligibleTechnicians(r).take(3).toList();

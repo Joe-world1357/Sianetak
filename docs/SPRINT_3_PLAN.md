@@ -37,11 +37,11 @@ The audit table lists **five** P0 rows (the brief said four); all five are track
 
 | # | Condition | Status now | How |
 |---|-----------|------------|-----|
-| P0-1 | Dispatch, offer-expiry and cancellation policy not approved (D-04) | **Open: needs product-owner sign-off** | Implemented as `[Proposed]` defaults in `mobile/lib/local/initial_data.dart` (`AppRules`): top 3 eligible by rating, 15-min expiry, fallback to admin, customer may cancel until work starts, 10% commission. Engineering cannot sign this off. |
+| P0-1 | Dispatch, offer-expiry and cancellation policy not approved (D-04) | **Resolved: approved by Joe 2 Nov 2026** | Built as defaults in `mobile/lib/local/initial_data.dart` (`AppRules`): top 3 eligible by rating, 15-min expiry, fallback to admin, customer may cancel until work starts, 10% commission. Lock-out and session times were not part of the sign-off and stay `[Proposed]`. |
 | P0-2 | No technician availability data (FR-MAT-01) | **Resolved (built, S3-02)** | "Available for new jobs" switch; dispatch and admin assignment skip unavailable technicians; turning it off hands back pending offers. |
 | P0-3 | No notification infrastructure (push, device tokens, SMS) | **Resolved by scope change** + local equivalent verified | Push/SMS need a server and are out of scope for a single-device app. In-app notification centre with unread badge fires on every key transition (tests: `local_backend_test`, journey tests). |
 | P0-4 | No real-time channel or background job runner | **Resolved by scope change** + local equivalent (S3-03) | One device, one database: screens refresh on store changes (no channel needed). Offer expiry runs on every read and now on a 30-second timer while the app is open. |
-| P0-5 | Location-sharing rules and maps/ETA provider not chosen | **Partly resolved**: sharing rules built; maps provider closed by scope; **map-pin form needs your OK** | Address and pin are hidden from merely-offered technicians, shown to the customer, the assigned technician and admins. No ETA/live tracking (plan forbids implying it). Pin opens in the phone's maps app (S3-04). |
+| P0-5 | Location-sharing rules and maps/ETA provider not chosen | **Resolved**: sharing rules built; maps provider closed by scope; GPS pin + Open in Maps accepted by Joe 2 Nov 2026 | Address and pin are hidden from merely-offered technicians, shown to the customer, the assigned technician and admins. No ETA/live tracking (plan forbids implying it). Pin opens in the phone's maps app (S3-04). |
 | P1 | One role per account | **Resolved (built, S3-01)** | Customer and technician accounts switch roles on the same account. |
 | P1 | Request/media access owner-or-admin only | **Resolved (already in local app)** | Assigned technician sees address, photos and chat; offered technician sees area only (test "requests and chats are private to their participants"). |
 | P1 | PR #2 (Sprint 2 docs) unmerged | **Resolved here (S3-05)** | Its report, screenshots and `create-staff --name` brought in; its README rewrites dropped as outdated (they describe the server app). PR #2 can be closed once this merges. |
@@ -61,16 +61,16 @@ starting figure to correct after the sprint.
 | S3-01 | Multi-role accounts (customer ⇄ technician on one account) | 5 | Highest (P1) | **Done** in this PR | none |
 | S3-02 | Technician availability switch | 3 | Highest (P0-2) | **Done** in this PR | none |
 | S3-03 | Offer expiry without a server job runner | 1 | High (P0-4) | **Done** in this PR | none |
-| S3-04 | Location pin: view, re-capture, open in maps (Sprint 2 carryover) | 3 | High (P0-5) | **Done in code; acceptance waits on decision D-S3-2** | none |
+| S3-04 | Location pin: view, re-capture, open in maps (Sprint 2 carryover) | 3 | High (P0-5) | **Done** (form accepted, D-S3-2) | none |
 | S3-05 | Carry over PR #2 docs and staff `--name` flag | 1 | Medium (P1) | **Done** in this PR | none |
-| S3-06 | Sign off dispatch / expiry / cancellation / commission defaults (D-04) | 1 | Highest (P0-1) | **Blocked: product decision D-S3-1** | Joe |
+| S3-06 | Sign off dispatch / expiry / cancellation / commission defaults (D-04) | 1 | Highest (P0-1) | **Done** (approved, D-S3-1) | Joe |
 | S3-07 | Sprint 3 journey regression (all roles, Arabic + English) | 3 | High | **Done** (automated); see test evidence | S3-01…04 |
 | S3-08 | Install and smoke-test the new APK on a physical Android phone | 2 | High | **To do (Joe)**: needs a real phone | CI APK |
 | S3-09 | Jira: import this backlog into SIANTEK and link the sprint | 1 | Medium | **Blocked: Jira access** | access to ouragileproject.atlassian.net |
 | S3-10 | *Stretch*: PDF preview for technician documents (P2) | 3 | Low | Backlog (not committed) | none |
 
-Committed 20 pts: 13 done in this PR plus S3-07 (3) = 16 done; 4 pts (S3-06, S3-08, S3-09) need
-Joe or Jira access.
+Committed 20 pts: 17 done (S3-01…07); 3 pts (S3-08 phone test, S3-09 Jira import) need Joe or
+Jira access.
 
 ## Acceptance criteria
 
@@ -132,7 +132,7 @@ New tests: `test/local/local_backend_test.dart` groups "multi-role accounts (P1)
 `test/widget/sprint3_carryover_test.dart` (5: role switch, no switch for admins, availability
 switch, pin opens maps + failure message, pin re-capture in the form).
 
-## Decisions needed
+## Decisions
 
-- **D-S3-1** Approve the `[Proposed]` dispatch, expiry, cancellation and commission defaults (P0-1).
-- **D-S3-2** Accept "GPS pin + open in the phone's maps app" as the map-pin requirement, instead of an in-app map (which would need internet, a tile provider and a new dependency).
+- **D-S3-1** Dispatch (top 3 by rating), 15-minute expiry, cancel until work starts, 10% commission: **approved by Joe, 2 Nov 2026.** Lock-out and session times remain `[Proposed]`.
+- **D-S3-2** GPS pin + open in the phone's maps app as the map-pin requirement (no in-app map): **accepted by Joe, 2 Nov 2026.**

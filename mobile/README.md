@@ -43,7 +43,8 @@ someone using the app.
 | Technician | Apply, see verification status, switch "available for new jobs" on or off, accept or decline offers, move a job through on the way → arrived → quote → completed (cash recorded), see earnings |
 | Admin | Dashboard, review / approve / reject / suspend technicians, assign requests nobody accepted, add administrators |
 
-Rules (in `local/initial_data.dart`, [Proposed] where marked): offers go to up to 3 approved,
+Rules (in `local/initial_data.dart`; dispatch, expiry, cancellation and commission approved
+2 Nov 2026, lock-out and session times still [Proposed]): offers go to up to 3 approved,
 available technicians covering the category and area and expire after 15 minutes (swept on
 every read and every 30 seconds while the app is open; there is no server job runner);
 turning availability off hands back pending offers; the first to accept wins;
