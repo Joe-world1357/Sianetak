@@ -47,6 +47,11 @@ Future<void> tapFound(WidgetTester tester, Finder finder) async {
 /// The scrollable of the route on top (routes underneath stay in the tree, obscured).
 Finder _topScrollable() => find.byType(Scrollable).hitTestable().first;
 
+Future<void> scrollTo(WidgetTester tester, Finder finder) async {
+  await tester.scrollUntilVisible(finder, 200, scrollable: _topScrollable());
+  expect(finder, findsOneWidget);
+}
+
 Future<void> scrollUp(WidgetTester tester) async {
   await tester.drag(_topScrollable(), const Offset(0, 5000));
   await tester.pumpAndSettle();
@@ -224,6 +229,74 @@ void main() {
       expect(find.text('شكرًا لتقييمك!'), findsOneWidget);
       await scrollUp(tester);
       expect(find.text('قيّم الخدمة'), findsNothing);
+
+      // Closeout summary, with the simulated-payment disclosure.
+      await scrollTo(tester, find.text('ملخص الخدمة'));
+      await scrollTo(tester, find.textContaining('للعرض فقط'));
+      await scrollUp(tester);
+
+      // Something went wrong after all: the customer reports it.
+      await tapText(tester, 'الإبلاغ عن مشكلة');
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'تفاصيل المشكلة'),
+        'الحنفية رجعت تسرب تاني بعد يوم',
+      );
+      await tapText(tester, 'إرسال البلاغ');
+      await scrollUp(tester);
+      expect(find.text('بلاغك لدى الفريق'), findsOneWidget);
+      expect(find.text('الإبلاغ عن مشكلة'), findsNothing);
+
+      // Operations sees it on the dashboard and closes it.
+      await switchTo(tester, adminPhone);
+      await tapText(tester, 'بلاغ مفتوح واحد');
+      await tapFound(tester, find.textContaining(reference));
+      await tapText(tester, 'إغلاق البلاغ');
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'ما تم اتخاذه'),
+        'الفني رجع وغيّر الجلدة مجاناً',
+      );
+      await tapText(tester, 'إغلاق البلاغ');
+      await scrollUp(tester);
+      expect(find.text('إغلاق البلاغ'), findsNothing);
+      await scrollTo(tester, find.text('تم الحل'));
+
+      // The customer sees the outcome.
+      await switchTo(tester, customerPhone);
+      await openRequest(tester, 'طلباتي', reference);
+      await scrollTo(tester, find.text('تم الحل'));
+      await scrollTo(tester, find.text('الفني رجع وغيّر الجلدة مجاناً'));
+    },
+  );
+
+  testWidgets(
+    'an admin erases the device and the app starts again from first install',
+    (tester) async {
+      final app = await onboardTeam(tester);
+      await customerRequests(tester, app);
+
+      await switchTo(tester, adminPhone);
+      await tester.tap(find.text('حسابي').last);
+      await tester.pumpAndSettle();
+      await tapText(tester, 'مسح كل البيانات على هذا الجهاز');
+      await tester.enterText(find.byType(TextField).last, 'wrong-pass1');
+      await tester.tap(find.widgetWithText(FilledButton, 'مسح كل شيء'));
+      await tester.pumpAndSettle();
+      expect(find.text('مسح كل شيء؟'), findsOneWidget);
+      expect(await app.backend.hasAdmin(), isTrue);
+
+      await tester.enterText(find.byType(TextField).last, password);
+      await tester.tap(find.widgetWithText(FilledButton, 'مسح كل شيء'));
+      await tester.pumpAndSettle();
+      expect(find.text('صيانة بيتك في مكان واحد'), findsOneWidget);
+      expect(await app.backend.hasAdmin(), isFalse);
+      expect(
+        (await app.store.open().then((_) => app.store.table('users'))),
+        isEmpty,
+      );
+
+      await tester.tap(find.text('تخطي'));
+      await tester.pumpAndSettle();
+      expect(find.text('إعداد حساب المسؤول'), findsOneWidget);
     },
   );
 

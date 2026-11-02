@@ -201,6 +201,23 @@ class _RequestActionsState extends State<RequestActions> {
           label: Text(l10n.rateButton),
         ),
       ],
+      if (status == RequestStatus.completed && d.problem == null) ...[
+        if (d.rating == null) const SizedBox(height: AppSpacing.sm),
+        OutlinedButton.icon(
+          onPressed: _busy ? null : _reportProblem,
+          icon: const Icon(Icons.report_problem_outlined),
+          label: Text(l10n.reportProblemButton),
+        ),
+      ],
+      if (d.problem case final p? when !p.resolved) ...[
+        if (status == RequestStatus.completed && d.rating == null) _space,
+        _note(
+          Icons.support_agent_rounded,
+          l10n.customerProblemOpenTitle,
+          l10n.customerProblemOpenBody,
+          AppColors.warning,
+        ),
+      ],
       if (status.isCancellable) ...[
         const SizedBox(height: AppSpacing.sm),
         _cancelButton(l10n),
@@ -220,6 +237,28 @@ class _RequestActionsState extends State<RequestActions> {
     await _run(
       () => requests.cancel(_id, reason),
       done: l10n.requestCancelledToast,
+    );
+  }
+
+  Future<void> _reportProblem() async {
+    final l10n = AppLocalizations.of(context);
+    final requests = AppScope.of(context).requests;
+    final text = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => _TextSheet(
+        title: l10n.reportProblemTitle,
+        body: l10n.reportProblemBody,
+        label: l10n.reportProblemLabel,
+        minLength: 10,
+        tooShort: l10n.reportProblemTooShort,
+        submit: l10n.reportProblemSubmit,
+      ),
+    );
+    if (text == null || !mounted) return;
+    await _run(
+      () => requests.reportProblem(_id, text),
+      done: l10n.problemReportedToast,
     );
   }
 
@@ -420,11 +459,46 @@ class _RequestActionsState extends State<RequestActions> {
           label: Text(l10n.assignTechnicianButton),
         ),
       ],
+      if (d.problem case final p? when !p.resolved) ...[
+        _note(
+          Icons.report_problem_rounded,
+          l10n.adminProblemTitle,
+          l10n.adminProblemBody,
+          AppColors.warning,
+        ),
+        _space,
+        FilledButton.icon(
+          onPressed: _busy ? null : _resolveProblem,
+          icon: const Icon(Icons.task_alt_rounded),
+          label: Text(l10n.resolveProblemButton),
+        ),
+      ],
       if (status.isCancellable) ...[
         const SizedBox(height: AppSpacing.sm),
         _cancelButton(l10n),
       ],
     ];
+  }
+
+  Future<void> _resolveProblem() async {
+    final l10n = AppLocalizations.of(context);
+    final admin = AppScope.of(context).admin;
+    final text = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => _TextSheet(
+        title: l10n.resolveProblemTitle,
+        label: l10n.problemResolutionLabel,
+        minLength: 2,
+        tooShort: l10n.resolveProblemTooShort,
+        submit: l10n.resolveProblemButton,
+      ),
+    );
+    if (text == null || !mounted) return;
+    await _run(
+      () => admin.resolveProblem(_id, text),
+      done: l10n.problemResolvedToast,
+    );
   }
 
   Future<void> _assign() async {
@@ -538,6 +612,79 @@ class _SheetFrame extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A bottom sheet asking for one piece of free text, returned trimmed on submit.
+class _TextSheet extends StatefulWidget {
+  const _TextSheet({
+    required this.title,
+    this.body,
+    required this.label,
+    required this.minLength,
+    required this.tooShort,
+    required this.submit,
+  });
+
+  final String title;
+  final String? body;
+  final String label;
+  final int minLength;
+  final String tooShort;
+  final String submit;
+
+  @override
+  State<_TextSheet> createState() => _TextSheetState();
+}
+
+class _TextSheetState extends State<_TextSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _text = TextEditingController();
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      Navigator.pop(context, _text.text.trim());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return _SheetFrame(
+      title: widget.title,
+      children: [
+        if (widget.body != null) ...[
+          Text(
+            widget.body!,
+            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _text,
+            autofocus: true,
+            maxLength: 500,
+            minLines: 3,
+            maxLines: 5,
+            textInputAction: TextInputAction.newline,
+            decoration: InputDecoration(labelText: widget.label),
+            validator: (v) => (v?.trim().length ?? 0) < widget.minLength
+                ? widget.tooShort
+                : null,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        FilledButton(onPressed: _submit, child: Text(widget.submit)),
+      ],
     );
   }
 }

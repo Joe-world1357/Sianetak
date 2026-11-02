@@ -8,6 +8,10 @@ project foundation, customer phone OTP authentication, and the guest service cat
 > password) for Customers, Technicians and Administrators. It starts empty: no sample users or
 > records. It no longer needs the backend or OTP. See [`mobile/README.md`](mobile/README.md). The
 > `backend/` folder is kept as the reference implementation of the Sprint 1/2 API rules.
+>
+> **Presenting the app?** See [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md) (install, demo script,
+> reset, known limitations). Sprint plans: [`docs/SPRINT_3_PLAN.md`](docs/SPRINT_3_PLAN.md),
+> [`docs/SPRINT_4_PLAN.md`](docs/SPRINT_4_PLAN.md).
 
 ```
 backend/   NestJS + PostgreSQL API (modular monolith)

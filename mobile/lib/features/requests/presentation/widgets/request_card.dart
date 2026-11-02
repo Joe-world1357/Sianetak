@@ -80,6 +80,14 @@ class RequestCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: muted,
                         ),
+                        if (request.problemOpen) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          TonePill(
+                            label: l10n.problemOpenBadge,
+                            tone: AppColors.warning,
+                            icon: Icons.report_problem_outlined,
+                          ),
+                        ],
                       ],
                     ),
                   ),

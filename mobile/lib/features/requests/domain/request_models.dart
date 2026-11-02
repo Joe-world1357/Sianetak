@@ -293,6 +293,7 @@ class RequestSummary {
     required this.schedule,
     required this.photoCount,
     required this.submittedAt,
+    this.problemOpen = false,
   });
 
   factory RequestSummary.fromJson(Map<String, dynamic> json) => RequestSummary(
@@ -306,6 +307,7 @@ class RequestSummary {
     schedule: RequestSchedule.fromJson(json['schedule']),
     photoCount: json['photoCount'] as int? ?? 0,
     submittedAt: DateTime.parse(json['submittedAt'] as String),
+    problemOpen: json['problemOpen'] as bool? ?? false,
   );
 
   final String id;
@@ -316,6 +318,9 @@ class RequestSummary {
   final RequestSchedule schedule;
   final int photoCount;
   final DateTime submittedAt;
+
+  /// The customer reported a problem after completion and an admin has not closed it yet.
+  final bool problemOpen;
 }
 
 class RequestPage {
@@ -434,6 +439,35 @@ class RequestRating {
   final DateTime at;
 }
 
+/// A customer's report that something is wrong with a completed job, and how an admin
+/// closed it.
+class ProblemReport {
+  const ProblemReport({
+    required this.text,
+    required this.at,
+    required this.resolved,
+    this.resolution,
+    this.resolvedAt,
+  });
+
+  static ProblemReport? fromJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    return ProblemReport(
+      text: json['text'] as String,
+      at: DateTime.parse(json['at'] as String),
+      resolved: json['status'] == 'resolved',
+      resolution: json['resolution'] as String?,
+      resolvedAt: DateTime.tryParse(json['resolvedAt'] as String? ?? ''),
+    );
+  }
+
+  final String text;
+  final DateTime at;
+  final bool resolved;
+  final String? resolution;
+  final DateTime? resolvedAt;
+}
+
 enum OfferStatus { pending, accepted, declined, expired, taken }
 
 /// A dispatch offer, as the receiving technician sees it.
@@ -479,6 +513,7 @@ class RequestDetail {
     this.payment,
     this.rating,
     this.cancelReason,
+    this.problem,
     this.offer,
   });
 
@@ -519,6 +554,7 @@ class RequestDetail {
       payment: PaymentRecord.fromJson(json['payment']),
       rating: RequestRating.fromJson(json['rating']),
       cancelReason: json['cancelReason'] as String?,
+      problem: ProblemReport.fromJson(json['problem']),
       offer: JobOffer.fromJson(json['offer']),
     );
   }
@@ -541,6 +577,19 @@ class RequestDetail {
   final PaymentRecord? payment;
   final RequestRating? rating;
   final String? cancelReason;
+  final ProblemReport? problem;
+
+  /// Set when the job is done: when the customer approved the quote (work start) and
+  /// when it was completed, from the timeline.
+  DateTime? get workStartedAt => _firstAt(RequestStatus.inProgress);
+  DateTime? get completedAt => _firstAt(RequestStatus.completed);
+
+  DateTime? _firstAt(RequestStatus status) {
+    for (final e in timeline) {
+      if (e.status == status) return e.at;
+    }
+    return null;
+  }
 
   /// Set when the viewer is a technician holding an offer for this request.
   final JobOffer? offer;

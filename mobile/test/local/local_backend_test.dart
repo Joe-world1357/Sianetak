@@ -598,6 +598,160 @@ void main() {
       ]);
     });
 
+    group('closeout support and device reset (Sprint 4)', () {
+      Future<String> completedJob() async {
+        final id = await submit();
+        final offer = await offerFor(id, technician);
+        await backend.respondToOffer(offer, accept: true);
+        await backend.advanceJob(id, 'en_route');
+        await backend.advanceJob(id, 'arrived');
+        await backend.sendQuote(id, 30000, null);
+        await as(customer);
+        await backend.decideQuote(id, approve: true);
+        await as(technician);
+        await backend.advanceJob(id, 'completed');
+        return id;
+      }
+
+      test(
+        'a customer reports a problem once, after completion only',
+        () async {
+          final open = await submit();
+          await expectLater(
+            backend.reportProblem(open, 'الحنفية لسه بتسرب'),
+            failsWith('REQUEST_STATE_CONFLICT'),
+          );
+          final id = await completedJob();
+          await as(customer);
+          await expectLater(
+            backend.reportProblem(id, 'قصير'),
+            failsWith('VALIDATION_FAILED'),
+          );
+          final reported = await backend.reportProblem(
+            id,
+            '  الحنفية رجعت تسرب تاني بعد يوم  ',
+          );
+          expect(reported['problem'], {
+            'text': 'الحنفية رجعت تسرب تاني بعد يوم',
+            'status': 'open',
+            'at': isA<String>(),
+          });
+          expect(reported['problemOpen'], true);
+          await expectLater(
+            backend.reportProblem(id, 'مشكلة تانية خالص هنا'),
+            failsWith('REQUEST_STATE_CONFLICT'),
+          );
+
+          // Another customer and the technician cannot report on it.
+          await as(otherCustomer);
+          await expectLater(
+            backend.reportProblem(id, 'مش طلبي أصلاً بس بجرب'),
+            failsWith('REQUEST_NOT_FOUND'),
+          );
+          await as(technician);
+          await expectLater(
+            backend.reportProblem(id, 'الفني بيحاول يبلغ'),
+            failsWith('FORBIDDEN'),
+          );
+          final techNotices = await backend.notifications();
+          expect(
+            techNotices.map((n) => n['type']),
+            contains('problem_reported'),
+          );
+        },
+      );
+
+      test(
+        'admins see open reports, close them, and both sides are told',
+        () async {
+          final id = await completedJob();
+          await as(customer);
+          await backend.reportProblem(id, 'الحنفية رجعت تسرب تاني بعد يوم');
+
+          await as(admin);
+          expect((await backend.adminOverview())['openProblems'], 1);
+          expect(
+            (await backend.notifications()).map((n) => n['type']),
+            contains('problem_reported'),
+          );
+          final queue = await backend.adminRequests({}, openProblems: true);
+          expect(queue.map((r) => r['id']), [id]);
+          await expectLater(
+            backend.resolveProblem(id, ' '),
+            failsWith('VALIDATION_FAILED'),
+          );
+          final closed = await backend.resolveProblem(
+            id,
+            'الفني رجع وغيّر الجلدة مجاناً',
+          );
+          final problem = closed['problem'] as Map<String, dynamic>;
+          expect(problem['status'], 'resolved');
+          expect(problem['resolution'], 'الفني رجع وغيّر الجلدة مجاناً');
+          expect(closed.containsKey('problemOpen'), isFalse);
+          expect((await backend.adminOverview())['openProblems'], 0);
+          expect(await backend.adminRequests({}, openProblems: true), isEmpty);
+          await expectLater(
+            backend.resolveProblem(id, 'مرة تانية'),
+            failsWith('REQUEST_STATE_CONFLICT'),
+          );
+
+          await as(customer);
+          expect(
+            (await backend.notifications()).map((n) => n['type']),
+            contains('problem_resolved'),
+          );
+          await expectLater(
+            backend.resolveProblem(id, 'العميل يغلق بنفسه'),
+            failsWith('FORBIDDEN'),
+          );
+          await as(technician);
+          expect(
+            (await backend.notifications()).map((n) => n['type']),
+            contains('problem_resolved'),
+          );
+        },
+      );
+
+      test(
+        'only an admin, with the right password, can erase the device',
+        () async {
+          final id = await completedJob();
+          await as(customer);
+          await backend.uploadMedia('request_photo', transparentPng);
+          expect(storage.blobs, isNotEmpty);
+          await expectLater(
+            backend.eraseAllData(password),
+            failsWith('FORBIDDEN'),
+          );
+          await as(admin);
+          await expectLater(
+            backend.eraseAllData('wrong-pass1'),
+            failsWith('WRONG_PASSWORD'),
+          );
+          expect(await backend.hasAdmin(), isTrue);
+
+          await backend.eraseAllData(password);
+          expect(await backend.currentUser(), isNull);
+          expect(await backend.hasAdmin(), isFalse);
+          expect(await backend.onboardingSeen(), isFalse);
+          expect(storage.blobs, isEmpty);
+          await expectLater(
+            backend.signIn(customer, password),
+            failsWith('INVALID_CREDENTIALS'),
+          );
+
+          // A restart reads the erased database: catalog only, as on first install.
+          backend = open();
+          expect(await backend.hasAdmin(), isFalse);
+          expect(await backend.categories(), isNotEmpty);
+          final raw = jsonDecode(storage.document!) as Map<String, dynamic>;
+          expect(raw['users'] ?? const [], isEmpty);
+          expect(raw['requests'] ?? const [], isEmpty);
+          expect(raw.toString(), isNot(contains(id)));
+        },
+      );
+    });
+
     test('requests and chats are private to their participants', () async {
       final id = await submit();
       final offer = await offerFor(id, technician);
