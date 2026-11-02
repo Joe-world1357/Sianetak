@@ -33,9 +33,10 @@ class RootScreen extends StatelessWidget {
               ? const SignInScreen()
               : const OnboardingScreen();
         }
-        // Keyed so tabs reset when another account signs in or a technician is approved.
+        // Keyed so tabs reset when another account signs in, an account switches role or a
+        // technician is approved.
         return RoleShell(
-          key: ValueKey('${user.id}:${user.canWork}'),
+          key: ValueKey('${user.id}:${user.role.name}:${user.canWork}'),
           role: user.role,
           canWork: user.canWork,
         );

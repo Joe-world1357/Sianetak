@@ -1,0 +1,11 @@
+Summary,Issue Type,Story Points,Priority,Status,Labels,Description,External ID
+Multi-role accounts (customer and technician on one account),Story,5,Highest,Done,sprint3;p1;multi-role,Acceptance: Switch role under Account for customer/technician accounts; same phone and password; never offered own request; notices per role; survives restart; enforced in LocalBackend.,S3-01
+Technician availability switch,Story,3,Highest,Done,sprint3;p0;dispatch,"Acceptance: Available for new jobs switch on Offers; off = no offers or admin assignment, pending offers handed back; accepted jobs unaffected; approved technicians only.",S3-02
+Offer expiry without a server job runner,Story,1,High,Done,sprint3;p0;dispatch,Acceptance: Lapsed offers expire and fall back to admin via a 30 s timer while the app is open and on every read.,S3-03
+"Location pin: view, re-capture, open in maps (Sprint 2 carryover)",Story,3,High,Done (awaiting D-S3-2),sprint3;p0;carryover;location,"Acceptance: Coordinates, Open in Maps, Update location and Remove in the form; pin visible to customer, assigned technician and admins only; message when no maps app; no in-app map or ETA implied.",S3-04
+Carry over PR #2 docs and create-staff --name,Story,1,Medium,Done,sprint3;p1;carryover;docs,"Acceptance: Sprint 2 report and screenshots in docs with a historical note; backend lint, typecheck and unit tests pass.",S3-05
+Sign off dispatch/expiry/cancellation/commission defaults (D-04),Story,1,Highest,Blocked,sprint3;p0;decision,"Acceptance: Product owner approves or changes offer batch 3, expiry 15 min, rating ranking, cancel until work starts, 10% commission, lock-out and session values.",S3-06
+"Sprint 3 journey regression (all roles, AR + EN)",Story,3,High,Done,sprint3;qa,"Acceptance: Analyzer and format clean, all tests pass, web build ok, CI APK build and emulator launch pass.",S3-07
+Smoke-test the new APK on a physical Android phone,Story,2,High,To Do,sprint3;qa;device,Acceptance: Full journey on a phone including role switch and Open in Maps.,S3-08
+Import Sprint 3 backlog into Jira SIANTEK,Story,1,Medium,Blocked,sprint3;jira,Acceptance: Issues created in SIANTEK and added to the Sprint 3 sprint.,S3-09
+PDF preview for technician documents (stretch),Story,3,Low,Backlog,p2;stretch,Acceptance: Admins can open uploaded PDF documents in the app.,S3-10

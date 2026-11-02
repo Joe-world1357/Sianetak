@@ -419,5 +419,16 @@
   "errorAdminExists": "An administrator already exists on this device.",
   "errorAccountDisabled": "This account is disabled.",
   "errorWrongPassword": "The current password is wrong.",
-  "errorTechnicianNotApproved": "An administrator must approve your application first."
+  "errorTechnicianNotApproved": "An administrator must approve your application first.",
+  "switchToCustomerMode": "Switch to customer mode",
+  "switchToTechnicianMode": "Switch to technician mode",
+  "switchRoleNote": "Same account and number. You can switch back at any time.",
+  "actingAsLabel": "Current mode",
+  "availabilityTitle": "Available for new jobs",
+  "availabilityOnNote": "You get new offers for your specialties and areas.",
+  "availabilityOffNote": "You won't get new offers or assignments. Your current jobs aren't affected.",
+  "openInMaps": "Open in Maps",
+  "mapsUnavailable": "No maps app could open this location.",
+  "locationPinTitle": "Location pin",
+  "locationRefresh": "Update location"
 }

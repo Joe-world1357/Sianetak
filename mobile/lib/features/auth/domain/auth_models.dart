@@ -32,6 +32,7 @@ class AppUser {
     this.name,
     required this.role,
     this.technicianStatus,
+    this.roles = const [],
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
@@ -40,12 +41,29 @@ class AppUser {
     name: json['name'] as String?,
     role: _parseRole(json['role']),
     technicianStatus: _parseTechnicianStatus(json['technicianStatus']),
+    roles: [
+      for (final r in json['roles'] as List<dynamic>? ?? const [])
+        if (_parseRole(r) != UserRole.unknown) _parseRole(r),
+    ],
   );
 
   final String id;
   final String phone;
   final String? name;
+
+  /// The role the account is acting in now.
   final UserRole role;
+
+  /// Every role this account can act in. Customer and technician accounts can switch
+  /// between the two (one phone number, one account); administrators cannot.
+  final List<UserRole> roles;
+
+  bool get canSwitchRole => roles.length > 1;
+
+  /// The other role a multi-role account can switch to, if any.
+  UserRole? get otherRole => canSwitchRole
+      ? roles.firstWhere((r) => r != role, orElse: () => role)
+      : null;
 
   /// Technician accounts only; null for other roles.
   final TechnicianStatus? technicianStatus;

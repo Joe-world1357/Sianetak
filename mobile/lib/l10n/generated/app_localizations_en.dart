@@ -1483,4 +1483,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorTechnicianNotApproved =>
       'An administrator must approve your application first.';
+
+  @override
+  String get switchToCustomerMode => 'Switch to customer mode';
+
+  @override
+  String get switchToTechnicianMode => 'Switch to technician mode';
+
+  @override
+  String get switchRoleNote =>
+      'Same account and number. You can switch back at any time.';
+
+  @override
+  String get actingAsLabel => 'Current mode';
+
+  @override
+  String get availabilityTitle => 'Available for new jobs';
+
+  @override
+  String get availabilityOnNote =>
+      'You get new offers for your specialties and areas.';
+
+  @override
+  String get availabilityOffNote =>
+      'You won\'t get new offers or assignments. Your current jobs aren\'t affected.';
+
+  @override
+  String get openInMaps => 'Open in Maps';
+
+  @override
+  String get mapsUnavailable => 'No maps app could open this location.';
+
+  @override
+  String get locationPinTitle => 'Location pin';
+
+  @override
+  String get locationRefresh => 'Update location';
 }

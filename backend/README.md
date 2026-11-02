@@ -43,7 +43,7 @@ npm run build && npm start        # production build
 npm run migration:run             # apply migrations
 npm run migration:revert          # roll back the last migration
 npm run seed:catalog              # sample catalog (refuses to run in production)
-npm run user:create-staff -- --phone 01012345678 --role admin
+npm run user:create-staff -- --phone 01012345678 --role admin --name "Reviewer name"
 npm run lint && npm run typecheck && npm test && npm run test:e2e
 ```
 

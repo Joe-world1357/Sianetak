@@ -15,6 +15,9 @@ abstract class AuthRepository {
   Future<AppUser> signIn({required String phone, required String password});
   Future<void> signOut();
   Future<AppUser> updateName(String name);
+
+  /// Multi-role accounts: act as [role] (customer or technician) from now on.
+  Future<AppUser> switchRole(UserRole role);
   Future<void> changePassword({required String current, required String next});
 
   /// True once an administrator exists; until then the first one can be set up.
@@ -73,6 +76,10 @@ class LocalAuthRepository implements AuthRepository {
   @override
   Future<AppUser> updateName(String name) async =>
       AppUser.fromJson(await _backend.updateName(name));
+
+  @override
+  Future<AppUser> switchRole(UserRole role) async =>
+      AppUser.fromJson(await _backend.switchRole(role.name));
 
   @override
   Future<void> changePassword({

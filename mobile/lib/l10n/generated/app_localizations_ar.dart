@@ -1469,4 +1469,39 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get errorTechnicianNotApproved =>
       'يجب أن يوافق المسؤول على طلب انضمامك أولاً.';
+
+  @override
+  String get switchToCustomerMode => 'استخدم التطبيق كعميل';
+
+  @override
+  String get switchToTechnicianMode => 'التبديل إلى وضع الفني';
+
+  @override
+  String get switchRoleNote =>
+      'نفس الحساب ورقم الهاتف. يمكنك العودة في أي وقت.';
+
+  @override
+  String get actingAsLabel => 'الوضع الحالي';
+
+  @override
+  String get availabilityTitle => 'متاح لاستقبال أعمال جديدة';
+
+  @override
+  String get availabilityOnNote => 'تصلك العروض الجديدة لتخصصاتك ومناطقك.';
+
+  @override
+  String get availabilityOffNote =>
+      'لن تصلك عروض أو تكليفات جديدة. أعمالك الحالية لا تتأثر.';
+
+  @override
+  String get openInMaps => 'افتح في الخرائط';
+
+  @override
+  String get mapsUnavailable => 'لم يتمكن أي تطبيق خرائط من فتح هذا الموقع.';
+
+  @override
+  String get locationPinTitle => 'موقع الدبوس';
+
+  @override
+  String get locationRefresh => 'تحديث الموقع';
 }

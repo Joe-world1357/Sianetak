@@ -20,7 +20,17 @@ class OffersScreen extends StatelessWidget {
     final scope = AppScope.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.offersTitle)),
-      body: AsyncView<List<OfferedJob>>(
+      body: Column(
+        children: [
+          const _AvailabilityCard(),
+          Expanded(child: _offerList(l10n, scope)),
+        ],
+      ),
+    );
+  }
+
+  Widget _offerList(AppLocalizations l10n, AppScope scope) =>
+      AsyncView<List<OfferedJob>>(
         load: scope.jobs.offers,
         refreshOn: scope.changes,
         builder: (context, offers, reload) => RefreshIndicator(
@@ -48,6 +58,81 @@ class OffersScreen extends StatelessWidget {
                         )
                       : _OfferCard(job: offers[i - 1]),
                 ),
+        ),
+      );
+}
+
+/// The technician's "available for new jobs" switch. Turning it off hands back pending
+/// offers; accepted jobs are not affected.
+class _AvailabilityCard extends StatefulWidget {
+  const _AvailabilityCard();
+
+  @override
+  State<_AvailabilityCard> createState() => _AvailabilityCardState();
+}
+
+class _AvailabilityCardState extends State<_AvailabilityCard> {
+  bool? _available;
+  bool _busy = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_available == null) _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final value = await AppScope.of(context).jobs.availability();
+      if (mounted) setState(() => _available = value);
+    } catch (_) {
+      // Leave the switch hidden; offers below still show any error.
+    }
+  }
+
+  Future<void> _set(bool value) async {
+    final l10n = AppLocalizations.of(context);
+    final jobs = AppScope.of(context).jobs;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      final saved = await jobs.setAvailability(value);
+      if (mounted) setState(() => _available = saved);
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(messageForError(l10n, e))));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final available = _available;
+    if (available == null) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        0,
+      ),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: SwitchListTile(
+          value: available,
+          onChanged: _busy ? null : _set,
+          secondary: Icon(
+            available ? Icons.toggle_on_rounded : Icons.toggle_off_outlined,
+            color: available ? AppColors.success.$1 : AppColors.muted,
+          ),
+          title: Text(
+            l10n.availabilityTitle,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: Text(
+            available ? l10n.availabilityOnNote : l10n.availabilityOffNote,
+          ),
         ),
       ),
     );
