@@ -2683,6 +2683,234 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تحديث الموقع'**
   String get locationRefresh;
+
+  /// No description provided for @completionSummaryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الخدمة'**
+  String get completionSummaryTitle;
+
+  /// No description provided for @summaryService.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخدمة'**
+  String get summaryService;
+
+  /// No description provided for @summaryWorkStarted.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدء العمل'**
+  String get summaryWorkStarted;
+
+  /// No description provided for @summaryCompletedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهى العمل'**
+  String get summaryCompletedAt;
+
+  /// No description provided for @summaryDuration.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدة العمل'**
+  String get summaryDuration;
+
+  /// No description provided for @durationHoursMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'{hours} س {minutes} د'**
+  String durationHoursMinutes(String hours, String minutes);
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutes} د'**
+  String durationMinutes(String minutes);
+
+  /// No description provided for @demoPaymentNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'للعرض فقط: لا يعالج التطبيق أي أموال. هو يسجّل المبلغ النقدي الذي حصّله الفني لأغراض العرض الدراسي.'**
+  String get demoPaymentNotice;
+
+  /// No description provided for @reportProblemButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن مشكلة'**
+  String get reportProblemButton;
+
+  /// No description provided for @reportProblemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما المشكلة؟'**
+  String get reportProblemTitle;
+
+  /// No description provided for @reportProblemBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'صف المشكلة، وسيتواصل فريق صيانتك معك ومع الفني.'**
+  String get reportProblemBody;
+
+  /// No description provided for @reportProblemLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل المشكلة'**
+  String get reportProblemLabel;
+
+  /// No description provided for @reportProblemTooShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب 10 أحرف على الأقل.'**
+  String get reportProblemTooShort;
+
+  /// No description provided for @reportProblemSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال البلاغ'**
+  String get reportProblemSubmit;
+
+  /// No description provided for @problemReportedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال البلاغ وسيتابعه الفريق.'**
+  String get problemReportedToast;
+
+  /// No description provided for @problemCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلاغ مشكلة'**
+  String get problemCardTitle;
+
+  /// No description provided for @problemOpenPill.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوح'**
+  String get problemOpenPill;
+
+  /// No description provided for @problemResolvedPill.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل'**
+  String get problemResolvedPill;
+
+  /// No description provided for @problemResolutionLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما تم اتخاذه'**
+  String get problemResolutionLabel;
+
+  /// No description provided for @problemOpenBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلاغ مفتوح'**
+  String get problemOpenBadge;
+
+  /// No description provided for @customerProblemOpenTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلاغك لدى الفريق'**
+  String get customerProblemOpenTitle;
+
+  /// No description provided for @customerProblemOpenBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتابع أحد المسؤولين البلاغ ويسجّل ما تم.'**
+  String get customerProblemOpenBody;
+
+  /// No description provided for @adminProblemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبلغ العميل عن مشكلة'**
+  String get adminProblemTitle;
+
+  /// No description provided for @adminProblemBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع الطرفين، ثم أغلق البلاغ مع تسجيل ما تم.'**
+  String get adminProblemBody;
+
+  /// No description provided for @resolveProblemButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق البلاغ'**
+  String get resolveProblemButton;
+
+  /// No description provided for @resolveProblemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف تم حل المشكلة؟'**
+  String get resolveProblemTitle;
+
+  /// No description provided for @resolveProblemTooShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب ما تم اتخاذه.'**
+  String get resolveProblemTooShort;
+
+  /// No description provided for @problemResolvedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إغلاق البلاغ وإبلاغ الطرفين.'**
+  String get problemResolvedToast;
+
+  /// No description provided for @adminFilterProblems.
+  ///
+  /// In ar, this message translates to:
+  /// **'البلاغات'**
+  String get adminFilterProblems;
+
+  /// No description provided for @kpiOpenProblems.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{لا توجد بلاغات مفتوحة} =1{بلاغ مفتوح واحد} =2{بلاغان مفتوحان} few{{count} بلاغات مفتوحة} other{{count} بلاغ مفتوح}}'**
+  String kpiOpenProblems(int count);
+
+  /// No description provided for @kpiOpenProblemsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلاغات العملاء بعد اكتمال الخدمة'**
+  String get kpiOpenProblemsHint;
+
+  /// No description provided for @ntfProblemReported.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإبلاغ عن مشكلة في الطلب {ref}'**
+  String ntfProblemReported(String ref);
+
+  /// No description provided for @ntfProblemResolved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إغلاق بلاغ المشكلة في الطلب {ref}'**
+  String ntfProblemResolved(String ref);
+
+  /// No description provided for @eraseDeviceEntry.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح كل البيانات على هذا الجهاز'**
+  String get eraseDeviceEntry;
+
+  /// No description provided for @eraseDeviceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح كل شيء؟'**
+  String get eraseDeviceTitle;
+
+  /// No description provided for @eraseDeviceBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم حذف كل الحسابات والطلبات والرسائل والصور على هذا الجهاز، ويبدأ التطبيق من جديد كأول تثبيت. لا يمكن التراجع عن ذلك.'**
+  String get eraseDeviceBody;
+
+  /// No description provided for @eraseDevicePasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور للتأكيد'**
+  String get eraseDevicePasswordLabel;
+
+  /// No description provided for @eraseDeviceConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح كل شيء'**
+  String get eraseDeviceConfirm;
 }
 
 class _AppLocalizationsDelegate

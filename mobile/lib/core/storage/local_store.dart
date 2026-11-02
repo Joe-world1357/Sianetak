@@ -199,6 +199,19 @@ class LocalStore extends ChangeNotifier {
           'actingAs': ?actingAs,
         };
 
+  /// Erases every account, record and stored photo on this device and starts again from a
+  /// fresh database (catalog and service areas only), as on first install.
+  Future<void> reset() async {
+    await open();
+    final blobIds = [for (final m in table('media')) m['id'] as String];
+    _data = _fresh();
+    await _persist();
+    for (final id in blobIds) {
+      await _backend.deleteBlob(id);
+    }
+    notifyListeners();
+  }
+
   Future<void> _persist() {
     final json = jsonEncode(_data);
     return _writes = _writes.then((_) => _backend.writeDocument(json));

@@ -11,7 +11,7 @@ import '../../requests/domain/request_models.dart';
 import '../../requests/presentation/widgets/request_card.dart';
 import '../data/admin_repository.dart';
 
-enum _Filter { attention, active, done, all }
+enum _Filter { attention, problems, active, done, all }
 
 /// Operations overview: key counts and every request, with the ones needing a person first.
 class AdminDashboardScreen extends StatefulWidget {
@@ -37,6 +37,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Set<RequestStatus> get _statuses => switch (_filter) {
     _Filter.attention => _attention,
+    _Filter.problems => const {},
     _Filter.active => _active,
     _Filter.done => _done,
     _Filter.all => const {},
@@ -53,13 +54,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         key: ValueKey(_filter),
         load: () async => (
           await scope.admin.overview(),
-          await scope.admin.requests(_statuses),
+          await scope.admin.requests(
+            _statuses,
+            openProblems: _filter == _Filter.problems,
+          ),
         ),
         refreshOn: scope.changes,
         builder: (context, data, reload) {
           final (overview, requests) = data;
           final labels = {
             _Filter.attention: l10n.adminFilterAttention,
+            _Filter.problems: l10n.adminFilterProblems,
             _Filter.active: l10n.adminFilterActive,
             _Filter.done: l10n.adminFilterDone,
             _Filter.all: l10n.adminFilterAll,
@@ -119,6 +124,30 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     subtitle: Text(
                       l10n.kpiApprovedTechnicians(overview.approvedTechnicians),
                     ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: ListTile(
+                    leading: IconBadge(
+                      icon: Icons.report_problem_outlined,
+                      tone: overview.openProblems > 0
+                          ? AppColors.warning
+                          : AppColors.success,
+                      size: 40,
+                    ),
+                    title: Text(l10n.kpiOpenProblems(overview.openProblems)),
+                    subtitle: Text(l10n.kpiOpenProblemsHint),
+                    trailing: overview.openProblems > 0
+                        ? const Icon(
+                            Icons.chevron_right,
+                            color: AppColors.muted,
+                          )
+                        : null,
+                    onTap: overview.openProblems > 0
+                        ? () => setState(() => _filter = _Filter.problems)
+                        : null,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),

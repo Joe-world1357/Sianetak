@@ -19,6 +19,9 @@ abstract class RequestsRepository {
   Future<RequestDetail> decideQuote(String id, {required bool approve});
   Future<RequestDetail> rate(String id, int stars, {String? comment});
 
+  /// Customer reports a problem with a completed job (once per request).
+  Future<RequestDetail> reportProblem(String id, String text);
+
   /// Order-bound chat between the customer and the assigned technician.
   Future<List<ChatMessage>> messages(String id);
   Future<void> sendMessage(String id, String text);
@@ -77,6 +80,10 @@ class LocalRequestsRepository implements RequestsRepository {
   @override
   Future<RequestDetail> rate(String id, int stars, {String? comment}) async =>
       RequestDetail.fromJson(await _backend.rate(id, stars, comment));
+
+  @override
+  Future<RequestDetail> reportProblem(String id, String text) async =>
+      RequestDetail.fromJson(await _backend.reportProblem(id, text));
 
   @override
   Future<List<ChatMessage>> messages(String id) async =>

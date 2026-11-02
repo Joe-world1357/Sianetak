@@ -246,6 +246,9 @@ class FakeAuthRepository implements AuthRepository {
 
   @override
   Future<void> markOnboardingSeen() async => onboardingDone = true;
+
+  @override
+  Future<void> eraseDevice(String password) => throw UnimplementedError();
 }
 
 // ---------------------------------------------------------------------------
@@ -373,6 +376,10 @@ class FakeRequestsRepository implements RequestsRepository {
 
   @override
   Future<RequestDetail> rate(String id, int stars, {String? comment}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> reportProblem(String id, String text) =>
       throw UnimplementedError();
 
   @override
@@ -706,8 +713,14 @@ class FakeAdminRepository implements AdminRepository {
   );
 
   @override
-  Future<List<RequestSummary>> requests(Set<RequestStatus> statuses) async =>
-      const [];
+  Future<List<RequestSummary>> requests(
+    Set<RequestStatus> statuses, {
+    bool openProblems = false,
+  }) async => const [];
+
+  @override
+  Future<RequestDetail> resolveProblem(String requestId, String resolution) =>
+      throw UnimplementedError();
 
   @override
   Future<List<PersonRef>> assignableTechnicians(String requestId) async =>

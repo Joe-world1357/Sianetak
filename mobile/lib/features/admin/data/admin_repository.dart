@@ -11,6 +11,7 @@ class AdminOverview {
     required this.pendingApplications,
     required this.approvedTechnicians,
     required this.commissionMinor,
+    this.openProblems = 0,
   });
 
   factory AdminOverview.fromJson(Map<String, dynamic> json) => AdminOverview(
@@ -21,12 +22,16 @@ class AdminOverview {
     pendingApplications: json['pendingApplications'] as int,
     approvedTechnicians: json['approvedTechnicians'] as int,
     commissionMinor: json['commissionMinor'] as int,
+    openProblems: json['openProblems'] as int? ?? 0,
   );
 
   final Map<RequestStatus, int> statusCounts;
   final int pendingApplications;
   final int approvedTechnicians;
   final int commissionMinor;
+
+  /// Completed requests whose customer reported a problem not yet resolved.
+  final int openProblems;
 
   int count(Iterable<RequestStatus> statuses) =>
       statuses.fold(0, (sum, s) => sum + (statusCounts[s] ?? 0));
@@ -44,8 +49,13 @@ abstract class AdminRepository {
 
   Future<AdminOverview> overview();
 
-  /// All requests in [statuses] (every request when empty), newest first.
-  Future<List<RequestSummary>> requests(Set<RequestStatus> statuses);
+  /// All requests in [statuses] (every request when empty), newest first; only those with
+  /// an open problem report when [openProblems] is set.
+  Future<List<RequestSummary>> requests(
+    Set<RequestStatus> statuses, {
+    bool openProblems = false,
+  });
+  Future<RequestDetail> resolveProblem(String requestId, String resolution);
   Future<List<PersonRef>> assignableTechnicians(String requestId);
   Future<RequestDetail> assign(String requestId, String technicianId);
 }
@@ -81,10 +91,21 @@ class LocalAdminRepository implements AdminRepository {
       AdminOverview.fromJson(await _backend.adminOverview());
 
   @override
-  Future<List<RequestSummary>> requests(Set<RequestStatus> statuses) async =>
-      (await _backend.adminRequests({
-        for (final s in statuses) requestStatusWire(s),
-      })).map(RequestSummary.fromJson).toList(growable: false);
+  Future<List<RequestSummary>> requests(
+    Set<RequestStatus> statuses, {
+    bool openProblems = false,
+  }) async => (await _backend.adminRequests(
+    {for (final s in statuses) requestStatusWire(s)},
+    openProblems: openProblems,
+  )).map(RequestSummary.fromJson).toList(growable: false);
+
+  @override
+  Future<RequestDetail> resolveProblem(
+    String requestId,
+    String resolution,
+  ) async => RequestDetail.fromJson(
+    await _backend.resolveProblem(requestId, resolution),
+  );
 
   @override
   Future<List<PersonRef>> assignableTechnicians(String requestId) async =>
