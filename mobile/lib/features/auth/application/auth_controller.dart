@@ -83,6 +83,7 @@ class AuthController extends ChangeNotifier {
       final user = await _repository.currentUser();
       if (user?.id != _user?.id ||
           user?.technicianStatus != _user?.technicianStatus ||
+          user?.role != _user?.role ||
           user?.name != _user?.name) {
         _apply(user);
       }
@@ -93,6 +94,10 @@ class AuthController extends ChangeNotifier {
 
   Future<void> updateName(String name) async =>
       _apply(await _repository.updateName(name));
+
+  /// Multi-role accounts: switches between customer and technician mode.
+  Future<void> switchRole(UserRole role) async =>
+      _apply(await _repository.switchRole(role));
 
   Future<void> changePassword({
     required String current,

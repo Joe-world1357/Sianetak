@@ -7,12 +7,14 @@ library;
 
 import '../core/storage/local_store.dart';
 
-/// Business rules in one place. Values marked [Proposed] await product sign-off.
+/// Business rules in one place. Values marked [Proposed] await product sign-off; dispatch,
+/// offer expiry, cancellation and commission were approved by the product owner on
+/// 2 Nov 2026 (Sprint 3, audit P0-1).
 abstract final class AppRules {
-  /// [Proposed] How long a technician has to accept an offer.
+  /// Approved: how long a technician has to accept an offer.
   static const offerMinutes = 15;
 
-  /// [Proposed] Platform commission on the collected amount, in percent.
+  /// Approved: platform commission on the collected amount, in percent.
   static const commissionPercent = 10;
   static const maxPhotos = 5;
   static const maxPhotoBytes = 5 * 1024 * 1024;

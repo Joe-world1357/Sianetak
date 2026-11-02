@@ -71,6 +71,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _switchRole(UserRole role) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await AppScope.of(context).auth.switchRole(role);
+    } catch (e) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(messageForError(l10n, e))));
+    }
+  }
+
   Future<void> _signOut() async {
     final l10n = AppLocalizations.of(context);
     final auth = AppScope.of(context).auth;
@@ -236,6 +248,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                if (user.otherRole case final other?) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.swap_horiz_rounded,
+                        color: AppColors.primary,
+                      ),
+                      title: Text(
+                        other == UserRole.customer
+                            ? l10n.switchToCustomerMode
+                            : l10n.switchToTechnicianMode,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: Text(l10n.switchRoleNote),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: AppColors.muted,
+                      ),
+                      onTap: () => _switchRole(other),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.md),
                 Card(
                   clipBehavior: Clip.antiAlias,

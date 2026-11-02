@@ -14,6 +14,7 @@ import '../../catalog/presentation/price_guidance_text.dart';
 import '../domain/request_models.dart';
 import 'chat_screen.dart';
 import 'widgets/journey_progress.dart';
+import 'widgets/location_pin.dart';
 import 'widgets/request_actions.dart';
 import 'widgets/request_status_chip.dart';
 
@@ -207,11 +208,10 @@ class _Body extends StatelessWidget {
               if (detail.landmark != null) Text(detail.landmark!),
               if (detail.coordinates != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.xs),
-                  child: TonePill(
-                    label: l10n.locationCaptured,
-                    tone: AppColors.success,
-                    icon: Icons.my_location_rounded,
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: LocationPin(
+                    point: detail.coordinates!,
+                    label: detail.summary.reference,
                   ),
                 ),
             ],

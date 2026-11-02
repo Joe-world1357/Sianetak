@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/app_scope.dart';
 import 'core/device/image_picker_service.dart';
 import 'core/device/location_service.dart';
+import 'core/device/map_launcher.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'features/admin/data/admin_repository.dart';
@@ -29,6 +30,7 @@ class SianetakApp extends StatelessWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    this.maps = const DeviceMapLauncher(),
     required this.jobs,
     required this.notifications,
     required this.changes,
@@ -43,6 +45,7 @@ class SianetakApp extends StatelessWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final MapLauncher maps;
   final JobsRepository jobs;
   final NotificationsRepository notifications;
   final Listenable changes;
@@ -59,6 +62,7 @@ class SianetakApp extends StatelessWidget {
       admin: admin,
       imagePicker: imagePicker,
       location: location,
+      maps: maps,
       jobs: jobs,
       notifications: notifications,
       changes: changes,

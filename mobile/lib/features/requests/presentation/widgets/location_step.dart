@@ -6,9 +6,11 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/auth_error_text.dart';
 import '../../application/request_draft_controller.dart';
 import 'draft_issue_text.dart';
+import 'location_pin.dart';
 
-/// Step 2: a saved address or a typed one, optionally with the device's current location
-/// (FR-REQ-04). A map pin needs a maps provider, which is not integrated yet.
+/// Step 2: a saved address or a typed one, optionally pinned at the device's current
+/// location (FR-REQ-04). The pin can be checked in the phone's maps app and re-captured;
+/// the app has no in-app map because it works offline.
 class LocationStep extends StatelessWidget {
   const LocationStep({
     super.key,
@@ -212,15 +214,32 @@ class _CurrentLocation extends StatelessWidget {
                     : const Icon(Icons.my_location),
                 label: Text(locating ? l10n.locating : l10n.useCurrentLocation),
               )
-            else
-              Row(
+            else ...[
+              Semantics(
+                liveRegion: true,
+                child: Text(
+                  l10n.locationCaptured,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              LocationPin(point: draft.point!),
+              Wrap(
+                spacing: AppSpacing.sm,
                 children: [
-                  Icon(Icons.check_circle, color: theme.colorScheme.primary),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Semantics(
-                      liveRegion: true,
-                      child: Text(l10n.locationCaptured),
+                  TextButton.icon(
+                    onPressed: locating ? null : onUse,
+                    icon: locating
+                        ? const SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                    label: Text(
+                      locating ? l10n.locating : l10n.locationRefresh,
                     ),
                   ),
                   TextButton(
@@ -229,6 +248,7 @@ class _CurrentLocation extends StatelessWidget {
                   ),
                 ],
               ),
+            ],
             const SizedBox(height: AppSpacing.xs),
             Text(l10n.locationOptionalNote, style: theme.textTheme.bodySmall),
             if (failure != null) ...[

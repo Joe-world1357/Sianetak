@@ -20,5 +20,6 @@ Future<void> main() async {
     location: DeviceLocationService(),
   );
   await app.start();
+  app.startOfferExpiryTimer();
   runApp(app.build());
 }

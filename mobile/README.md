@@ -24,7 +24,13 @@ someone using the app.
 - Sign in with an Egyptian mobile number and password (Arabic-Indic digits accepted).
 - Passwords: at least 8 characters with a letter and a digit, stored only as salted
   PBKDF2-HMAC-SHA256 hashes (60,000 iterations, run off the UI thread). Never in plaintext.
-- One phone number per account. Wrong number and wrong password fail the same way; 5 failures
+- One phone number per account. Customer and technician accounts are **multi-role**: Account →
+  "Switch to customer mode / technician mode" changes the role the same account acts in (a
+  technician can book a service for their own home; a customer can apply as a technician
+  without a second number). Each role sees its own navigation and its own notices; a technician
+  is never offered their own request. Administrators cannot switch. Sign-in starts in the
+  account's stored role.
+- Wrong number and wrong password fail the same way; 5 failures
   lock that number for 5 minutes [Proposed].
 - Sessions persist across restarts, slide forward on each launch and expire after 30 days unused.
   Sign-out (with confirmation) ends the session. Change password needs the current one.
@@ -34,11 +40,14 @@ someone using the app.
 | Role | What it can do |
 |------|----------------|
 | Customer | Browse services, create requests (photos, saved addresses, schedule), track status, chat with the assigned technician, approve or reject quotes, cancel, rate completed work |
-| Technician | Apply, see verification status, accept or decline offers, move a job through on the way → arrived → quote → completed (cash recorded), see earnings |
+| Technician | Apply, see verification status, switch "available for new jobs" on or off, accept or decline offers, move a job through on the way → arrived → quote → completed (cash recorded), see earnings |
 | Admin | Dashboard, review / approve / reject / suspend technicians, assign requests nobody accepted, add administrators |
 
-Rules (in `local/initial_data.dart`, [Proposed] where marked): offers go to up to 3 approved
-technicians covering the category and area and expire after 15 minutes; the first to accept wins;
+Rules (in `local/initial_data.dart`; dispatch, expiry, cancellation and commission approved
+2 Nov 2026, lock-out and session times still [Proposed]): offers go to up to 3 approved,
+available technicians covering the category and area and expire after 15 minutes (swept on
+every read and every 30 seconds while the app is open; there is no server job runner);
+turning availability off hands back pending offers; the first to accept wins;
 with nobody eligible or after every offer lapses the request waits for an admin to assign it;
 work starts only after the customer approves the quote; payment is cash with a 10% commission.
 
@@ -46,8 +55,10 @@ work starts only after the customer approves the quote; payment is cash with a 1
 
 - **One device, one database.** All roles share the device. Notifications and chat reach other
   accounts only on this same phone, and there is no sync between phones.
-- No SMS, push notifications, online payment, maps or live location: these need a server or a
-  provider. Location is an optional one-off pin from the phone's GPS.
+- No SMS, push notifications, online payment, in-app map or live location: these need a server
+  or a provider. Location is an optional one-off pin from the phone's GPS; it shows as
+  coordinates and opens in the phone's own maps app ("Open in Maps"), for the customer, the
+  assigned technician and admins only. Notifications are in-app (badge + list).
 - No password recovery (there is no channel to verify identity offline). An administrator can
   add a new admin, but cannot reset passwords.
 - The previous demo build kept sample data in `sianetak_demo/` in app storage; this version

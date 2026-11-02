@@ -17,6 +17,8 @@ class TestHarness {
     FakeAdminRepository? admin,
     FakeImagePicker? imagePicker,
     FakeLocationService? location,
+    FakeMapLauncher? maps,
+    FakeJobsRepository? jobs,
     Locale locale = LocaleController.arabic,
     bool signedIn = false,
   }) : catalog = catalog ?? FakeCatalogRepository(),
@@ -27,6 +29,8 @@ class TestHarness {
        admin = admin ?? FakeAdminRepository(),
        imagePicker = imagePicker ?? FakeImagePicker(),
        location = location ?? FakeLocationService(),
+       maps = maps ?? FakeMapLauncher(),
+       jobs = jobs ?? FakeJobsRepository(),
        locale = LocaleController(initial: locale) {
     authController = AuthController(repository: authRepository);
     if (signedIn) authRepository.signedIn = authRepository.user;
@@ -40,6 +44,8 @@ class TestHarness {
   final FakeAdminRepository admin;
   final FakeImagePicker imagePicker;
   final FakeLocationService location;
+  final FakeMapLauncher maps;
+  final FakeJobsRepository jobs;
   final LocaleController locale;
   late final AuthController authController;
   final changes = ChangeNotifier();
@@ -54,7 +60,8 @@ class TestHarness {
     admin: admin,
     imagePicker: imagePicker,
     location: location,
-    jobs: FakeJobsRepository(),
+    maps: maps,
+    jobs: jobs,
     notifications: FakeNotificationsRepository(),
     changes: changes,
   );

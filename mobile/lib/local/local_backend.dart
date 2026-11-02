@@ -43,6 +43,10 @@ class LocalBackend {
     'phone': u['phone'],
     'name': u['name'],
     'role': u['role'],
+    'accountRole': u['accountRole'] ?? u['role'],
+    'roles': LocalStore.switchableRoles.contains(u['role'])
+        ? LocalStore.switchableRoles.toList()
+        : [u['role']],
     if (u['role'] == 'technician')
       'technicianStatus':
           _applicationOf(u['id'] as String)?['status'] ?? 'not_submitted',
@@ -54,7 +58,12 @@ class LocalBackend {
     await store.open();
     final u = store.sessionUser;
     if (renew) {
-      await store.write(() => store.setSession(u?['id'] as String?));
+      await store.write(
+        () => store.setSession(
+          u?['id'] as String?,
+          actingAs: u == null ? null : store.sessionActingAs,
+        ),
+      );
     }
     return u == null ? null : _user(u);
   }
@@ -230,13 +239,35 @@ class LocalBackend {
     }
     _checkPassword(next);
     final hash = await _hasher.hash(next);
-    await store.write(() => store.requireUser()['passwordHash'] = hash);
+    await store.write(
+      () => store.find(
+        'users',
+        store.requireUser()['id'] as String,
+      )!['passwordHash'] = hash,
+    );
   }
 
   Future<Row> updateName(String name) => store.write(() {
-    final u = store.requireUser();
-    u['name'] = _validName(name);
-    return _user(u);
+    final me = store.requireUser();
+    store.find('users', me['id'] as String)!['name'] = _validName(name);
+    return _user(store.sessionUser!);
+  });
+
+  /// Multi-role accounts: a customer or technician account switches the role it acts in.
+  /// One phone number, one account, one password; requests, jobs and the technician
+  /// application all stay with the same person. Administrators cannot switch.
+  Future<Row> switchRole(String role) => store.write(() {
+    final me = store.requireUser();
+    final account = store.find('users', me['id'] as String)!;
+    if (!LocalStore.switchableRoles.contains(account['role']) ||
+        !LocalStore.switchableRoles.contains(role)) {
+      _fail('FORBIDDEN', 403);
+    }
+    store.setSession(
+      account['id'] as String,
+      actingAs: role == account['role'] ? null : role,
+    );
+    return _user(store.sessionUser!);
   });
 
   // ---------------------------------------------------------------------------------------
@@ -728,10 +759,20 @@ class LocalBackend {
     });
   }
 
+  /// Which role a notice is for, so a multi-role account sees each notice in the role it
+  /// concerns: customer notices in customer mode, job and application notices as technician.
+  String _audience(String userId, Row? request) {
+    final role = store.find('users', userId)?['role'];
+    if (role == 'admin') return 'admin';
+    if (request != null && request['customerId'] == userId) return 'customer';
+    return 'technician';
+  }
+
   void _notify(String userId, String type, {Row? request, String? appId}) {
     store.table('notifications').add({
       'id': store.newId('ntf'),
       'userId': userId,
+      'audience': _audience(userId, request),
       'type': type,
       if (request != null) 'requestId': request['id'],
       if (request != null) 'reference': request['reference'],
@@ -815,14 +856,16 @@ class LocalBackend {
   });
 
   // ---------------------------------------------------------------------------------------
-  // Dispatch (Sprint 3): eligible = approved, covers the category and the area.
+  // Dispatch (Sprint 3): eligible = approved, available, covers the category and the area.
 
-  /// Approved technicians who cover [r]'s category and area, best rated first.
+  /// Approved technicians who are available for new jobs and cover [r]'s category and
+  /// area, best rated first. Used for both offers and admin assignment.
   List<String> eligibleTechnicians(Row r) {
     final service = store.find('services', r['serviceId'] as String)!;
     final candidates = [
       for (final a in store.table('applications'))
         if (a['status'] == 'approved' &&
+            a['available'] != false &&
             a['userId'] != r['customerId'] &&
             (a['specialtyIds'] as List<dynamic>).contains(
               service['categoryId'],
@@ -841,7 +884,7 @@ class LocalBackend {
     return candidates;
   }
 
-  /// [Proposed] Offers go to the top three eligible technicians at once; the first to
+  /// Approved policy: offers go to the top three eligible technicians at once; the first to
   /// accept wins. With nobody eligible the request goes to operations as `unmatched`.
   void _dispatch(Row r) {
     final technicians = eligibleTechnicians(r).take(3).toList();
@@ -863,6 +906,17 @@ class LocalBackend {
         ),
       });
       _notify(t, 'new_offer', request: r);
+    }
+  }
+
+  /// A submitted request with no pending offer left goes to operations as `unmatched`.
+  void _fallBackIfNoOffers(Row r) {
+    final stillPending = store
+        .table('offers')
+        .any((x) => x['requestId'] == r['id'] && x['status'] == 'pending');
+    if (!stillPending && r['status'] == 'submitted') {
+      _event(r, 'unmatched');
+      _notifyAdmins('request_unmatched', request: r);
     }
   }
 
@@ -949,13 +1003,7 @@ class LocalBackend {
       }
       if (!accept) {
         o['status'] = 'declined';
-        final stillPending = store
-            .table('offers')
-            .any((x) => x['requestId'] == r['id'] && x['status'] == 'pending');
-        if (!stillPending && r['status'] == 'submitted') {
-          _event(r, 'unmatched');
-          _notifyAdmins('request_unmatched', request: r);
-        }
+        _fallBackIfNoOffers(r);
         return _summary(r);
       }
       if (r['status'] != 'submitted') _fail('OFFER_TAKEN', 409);
@@ -967,6 +1015,36 @@ class LocalBackend {
       return _detail(r, me);
     });
   }
+
+  /// Technician availability (FR-MAT-01): whether this technician takes new offers and
+  /// assignments. Jobs already accepted are not affected. New applications start available.
+  Future<bool> availability() async {
+    await store.open();
+    final me = _requireTechnician();
+    return _applicationOf(me['id'] as String)!['available'] != false;
+  }
+
+  Future<bool> setAvailability(bool available) => store.write(() {
+    final me = _requireTechnician();
+    final a = _applicationOf(me['id'] as String)!;
+    a['available'] = available;
+    if (!available) {
+      // Hand back pending offers so the request can go to someone who is available.
+      for (final o in store.table('offers').toList()) {
+        if (o['technicianId'] == me['id'] && o['status'] == 'pending') {
+          o['status'] = 'declined';
+          _fallBackIfNoOffers(
+            store.find('requests', o['requestId'] as String)!,
+          );
+        }
+      }
+    }
+    return available;
+  });
+
+  /// Offer expiry without a server job runner: the app calls this on a timer while it is
+  /// open, and every read also sweeps lapsed offers.
+  Future<void> expireDueOffers() => _expireOffers();
 
   Future<Row> jobs({required bool active}) async {
     await _expireOffers();
@@ -1092,7 +1170,12 @@ class LocalBackend {
             'text': m['text'],
             'at': m['at'],
             'senderId': m['senderId'],
-            'senderRole': store.find('users', m['senderId'] as String)!['role'],
+            // The role the sender has on this request (one account can be both).
+            'senderRole': m['senderId'] == r['customerId']
+                ? 'customer'
+                : m['senderId'] == r['technicianId']
+                ? 'technician'
+                : store.find('users', m['senderId'] as String)!['role'],
             'mine': m['senderId'] == me['id'],
           },
     ];
@@ -1143,7 +1226,11 @@ class LocalBackend {
     if (me == null) return const [];
     return store
         .table('notifications')
-        .where((n) => n['userId'] == me['id'])
+        .where(
+          (n) =>
+              n['userId'] == me['id'] &&
+              (n['audience'] == null || n['audience'] == me['role']),
+        )
         .toList()
       ..sort((a, b) => (b['at'] as String).compareTo(a['at'] as String));
   }

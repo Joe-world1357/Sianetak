@@ -736,5 +736,16 @@
   "errorAdminExists": "يوجد حساب مسؤول بالفعل على هذا الجهاز.",
   "errorAccountDisabled": "هذا الحساب موقوف.",
   "errorWrongPassword": "كلمة المرور الحالية غير صحيحة.",
-  "errorTechnicianNotApproved": "يجب أن يوافق المسؤول على طلب انضمامك أولاً."
+  "errorTechnicianNotApproved": "يجب أن يوافق المسؤول على طلب انضمامك أولاً.",
+  "switchToCustomerMode": "استخدم التطبيق كعميل",
+  "switchToTechnicianMode": "التبديل إلى وضع الفني",
+  "switchRoleNote": "نفس الحساب ورقم الهاتف. يمكنك العودة في أي وقت.",
+  "actingAsLabel": "الوضع الحالي",
+  "availabilityTitle": "متاح لاستقبال أعمال جديدة",
+  "availabilityOnNote": "تصلك العروض الجديدة لتخصصاتك ومناطقك.",
+  "availabilityOffNote": "لن تصلك عروض أو تكليفات جديدة. أعمالك الحالية لا تتأثر.",
+  "openInMaps": "افتح في الخرائط",
+  "mapsUnavailable": "لم يتمكن أي تطبيق خرائط من فتح هذا الموقع.",
+  "locationPinTitle": "موقع الدبوس",
+  "locationRefresh": "تحديث الموقع"
 }

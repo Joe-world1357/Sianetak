@@ -10,6 +10,7 @@ import '../features/requests/data/requests_repository.dart';
 import '../features/technician/data/technician_repository.dart';
 import 'device/image_picker_service.dart';
 import 'device/location_service.dart';
+import 'device/map_launcher.dart';
 import 'locale/locale_controller.dart';
 
 /// Dependency container for the widget tree; swapped for fakes in tests.
@@ -25,6 +26,7 @@ class AppScope extends InheritedWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    required this.maps,
     required this.jobs,
     required this.notifications,
     required this.changes,
@@ -40,6 +42,7 @@ class AppScope extends InheritedWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final MapLauncher maps;
   final JobsRepository jobs;
   final NotificationsRepository notifications;
 
@@ -63,6 +66,7 @@ class AppScope extends InheritedWidget {
       admin != oldWidget.admin ||
       imagePicker != oldWidget.imagePicker ||
       location != oldWidget.location ||
+      maps != oldWidget.maps ||
       jobs != oldWidget.jobs ||
       notifications != oldWidget.notifications ||
       changes != oldWidget.changes;

@@ -30,6 +30,10 @@ class GeoPoint {
 
   final double latitude;
   final double longitude;
+
+  /// "24.08850, 32.89980": five decimals is about one metre.
+  String get display =>
+      '${latitude.toStringAsFixed(5)}, ${longitude.toStringAsFixed(5)}';
 }
 
 class SavedAddress {

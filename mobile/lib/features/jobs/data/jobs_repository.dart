@@ -15,6 +15,10 @@ abstract class JobsRepository {
     String? note,
   });
   Future<Earnings> earnings();
+
+  /// Whether this technician takes new offers and assignments (FR-MAT-01).
+  Future<bool> availability();
+  Future<bool> setAvailability(bool available);
 }
 
 class LocalJobsRepository implements JobsRepository {
@@ -65,4 +69,11 @@ class LocalJobsRepository implements JobsRepository {
   @override
   Future<Earnings> earnings() async =>
       Earnings.fromJson(await _backend.earnings());
+
+  @override
+  Future<bool> availability() => _backend.availability();
+
+  @override
+  Future<bool> setAvailability(bool available) =>
+      _backend.setAvailability(available);
 }

@@ -131,10 +131,33 @@ class LocalStore extends ChangeNotifier {
     return session['userId'] as String?;
   }
 
+  /// The signed-in account as it is acting now. A customer or technician account can act
+  /// in either role (multi-role accounts); the row returned then carries the acting role in
+  /// `role` and the stored one in `accountRole`. It is a copy in that case, so change
+  /// account fields through [find], never through this row.
   Row? get sessionUser {
     final id = sessionUserId;
     final user = id == null ? null : find('users', id);
-    return user == null || user['disabled'] == true ? null : user;
+    if (user == null || user['disabled'] == true) return null;
+    final acting = (_data['session'] as Map<String, dynamic>)['actingAs'];
+    if (acting is! String ||
+        acting == user['role'] ||
+        !switchableRoles.contains(acting) ||
+        !switchableRoles.contains(user['role'])) {
+      return user;
+    }
+    return {...user, 'role': acting, 'accountRole': user['role']};
+  }
+
+  /// Roles a non-admin account can switch between. Administrators stay administrators.
+  static const switchableRoles = {'customer', 'technician'};
+
+  /// The role the session acts in, when it differs from the account's stored role.
+  String? get sessionActingAs {
+    final session = _data['session'];
+    return session is Map<String, dynamic>
+        ? session['actingAs'] as String?
+        : null;
   }
 
   /// The signed-in user, or UNAUTHENTICATED; FORBIDDEN when the role is not in [roles].
@@ -166,11 +189,14 @@ class LocalStore extends ChangeNotifier {
   }
 
   /// Starts (or with null, ends) the device session. Sliding: renewed on each launch.
-  void setSession(String? userId) => _data['session'] = userId == null
+  /// [actingAs] is the role a multi-role account acts in (null: its stored role).
+  void setSession(String? userId, {String? actingAs}) =>
+      _data['session'] = userId == null
       ? null
       : {
           'userId': userId,
           'expiresAt': now().add(sessionLifetime).toUtc().toIso8601String(),
+          'actingAs': ?actingAs,
         };
 
   Future<void> _persist() {

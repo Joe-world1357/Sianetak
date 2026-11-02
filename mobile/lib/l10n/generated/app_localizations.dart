@@ -2617,6 +2617,72 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'يجب أن يوافق المسؤول على طلب انضمامك أولاً.'**
   String get errorTechnicianNotApproved;
+
+  /// No description provided for @switchToCustomerMode.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدم التطبيق كعميل'**
+  String get switchToCustomerMode;
+
+  /// No description provided for @switchToTechnicianMode.
+  ///
+  /// In ar, this message translates to:
+  /// **'التبديل إلى وضع الفني'**
+  String get switchToTechnicianMode;
+
+  /// No description provided for @switchRoleNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'نفس الحساب ورقم الهاتف. يمكنك العودة في أي وقت.'**
+  String get switchRoleNote;
+
+  /// No description provided for @actingAsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع الحالي'**
+  String get actingAsLabel;
+
+  /// No description provided for @availabilityTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح لاستقبال أعمال جديدة'**
+  String get availabilityTitle;
+
+  /// No description provided for @availabilityOnNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصلك العروض الجديدة لتخصصاتك ومناطقك.'**
+  String get availabilityOnNote;
+
+  /// No description provided for @availabilityOffNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن تصلك عروض أو تكليفات جديدة. أعمالك الحالية لا تتأثر.'**
+  String get availabilityOffNote;
+
+  /// No description provided for @openInMaps.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح في الخرائط'**
+  String get openInMaps;
+
+  /// No description provided for @mapsUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتمكن أي تطبيق خرائط من فتح هذا الموقع.'**
+  String get mapsUnavailable;
+
+  /// No description provided for @locationPinTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقع الدبوس'**
+  String get locationPinTitle;
+
+  /// No description provided for @locationRefresh.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث الموقع'**
+  String get locationRefresh;
 }
 
 class _AppLocalizationsDelegate

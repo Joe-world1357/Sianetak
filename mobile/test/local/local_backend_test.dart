@@ -636,6 +636,203 @@ void main() {
       );
     });
 
+    group('multi-role accounts (P1)', () {
+      test('a technician can request a service as a customer with the same account', () async {
+        await as(technician);
+        final switched = await backend.switchRole('customer');
+        expect(switched['role'], 'customer');
+        expect(switched['accountRole'], 'technician');
+        expect(switched['roles'], containsAll(['customer', 'technician']));
+        expect(switched['id'], ids[technician]);
+
+        final detail = await backend.submitRequest({
+          'serviceId': 'svc-plumbing-leak-repair',
+          'description': 'سخان المياه في شقتي بيسرب',
+          'address': {
+            'areaId': 'area-aswan-city-centre',
+            'details': 'شارع السوق ٣',
+          },
+          'schedule': {'type': 'asap'},
+        }, 'key-own-request');
+        final id = detail['id'] as String;
+        // Technician-only calls are refused while acting as a customer.
+        await expectLater(backend.offers(), failsWith('FORBIDDEN'));
+
+        // Never offered their own request; Karim gets it.
+        await backend.switchRole('technician');
+        expect([
+          for (final o in await backend.offers()) o['id'],
+        ], isNot(contains(id)));
+        await expectLater(
+          backend.getRequest(id),
+          failsWith('REQUEST_NOT_FOUND'),
+        );
+        await as(karim);
+        expect([for (final o in await backend.offers()) o['id']], contains(id));
+      });
+
+      test(
+        'the acting role survives a restart and resets on sign-in',
+        () async {
+          await as(technician);
+          await backend.switchRole('customer');
+          final reopened = open();
+          expect(
+            (await reopened.currentUser(renew: true))!['role'],
+            'customer',
+          );
+          expect((await reopened.currentUser())!['role'], 'customer');
+          await reopened.signIn(technician, password);
+          expect((await reopened.currentUser())!['role'], 'technician');
+        },
+      );
+
+      test('a customer can switch to technician mode and apply without a new account', () async {
+        await as(customer);
+        final switched = await backend.switchRole('technician');
+        expect(switched['technicianStatus'], 'not_submitted');
+        final app = await backend.submitApplication({
+          'fullName': 'أحمد محمود',
+          'yearsOfExperience': 3,
+          'bio': null,
+          'specialtyCategoryIds': ['cat-painting'],
+          'serviceAreaIds': ['area-atlas'],
+          'documents': <dynamic>[],
+        });
+        await as(admin);
+        await backend.decideApplication(
+          (app['application'] as Map<String, dynamic>)['id'] as String,
+          'approve',
+          null,
+        );
+        // Approval no longer costs them their customer side.
+        await as(customer);
+        expect((await backend.currentUser())!['technicianStatus'], 'approved');
+        await backend.switchRole('customer');
+        expect((await backend.listRequests())['items'], isEmpty);
+      });
+
+      test('administrators cannot switch roles', () async {
+        await as(admin);
+        expect((await backend.currentUser())!['roles'], ['admin']);
+        await expectLater(
+          backend.switchRole('customer'),
+          failsWith('FORBIDDEN'),
+        );
+      });
+
+      test(
+        'notices and chat roles follow the role each notice concerns',
+        () async {
+          await as(technician);
+          await backend.switchRole('customer');
+          final id =
+              (await backend.submitRequest({
+                    'serviceId': 'svc-plumbing-leak-repair',
+                    'description': 'سخان المياه في شقتي بيسرب',
+                    'address': {
+                      'areaId': 'area-aswan-city-centre',
+                      'details': 'شارع السوق ٣',
+                    },
+                    'schedule': {'type': 'asap'},
+                  }, 'key-own-request-2'))['id']
+                  as String;
+          final offer = await offerFor(id, karim);
+          await backend.respondToOffer(offer, accept: true);
+          await backend.sendMessage(id, 'وصلت');
+
+          await as(technician);
+          // Signed in as technician: the customer-side notices wait for customer mode.
+          expect(
+            (await backend.notifications()).where((n) => n['requestId'] == id),
+            isEmpty,
+          );
+          await backend.switchRole('customer');
+          final notices = await backend.notifications();
+          expect(
+            notices.where((n) => n['requestId'] == id).map((n) => n['type']),
+            containsAll(['assigned', 'message']),
+          );
+          await backend.sendMessage(id, 'تمام');
+          final roles = [
+            for (final m in await backend.messages(id)) m['senderRole'],
+          ];
+          expect(roles, ['technician', 'customer']);
+        },
+      );
+    });
+
+    group('technician availability (P0)', () {
+      test('unavailable technicians get no offers or assignments', () async {
+        await as(karim);
+        expect(await backend.availability(), isTrue);
+        await backend.setAvailability(false);
+
+        final id = await submit();
+        await as(karim);
+        expect(await backend.offers(), isEmpty);
+        await as(admin);
+        expect([
+          for (final t in await backend.assignableTechnicians(id)) t['id'],
+        ], isNot(contains(ids[karim])));
+        await expectLater(
+          backend.assign(id, ids[karim]!),
+          failsWith('TECHNICIAN_NOT_ELIGIBLE'),
+        );
+
+        await as(karim);
+        await backend.setAvailability(true);
+        final later = await submit(areaId: 'area-el-sahary');
+        await as(karim);
+        expect([
+          for (final o in await backend.offers()) o['id'],
+        ], contains(later));
+      });
+
+      test(
+        'going unavailable hands back pending offers but keeps accepted jobs',
+        () async {
+          final job = await submit();
+          final offer = await offerFor(job, karim);
+          await backend.respondToOffer(offer, accept: true);
+          final pending = await submit(areaId: 'area-el-sahary');
+          await offerFor(pending, technician);
+
+          await as(technician);
+          await backend.setAvailability(false);
+          expect(await backend.offers(), isEmpty);
+          await as(customer);
+          expect((await backend.getRequest(pending))['status'], 'submitted');
+          await as(karim);
+          await backend.setAvailability(false);
+          await as(customer);
+          // Nobody available is left: the request goes to operations.
+          expect((await backend.getRequest(pending))['status'], 'unmatched');
+          await as(karim);
+          expect((await backend.jobs(active: true))['items'], hasLength(1));
+        },
+      );
+
+      test('only approved technicians can change availability', () async {
+        await as(customer);
+        await expectLater(
+          backend.setAvailability(false),
+          failsWith('FORBIDDEN'),
+        );
+      });
+    });
+
+    test('lapsed offers are swept without a screen being reopened', () async {
+      final id = await submit();
+      now = now.add(const Duration(minutes: AppRules.offerMinutes + 1));
+      await backend.expireDueOffers();
+      final raw = jsonDecode(storage.document!) as Map<String, dynamic>;
+      final request = (raw['requests'] as List<dynamic>).firstWhere(
+        (r) => r['id'] == id,
+      );
+      expect(request['status'], 'unmatched');
+    });
+
     test('role checks mirror the server', () async {
       await as(customer);
       await expectLater(backend.offers(), failsWith('FORBIDDEN'));

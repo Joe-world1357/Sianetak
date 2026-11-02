@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:sianetak_customer/core/device/image_picker_service.dart';
 import 'package:sianetak_customer/core/device/location_service.dart';
+import 'package:sianetak_customer/core/device/map_launcher.dart';
 import 'package:sianetak_customer/core/network/api_exception.dart';
 import 'package:sianetak_customer/features/admin/data/admin_repository.dart';
 import 'package:sianetak_customer/features/auth/data/auth_repository.dart';
@@ -170,6 +171,24 @@ class FakeAuthRepository implements AuthRepository {
       name: name,
       role: user.role,
       technicianStatus: user.technicianStatus,
+    );
+    return signedIn = user;
+  }
+
+  final List<UserRole> switchedTo = [];
+
+  @override
+  Future<AppUser> switchRole(UserRole role) async {
+    switchedTo.add(role);
+    user = AppUser(
+      id: user.id,
+      phone: user.phone,
+      name: user.name,
+      role: role,
+      roles: user.roles,
+      technicianStatus: role == UserRole.technician
+          ? (user.technicianStatus ?? TechnicianStatus.notSubmitted)
+          : null,
     );
     return signedIn = user;
   }
@@ -385,6 +404,7 @@ RequestDetail requestDetail({
   ServiceArea? area,
   String details = 'شارع النيل، عمارة 5',
   RequestSchedule schedule = const RequestSchedule.asap(),
+  GeoPoint? coordinates,
 }) {
   final a = area ?? sampleArea;
   return RequestDetail(
@@ -407,6 +427,7 @@ RequestDetail requestDetail({
     photoIds: photoIds,
     areaName: a.name,
     addressDetails: details,
+    coordinates: coordinates,
     pricing: const PricingGuidance.inspectionRequired(),
     timeline: [
       RequestTimelineEntry(status: RequestStatus.submitted, at: DateTime.now()),
@@ -524,6 +545,17 @@ class FakeImagePicker implements ImagePickerService {
     final value = next;
     if (value is Exception) throw value;
     return value as PickedImage?;
+  }
+}
+
+class FakeMapLauncher implements MapLauncher {
+  final opened = <GeoPoint>[];
+  bool succeeds = true;
+
+  @override
+  Future<bool> open(GeoPoint point, {String? label}) async {
+    opened.add(point);
+    return succeeds;
   }
 }
 
@@ -688,6 +720,14 @@ class FakeAdminRepository implements AdminRepository {
 
 /// Technician dispatch with no offers or jobs.
 class FakeJobsRepository implements JobsRepository {
+  bool available = true;
+
+  @override
+  Future<bool> availability() async => available;
+
+  @override
+  Future<bool> setAvailability(bool value) async => available = value;
+
   @override
   Future<List<OfferedJob>> offers() async => const [];
 
