@@ -1,6 +1,7 @@
 # Sprint 4 Plan — Sianetak (صيانتك)
 
-Prepared 2 Nov 2026 · Branch `claude/project-thread-561x3b` · Base `main` @ `6320f71` (PR #5).
+Prepared 2 Nov 2026 · Branch `claude/project-thread-561x3b` (PR #6, merged 7 Nov 2026) · Base `main` @ `6320f71` (PR #5).
+Closed out 7 Nov 2026 on branch `claude/project-thread-cuqefj` (final PR): see **Sprint close-out** at the end.
 Jira-ready: every story has an ID, points, priority, acceptance criteria and dependencies.
 `docs/sprint4_jira_import.csv` holds the same backlog for Jira's CSV importer.
 
@@ -46,12 +47,12 @@ committed **20** (same as Sprint 3; there is still no Jira velocity history).
 | S4-05 | End-to-end regression: full journey, restart, reset (automated) | 3 | High | **Done** in this PR | S4-01…04 |
 | S4-06 | Arabic RTL review of the new screens (screenshots) | 1 | Medium | **Done** (`docs/screenshots/sprint4-*`) | S4-01…04 |
 | S4-07 | Demo guide: install, presentation script, reset, known limitations | 2 | High | **Done** (`docs/DEMO_GUIDE.md`) | S4-01…04 |
-| S4-08 | Sign off sign-in lock-out and session times | 0 | High | **Waiting on Joe** (decision posted) | Joe |
+| S4-08 | Sign off sign-in lock-out and session times | 0 | High | **Done** 7 Nov 2026 (recommended values kept, D-S4-2) | Joe |
 | S4-09 | Install and smoke-test the APK on a physical Android phone (incl. Sprint 3's S3-08) | 2 | Highest | **To do (Joe)**: needs a real phone | CI APK |
 | S4-10 | Jira: import Sprint 3 + 4 backlogs into SIANTEK | 1 | Medium | **Blocked: Jira access** | ouragileproject.atlassian.net |
 | S4-11 | *Stretch*: English-language screenshot pass and final slide deck | 3 | Low | Backlog (not committed) | S4-09 |
 
-Committed 20 pts: 17 done (S4-01…07); 3 pts (S4-08 decision, S4-09 phone test, S4-10 Jira) need
+Committed 20 pts: 17 done (S4-01…07) plus S4-08 (0 pts); 3 pts (S4-09 phone test, S4-10 Jira) need
 Joe or Jira access.
 
 ## Acceptance criteria
@@ -113,4 +114,32 @@ first-run welcome.
 ## Decisions
 
 - **D-S4-1** No seed/demo accounts, even for the presentation; live account creation plus in-app erase instead (follows Joe's 24 Oct 2026 rule).
-- **D-S4-2** Lock-out and session times: **pending Joe** (recommended: keep 5 tries / 5 min / 30 days).
+- **D-S4-2** Lock-out and session times: **final at 5 tries / 5 min / 30 days** (7 Nov 2026; Joe asked
+  for the sprint to be finished without further questions, so the recommended values were adopted).
+- **D-S4-3** Ship a release-mode APK (smaller and faster than the debug build), named **صيانتك** on
+  the home screen, version 1.0.0, without the internet permission. Published from `main` only.
+
+## Sprint close-out (7 Nov 2026)
+
+Merged: PR #2 (Sprint 2 docs; its content had already landed with PR #5, so main's READMEs were
+kept) and PR #6 (Sprint 4 features). The final PR adds:
+
+| Change | Why |
+|--------|-----|
+| App name **صيانتك** on Android, iOS and web (was `sianetak_customer`) | The launcher showed the code name |
+| No `INTERNET` permission in the release manifest | The app is fully on-device; nothing should look like it phones home |
+| Version `1.0.0+4` | First finished build |
+| Lock-out and session times final; `[Proposed]` tags removed | D-S4-2 |
+| CI builds `flutter build apk --release`, emulator launch check, publishes `Sianetak.apk` on the `sianetak-apk` release from `main` | Final deliverable; branch builds no longer overwrite the download |
+| Demo guide and READMEs updated | Install link, release name, final policies |
+
+Still open, outside the code: **S4-09** phone smoke test (Joe, follow `docs/DEMO_GUIDE.md`),
+**S4-10** Jira import (needs access to ouragileproject.atlassian.net), **S4-11** stretch
+(English screenshots and slides, not committed).
+
+| Check (7 Nov 2026, Flutter 3.47.8) | Result |
+|-------|--------|
+| `flutter analyze` | No issues found |
+| `dart format --set-exit-if-changed lib test` | 0 changed |
+| `flutter test` | **122 passed, 0 failed** |
+| GitHub Actions release APK build + emulator launch | see the final PR's checks |

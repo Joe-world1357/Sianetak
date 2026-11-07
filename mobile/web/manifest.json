@@ -1,6 +1,6 @@
 {
-    "name": "sianetak_customer",
-    "short_name": "sianetak_customer",
+    "name": "صيانتك · Sianetak",
+    "short_name": "صيانتك",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

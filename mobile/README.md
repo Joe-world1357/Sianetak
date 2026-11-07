@@ -31,7 +31,7 @@ someone using the app.
   is never offered their own request. Administrators cannot switch. Sign-in starts in the
   account's stored role.
 - Wrong number and wrong password fail the same way; 5 failures
-  lock that number for 5 minutes [Proposed].
+  lock that number for 5 minutes.
 - Sessions persist across restarts, slide forward on each launch and expire after 30 days unused.
   Sign-out (with confirmation) ends the session. Change password needs the current one.
 
@@ -44,7 +44,7 @@ someone using the app.
 | Admin | Dashboard, review / approve / reject / suspend technicians, assign requests nobody accepted, add administrators |
 
 Rules (in `local/initial_data.dart`; dispatch, expiry, cancellation and commission approved
-2 Nov 2026, lock-out and session times still [Proposed]): offers go to up to 3 approved,
+2 Nov 2026, lock-out and session times final 7 Nov 2026): offers go to up to 3 approved,
 available technicians covering the category and area and expire after 15 minutes (swept on
 every read and every 30 seconds while the app is open; there is no server job runner);
 turning availability off hands back pending offers; the first to accept wins;
@@ -95,11 +95,12 @@ answers in the API's JSON shapes and error codes. Screens refresh when the store
 ```bash
 flutter pub get
 flutter run                 # Android device or emulator
-flutter build apk --debug   # build/app/outputs/flutter-apk/app-debug.apk
+flutter build apk --release # build/app/outputs/flutter-apk/app-release.apk
 ```
 
-CI (`.github/workflows/android-apk.yml`) analyzes, tests, builds the debug APK, installs and
-launches it on an emulator, and publishes it as `Sianetak.apk` on the `sianetak-debug` release.
+CI (`.github/workflows/android-apk.yml`) analyzes, tests, builds the release APK, installs and
+launches it on an emulator, and, for pushes to `main`, publishes it as `Sianetak.apk` on the
+`sianetak-apk` release (other branches keep it as a workflow artifact).
 
 ## Language and layout
 
