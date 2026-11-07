@@ -1,0 +1,12 @@
+Summary,Issue Type,Story Points,Priority,Status,Labels,Description,External ID
+Completion summary on a finished request,Story,2,Highest,Done,sprint4;closeout,"Acceptance: Job summary card on completed requests with service, work started, completed, time on job, cash recorded; commission hidden from customers; localized digits.",S4-01
+Demo-only disclosure on the payment record,Story,1,Highest,Done,sprint4;closeout,"Acceptance: summary card states no money is processed and the app only records the cash collected (AR and EN).",S4-02
+Customer problem report and admin close-out,Story,5,High,Done,sprint4;support,"Acceptance: report once after completion (10-500 chars); admins and technician notified; dashboard count, Problems filter and card badge; admin closes with resolution; both sides notified; enforced in LocalBackend.",S4-03
+Admin erase-all-data on this device,Story,3,High,Done,sprint4;reset,"Acceptance: admin only, password required; deletes accounts, records and photos; returns to first-run welcome; catalog kept; survives restart.",S4-04
+End-to-end regression incl. restart and reset,Task,3,High,Done,sprint4;testing,"Acceptance: analyze and format clean, all tests pass, web build, CI APK + emulator launch.",S4-05
+Arabic RTL review of new screens,Task,1,Medium,Done,sprint4;rtl,"Acceptance: screenshots of every new screen in docs/screenshots/sprint4-*; no clipping or mirrored text.",S4-06
+Demo guide with script reset and limitations,Task,2,High,Done,sprint4;docs,"Acceptance: docs/DEMO_GUIDE.md covers install, presentation sequence, reset, known limitations.",S4-07
+Sign off lock-out and session times,Task,0,High,To Do,sprint4;policy,"Acceptance: Joe approves or changes 5 tries / 5 min lock-out and 30-day session; [Proposed] tags removed.",S4-08
+Physical phone smoke test,Task,2,Highest,To Do,sprint4;testing,"Acceptance: follow DEMO_GUIDE end to end on a real phone including erase; record defects.",S4-09
+Import Sprint 3 and 4 backlogs into Jira,Task,1,Medium,To Do,sprint4;jira,"Blocked: needs access to ouragileproject.atlassian.net.",S4-10
+English screenshot pass and final slide deck,Story,3,Low,Backlog,sprint4;stretch,"Stretch goal, not committed.",S4-11

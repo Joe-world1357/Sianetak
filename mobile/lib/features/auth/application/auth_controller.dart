@@ -104,6 +104,13 @@ class AuthController extends ChangeNotifier {
     required String next,
   }) => _repository.changePassword(current: current, next: next);
 
+  /// Admin only: erases this device's data; the app returns to the first-run welcome.
+  Future<void> eraseDevice(String password) async {
+    await _repository.eraseDevice(password);
+    _onboardingSeen = false;
+    _apply(null);
+  }
+
   Future<void> signOut() async {
     _apply(null);
     await _repository.signOut();

@@ -95,6 +95,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   'completed' ||
   'application_approved' => (Icons.task_alt_rounded, AppColors.success),
   'rated' => (Icons.star_rounded, AppColors.warning),
+  'problem_reported' => (Icons.report_problem_rounded, AppColors.warning),
+  'problem_resolved' => (Icons.task_alt_rounded, AppColors.success),
   'message' => (Icons.chat_bubble_rounded, AppColors.info),
   'request_cancelled' ||
   'application_rejected' ||
@@ -117,6 +119,8 @@ String notificationText(AppLocalizations l10n, AppNotification n) {
     'quote_rejected' => l10n.ntfQuoteRejected(ref),
     'completed' => l10n.ntfCompleted(ref),
     'rated' => l10n.ntfRated(ref),
+    'problem_reported' => l10n.ntfProblemReported(ref),
+    'problem_resolved' => l10n.ntfProblemResolved(ref),
     'message' => l10n.ntfMessage(ref),
     'request_cancelled' => l10n.ntfCancelled(ref),
     'request_unmatched' => l10n.ntfUnmatched(ref),

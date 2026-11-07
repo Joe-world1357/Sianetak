@@ -46,6 +46,162 @@ class RequestDetailScreen extends StatelessWidget {
   }
 }
 
+String _duration(AppLocalizations l10n, Duration d, String lang) {
+  final minutes = d.inMinutes < 1 ? 1 : d.inMinutes;
+  return minutes < 60
+      ? l10n.durationMinutes(formatCount(minutes, lang))
+      : l10n.durationHoursMinutes(
+          formatCount(minutes ~/ 60, lang),
+          formatCount(minutes % 60, lang),
+        );
+}
+
+/// Closeout: what was done, when, and the cash recorded, with the simulated-payment notice.
+class _CompletionSummary extends StatelessWidget {
+  const _CompletionSummary({required this.detail, required this.role});
+
+  final RequestDetail detail;
+  final UserRole role;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
+    final theme = Theme.of(context);
+    final payment = detail.payment!;
+    final started = detail.workStartedAt;
+    final finished = detail.completedAt ?? payment.at;
+    return SectionCard(
+      title: l10n.completionSummaryTitle,
+      icon: Icons.task_alt_rounded,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InfoRow(
+            icon: Icons.handyman_outlined,
+            label: l10n.summaryService,
+            value: detail.summary.service.name.resolve(lang),
+          ),
+          if (started != null)
+            InfoRow(
+              icon: Icons.play_circle_outline_rounded,
+              label: l10n.summaryWorkStarted,
+              value: formatDateTime(started, lang),
+            ),
+          InfoRow(
+            icon: Icons.event_available_rounded,
+            label: l10n.summaryCompletedAt,
+            value: formatDateTime(finished, lang),
+          ),
+          if (started != null)
+            InfoRow(
+              icon: Icons.timer_outlined,
+              label: l10n.summaryDuration,
+              value: _duration(l10n, finished.difference(started), lang),
+            ),
+          InfoRow(
+            icon: Icons.money_rounded,
+            label: l10n.paymentCashCollected,
+            value: formatEgp(payment.amountMinor, lang),
+          ),
+          if (role != UserRole.customer)
+            InfoRow(
+              icon: Icons.percent_rounded,
+              label: l10n.paymentCommission,
+              value: formatEgp(payment.commissionMinor, lang),
+            ),
+          const SizedBox(height: AppSpacing.sm),
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.sm + 2),
+            decoration: BoxDecoration(
+              color: AppColors.info.$2,
+              borderRadius: BorderRadius.circular(AppRadius.control),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  size: 18,
+                  color: AppColors.info.$1,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    l10n.demoPaymentNotice,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProblemCard extends StatelessWidget {
+  const _ProblemCard({required this.problem});
+
+  final ProblemReport problem;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
+    final theme = Theme.of(context);
+    return SectionCard(
+      title: l10n.problemCardTitle,
+      icon: Icons.report_problem_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              TonePill(
+                label: problem.resolved
+                    ? l10n.problemResolvedPill
+                    : l10n.problemOpenPill,
+                tone: problem.resolved ? AppColors.success : AppColors.warning,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  formatDateTime(problem.at, lang),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.muted,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(problem.text, style: theme.textTheme.bodyLarge),
+          if (problem.resolution != null) ...[
+            const Divider(height: AppSpacing.lg),
+            Text(
+              l10n.problemResolutionLabel,
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(problem.resolution!),
+            if (problem.resolvedAt != null)
+              Text(
+                formatDateTime(problem.resolvedAt!, lang),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.muted,
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _Body extends StatelessWidget {
   const _Body({required this.detail, required this.role});
 
@@ -92,31 +248,11 @@ class _Body extends StatelessWidget {
         ],
         if (detail.quote != null) ...[_QuoteCard(detail: detail), gap],
         if (detail.payment != null) ...[
-          SectionCard(
-            title: l10n.paymentTitle,
-            icon: Icons.payments_outlined,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                InfoRow(
-                  icon: Icons.money_rounded,
-                  label: l10n.paymentCashCollected,
-                  value: formatEgp(detail.payment!.amountMinor, lang),
-                ),
-                if (role != UserRole.customer)
-                  InfoRow(
-                    icon: Icons.percent_rounded,
-                    label: l10n.paymentCommission,
-                    value: formatEgp(detail.payment!.commissionMinor, lang),
-                  ),
-                InfoRow(
-                  icon: Icons.event_available_rounded,
-                  label: l10n.paymentRecordedAt,
-                  value: formatDateTime(detail.payment!.at, lang),
-                ),
-              ],
-            ),
-          ),
+          _CompletionSummary(detail: detail, role: role),
+          gap,
+        ],
+        if (detail.problem != null) ...[
+          _ProblemCard(problem: detail.problem!),
           gap,
         ],
         if (detail.rating != null) ...[

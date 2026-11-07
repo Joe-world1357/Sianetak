@@ -34,6 +34,9 @@ abstract class AuthRepository {
     required String phone,
     required String password,
   });
+
+  /// Admin only: erases every account and record on this device after checking [password].
+  Future<void> eraseDevice(String password);
   Future<bool> onboardingSeen();
   Future<void> markOnboardingSeen();
 }
@@ -107,6 +110,9 @@ class LocalAuthRepository implements AuthRepository {
   }) async => AppUser.fromJson(
     await _backend.createAdmin(name: name, phone: phone, password: password),
   );
+
+  @override
+  Future<void> eraseDevice(String password) => _backend.eraseAllData(password);
 
   @override
   Future<bool> onboardingSeen() => _backend.onboardingSeen();

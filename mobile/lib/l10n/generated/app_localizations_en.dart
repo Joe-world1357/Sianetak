@@ -1519,4 +1519,140 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationRefresh => 'Update location';
+
+  @override
+  String get completionSummaryTitle => 'Job summary';
+
+  @override
+  String get summaryService => 'Service';
+
+  @override
+  String get summaryWorkStarted => 'Work started';
+
+  @override
+  String get summaryCompletedAt => 'Completed';
+
+  @override
+  String get summaryDuration => 'Time on the job';
+
+  @override
+  String durationHoursMinutes(String hours, String minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String durationMinutes(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get demoPaymentNotice =>
+      'Demo only: no money is processed in the app. It records the cash the technician collected, for the course demo.';
+
+  @override
+  String get reportProblemButton => 'Report a problem';
+
+  @override
+  String get reportProblemTitle => 'What went wrong?';
+
+  @override
+  String get reportProblemBody =>
+      'Describe the problem. The Sianetak team will contact you and the technician.';
+
+  @override
+  String get reportProblemLabel => 'Problem details';
+
+  @override
+  String get reportProblemTooShort => 'Write at least 10 characters.';
+
+  @override
+  String get reportProblemSubmit => 'Send report';
+
+  @override
+  String get problemReportedToast => 'Report sent. The team will follow up.';
+
+  @override
+  String get problemCardTitle => 'Problem report';
+
+  @override
+  String get problemOpenPill => 'Open';
+
+  @override
+  String get problemResolvedPill => 'Resolved';
+
+  @override
+  String get problemResolutionLabel => 'What was done';
+
+  @override
+  String get problemOpenBadge => 'Open problem';
+
+  @override
+  String get customerProblemOpenTitle => 'Your report is with the team';
+
+  @override
+  String get customerProblemOpenBody =>
+      'An admin will follow up and record what was done.';
+
+  @override
+  String get adminProblemTitle => 'The customer reported a problem';
+
+  @override
+  String get adminProblemBody =>
+      'Contact both sides, then close the report with what was done.';
+
+  @override
+  String get resolveProblemButton => 'Close the report';
+
+  @override
+  String get resolveProblemTitle => 'How was it resolved?';
+
+  @override
+  String get resolveProblemTooShort => 'Write what was done.';
+
+  @override
+  String get problemResolvedToast => 'Report closed. Both sides were notified.';
+
+  @override
+  String get adminFilterProblems => 'Problems';
+
+  @override
+  String kpiOpenProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open problem reports',
+      one: '1 open problem report',
+      zero: 'No open problem reports',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get kpiOpenProblemsHint => 'Customer reports after a completed job';
+
+  @override
+  String ntfProblemReported(String ref) {
+    return 'A problem was reported on $ref';
+  }
+
+  @override
+  String ntfProblemResolved(String ref) {
+    return 'The problem report on $ref was closed';
+  }
+
+  @override
+  String get eraseDeviceEntry => 'Erase all data on this device';
+
+  @override
+  String get eraseDeviceTitle => 'Erase everything?';
+
+  @override
+  String get eraseDeviceBody =>
+      'Every account, request, message and photo on this device is deleted, and the app starts again as on first install. This can\'t be undone.';
+
+  @override
+  String get eraseDevicePasswordLabel => 'Your password, to confirm';
+
+  @override
+  String get eraseDeviceConfirm => 'Erase everything';
 }

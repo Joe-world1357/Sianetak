@@ -747,5 +747,81 @@
   "openInMaps": "افتح في الخرائط",
   "mapsUnavailable": "لم يتمكن أي تطبيق خرائط من فتح هذا الموقع.",
   "locationPinTitle": "موقع الدبوس",
-  "locationRefresh": "تحديث الموقع"
+  "locationRefresh": "تحديث الموقع",
+  "completionSummaryTitle": "ملخص الخدمة",
+  "summaryService": "الخدمة",
+  "summaryWorkStarted": "بدء العمل",
+  "summaryCompletedAt": "انتهى العمل",
+  "summaryDuration": "مدة العمل",
+  "durationHoursMinutes": "{hours} س {minutes} د",
+  "@durationHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} د",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "demoPaymentNotice": "للعرض فقط: لا يعالج التطبيق أي أموال. هو يسجّل المبلغ النقدي الذي حصّله الفني لأغراض العرض الدراسي.",
+  "reportProblemButton": "الإبلاغ عن مشكلة",
+  "reportProblemTitle": "ما المشكلة؟",
+  "reportProblemBody": "صف المشكلة، وسيتواصل فريق صيانتك معك ومع الفني.",
+  "reportProblemLabel": "تفاصيل المشكلة",
+  "reportProblemTooShort": "اكتب 10 أحرف على الأقل.",
+  "reportProblemSubmit": "إرسال البلاغ",
+  "problemReportedToast": "تم إرسال البلاغ وسيتابعه الفريق.",
+  "problemCardTitle": "بلاغ مشكلة",
+  "problemOpenPill": "مفتوح",
+  "problemResolvedPill": "تم الحل",
+  "problemResolutionLabel": "ما تم اتخاذه",
+  "problemOpenBadge": "بلاغ مفتوح",
+  "customerProblemOpenTitle": "بلاغك لدى الفريق",
+  "customerProblemOpenBody": "سيتابع أحد المسؤولين البلاغ ويسجّل ما تم.",
+  "adminProblemTitle": "أبلغ العميل عن مشكلة",
+  "adminProblemBody": "تواصل مع الطرفين، ثم أغلق البلاغ مع تسجيل ما تم.",
+  "resolveProblemButton": "إغلاق البلاغ",
+  "resolveProblemTitle": "كيف تم حل المشكلة؟",
+  "resolveProblemTooShort": "اكتب ما تم اتخاذه.",
+  "problemResolvedToast": "تم إغلاق البلاغ وإبلاغ الطرفين.",
+  "adminFilterProblems": "البلاغات",
+  "kpiOpenProblems": "{count, plural, =0{لا توجد بلاغات مفتوحة} =1{بلاغ مفتوح واحد} =2{بلاغان مفتوحان} few{{count} بلاغات مفتوحة} other{{count} بلاغ مفتوح}}",
+  "@kpiOpenProblems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kpiOpenProblemsHint": "بلاغات العملاء بعد اكتمال الخدمة",
+  "ntfProblemReported": "تم الإبلاغ عن مشكلة في الطلب {ref}",
+  "@ntfProblemReported": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "ntfProblemResolved": "تم إغلاق بلاغ المشكلة في الطلب {ref}",
+  "@ntfProblemResolved": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "eraseDeviceEntry": "مسح كل البيانات على هذا الجهاز",
+  "eraseDeviceTitle": "مسح كل شيء؟",
+  "eraseDeviceBody": "سيتم حذف كل الحسابات والطلبات والرسائل والصور على هذا الجهاز، ويبدأ التطبيق من جديد كأول تثبيت. لا يمكن التراجع عن ذلك.",
+  "eraseDevicePasswordLabel": "كلمة المرور للتأكيد",
+  "eraseDeviceConfirm": "مسح كل شيء"
 }

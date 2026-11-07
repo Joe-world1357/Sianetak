@@ -126,6 +126,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _eraseDevice() => showDialog<void>(
+    context: context,
+    builder: (_) => const _EraseDeviceDialog(),
+  );
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -316,6 +321,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         l10n.aboutDataEntry,
                         _aboutData,
                       ),
+                      if (user.role == UserRole.admin) ...[
+                        const Divider(indent: 56),
+                        setting(
+                          Icons.delete_forever_outlined,
+                          l10n.eraseDeviceEntry,
+                          _eraseDevice,
+                          color: theme.colorScheme.error,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -330,6 +344,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+    );
+  }
+}
+
+/// Admin only: confirms with the password, then erases every account and record on the
+/// device. The app then shows the first-run welcome, as after a fresh install.
+class _EraseDeviceDialog extends StatefulWidget {
+  const _EraseDeviceDialog();
+
+  @override
+  State<_EraseDeviceDialog> createState() => _EraseDeviceDialogState();
+}
+
+class _EraseDeviceDialogState extends State<_EraseDeviceDialog> {
+  final _password = TextEditingController();
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _erase() async {
+    if (_busy || _password.text.isEmpty) return;
+    final l10n = AppLocalizations.of(context);
+    final auth = AppScope.of(context).auth;
+    final navigator = Navigator.of(context);
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await auth.eraseDevice(_password.text);
+      navigator.popUntil((route) => route.isFirst);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _error = messageForError(l10n, e);
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final error = Theme.of(context).colorScheme.error;
+    return AlertDialog(
+      icon: Icon(Icons.delete_forever_outlined, color: error),
+      title: Text(l10n.eraseDeviceTitle),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.eraseDeviceBody),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: _password,
+              obscureText: true,
+              autofocus: true,
+              enabled: !_busy,
+              onChanged: (_) => setState(() {}),
+              onSubmitted: (_) => _erase(),
+              decoration: InputDecoration(
+                labelText: l10n.eraseDevicePasswordLabel,
+              ),
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              AuthErrorText(_error!),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.pop(context),
+          child: Text(l10n.cancelButton),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: error,
+            minimumSize: const Size(0, 44),
+          ),
+          onPressed: _busy || _password.text.isEmpty ? null : _erase,
+          child: Text(l10n.eraseDeviceConfirm),
+        ),
+      ],
     );
   }
 }

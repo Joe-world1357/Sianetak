@@ -1504,4 +1504,142 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get locationRefresh => 'تحديث الموقع';
+
+  @override
+  String get completionSummaryTitle => 'ملخص الخدمة';
+
+  @override
+  String get summaryService => 'الخدمة';
+
+  @override
+  String get summaryWorkStarted => 'بدء العمل';
+
+  @override
+  String get summaryCompletedAt => 'انتهى العمل';
+
+  @override
+  String get summaryDuration => 'مدة العمل';
+
+  @override
+  String durationHoursMinutes(String hours, String minutes) {
+    return '$hours س $minutes د';
+  }
+
+  @override
+  String durationMinutes(String minutes) {
+    return '$minutes د';
+  }
+
+  @override
+  String get demoPaymentNotice =>
+      'للعرض فقط: لا يعالج التطبيق أي أموال. هو يسجّل المبلغ النقدي الذي حصّله الفني لأغراض العرض الدراسي.';
+
+  @override
+  String get reportProblemButton => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get reportProblemTitle => 'ما المشكلة؟';
+
+  @override
+  String get reportProblemBody =>
+      'صف المشكلة، وسيتواصل فريق صيانتك معك ومع الفني.';
+
+  @override
+  String get reportProblemLabel => 'تفاصيل المشكلة';
+
+  @override
+  String get reportProblemTooShort => 'اكتب 10 أحرف على الأقل.';
+
+  @override
+  String get reportProblemSubmit => 'إرسال البلاغ';
+
+  @override
+  String get problemReportedToast => 'تم إرسال البلاغ وسيتابعه الفريق.';
+
+  @override
+  String get problemCardTitle => 'بلاغ مشكلة';
+
+  @override
+  String get problemOpenPill => 'مفتوح';
+
+  @override
+  String get problemResolvedPill => 'تم الحل';
+
+  @override
+  String get problemResolutionLabel => 'ما تم اتخاذه';
+
+  @override
+  String get problemOpenBadge => 'بلاغ مفتوح';
+
+  @override
+  String get customerProblemOpenTitle => 'بلاغك لدى الفريق';
+
+  @override
+  String get customerProblemOpenBody =>
+      'سيتابع أحد المسؤولين البلاغ ويسجّل ما تم.';
+
+  @override
+  String get adminProblemTitle => 'أبلغ العميل عن مشكلة';
+
+  @override
+  String get adminProblemBody =>
+      'تواصل مع الطرفين، ثم أغلق البلاغ مع تسجيل ما تم.';
+
+  @override
+  String get resolveProblemButton => 'إغلاق البلاغ';
+
+  @override
+  String get resolveProblemTitle => 'كيف تم حل المشكلة؟';
+
+  @override
+  String get resolveProblemTooShort => 'اكتب ما تم اتخاذه.';
+
+  @override
+  String get problemResolvedToast => 'تم إغلاق البلاغ وإبلاغ الطرفين.';
+
+  @override
+  String get adminFilterProblems => 'البلاغات';
+
+  @override
+  String kpiOpenProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بلاغ مفتوح',
+      few: '$count بلاغات مفتوحة',
+      two: 'بلاغان مفتوحان',
+      one: 'بلاغ مفتوح واحد',
+      zero: 'لا توجد بلاغات مفتوحة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get kpiOpenProblemsHint => 'بلاغات العملاء بعد اكتمال الخدمة';
+
+  @override
+  String ntfProblemReported(String ref) {
+    return 'تم الإبلاغ عن مشكلة في الطلب $ref';
+  }
+
+  @override
+  String ntfProblemResolved(String ref) {
+    return 'تم إغلاق بلاغ المشكلة في الطلب $ref';
+  }
+
+  @override
+  String get eraseDeviceEntry => 'مسح كل البيانات على هذا الجهاز';
+
+  @override
+  String get eraseDeviceTitle => 'مسح كل شيء؟';
+
+  @override
+  String get eraseDeviceBody =>
+      'سيتم حذف كل الحسابات والطلبات والرسائل والصور على هذا الجهاز، ويبدأ التطبيق من جديد كأول تثبيت. لا يمكن التراجع عن ذلك.';
+
+  @override
+  String get eraseDevicePasswordLabel => 'كلمة المرور للتأكيد';
+
+  @override
+  String get eraseDeviceConfirm => 'مسح كل شيء';
 }

@@ -231,6 +231,17 @@ class LocalBackend {
 
   Future<void> signOut() => store.write(() => store.setSession(null));
 
+  /// Admin only, after re-entering the password: erases everything on this device so the
+  /// next presenter starts from a fresh install. There is no undo.
+  Future<void> eraseAllData(String password) async {
+    await store.open();
+    final me = store.requireUser({'admin'});
+    if (!await _hasher.verify(password, me['passwordHash'] as String? ?? '')) {
+      _fail('WRONG_PASSWORD', 422);
+    }
+    await store.reset();
+  }
+
   Future<void> changePassword(String current, String next) async {
     await store.open();
     final me = store.requireUser();
@@ -514,8 +525,12 @@ class LocalBackend {
       'schedule': r['schedule'],
       'photoCount': (r['photoIds'] as List<dynamic>).length,
       'submittedAt': r['submittedAt'],
+      if (_hasOpenProblem(r)) 'problemOpen': true,
     };
   }
+
+  static bool _hasOpenProblem(Row r) =>
+      (r['problem'] as Map<String, dynamic>?)?['status'] == 'open';
 
   Row _person(String id, {bool withRating = false}) {
     final u = store.find('users', id)!;
@@ -580,6 +595,7 @@ class LocalBackend {
       'payment': r['payment'],
       'rating': r['rating'],
       'cancelReason': r['cancelReason'],
+      'problem': r['problem'],
       if (offer != null) 'offer': _offer(offer),
     };
   }
@@ -852,6 +868,41 @@ class LocalBackend {
       'at': _iso(_now),
     };
     _notify(r['technicianId'] as String, 'rated', request: r);
+    return _detail(r, me);
+  });
+
+  /// Customer reports a problem with a completed job, once per request. Admins are told and
+  /// follow up; the technician is told too.
+  Future<Row> reportProblem(String id, String text) => store.write(() {
+    final me = store.requireUser({'customer'});
+    final r = _requireRequest(me, id);
+    if (r['status'] != 'completed' || r['problem'] != null) {
+      _fail('REQUEST_STATE_CONFLICT', 409);
+    }
+    final clean = text.trim();
+    if (clean.length < 10 || clean.length > 500) _fail('VALIDATION_FAILED');
+    r['problem'] = {'text': clean, 'status': 'open', 'at': _iso(_now)};
+    _notifyAdmins('problem_reported', request: r);
+    _notify(r['technicianId'] as String, 'problem_reported', request: r);
+    return _detail(r, me);
+  });
+
+  /// Admin closes an open problem report with what was done about it.
+  Future<Row> resolveProblem(String id, String resolution) => store.write(() {
+    final me = store.requireUser({'admin'});
+    final r = store.require('requests', id, 'REQUEST_NOT_FOUND');
+    final problem = r['problem'] as Map<String, dynamic>?;
+    if (problem == null || problem['status'] != 'open') {
+      _fail('REQUEST_STATE_CONFLICT', 409);
+    }
+    final clean = resolution.trim();
+    if (clean.length < 2 || clean.length > 500) _fail('VALIDATION_FAILED');
+    problem
+      ..['status'] = 'resolved'
+      ..['resolution'] = clean
+      ..['resolvedAt'] = _iso(_now);
+    _notify(r['customerId'] as String, 'problem_resolved', request: r);
+    _notify(r['technicianId'] as String, 'problem_resolved', request: r);
     return _detail(r, me);
   });
 
@@ -1476,16 +1527,23 @@ class LocalBackend {
           .where((a) => a['status'] == 'approved')
           .length,
       'commissionMinor': revenue,
+      'openProblems': store.table('requests').where(_hasOpenProblem).length,
     };
   }
 
-  Future<List<Row>> adminRequests(Set<String> statuses) async {
+  /// Requests in [statuses] (all when empty); only those with an open problem report when
+  /// [openProblems] is set.
+  Future<List<Row>> adminRequests(
+    Set<String> statuses, {
+    bool openProblems = false,
+  }) async {
     await _expireOffers();
     store.requireUser({'admin'});
     final rows =
         store
             .table('requests')
             .where((r) => statuses.isEmpty || statuses.contains(r['status']))
+            .where((r) => !openProblems || _hasOpenProblem(r))
             .toList()
           ..sort(
             (a, b) => (b['submittedAt'] as String).compareTo(
