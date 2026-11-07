@@ -1,8 +1,9 @@
 name: Android APK
 
-# Analyzes and tests the app, builds a debug APK with the Gradle wrapper (via flutter build),
-# checks it installs and launches on an emulator, and publishes it as Sianetak.apk on the
-# "sianetak-debug" prerelease for direct download.
+# Analyzes and tests the app, builds the release APK with the Gradle wrapper (via flutter build),
+# checks it installs and launches on an emulator, and, for pushes to main, publishes it as
+# Sianetak.apk on the "sianetak-apk" release for direct download. Other branches keep the APK
+# as a workflow artifact only.
 on:
   workflow_dispatch:
   push:
@@ -36,10 +37,10 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
-      - run: flutter build apk --debug
+      - run: flutter build apk --release
       - name: Verify APK
         run: |
-          apk=build/app/outputs/flutter-apk/app-debug.apk
+          apk=build/app/outputs/flutter-apk/app-release.apk
           test -s "$apk"
           tools="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
           "$tools/aapt2" dump badging "$apk" | head -3
@@ -83,20 +84,21 @@ jobs:
 
   publish:
     needs: install-check
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: Sianetak
-      - name: Publish to the sianetak-debug prerelease
+      - name: Publish to the sianetak-apk release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          notes="Debug build of ${GITHUB_REF_NAME} at ${GITHUB_SHA::7}. Download Sianetak.apk on your phone and open it to install."
-          if gh release view sianetak-debug >/dev/null 2>&1; then
-            gh release edit sianetak-debug --target "$GITHUB_SHA" --notes "$notes"
+          notes="Release build of main at ${GITHUB_SHA::7}. Download Sianetak.apk on your phone and open it to install. If an older build is installed, uninstall it first (each build is signed by the CI runner's key)."
+          if gh release view sianetak-apk >/dev/null 2>&1; then
+            gh release edit sianetak-apk --target "$GITHUB_SHA" --notes "$notes"
           else
-            gh release create sianetak-debug --prerelease --target "$GITHUB_SHA" --title "Sianetak (debug APK)" --notes "$notes"
+            gh release create sianetak-apk --latest --target "$GITHUB_SHA" --title "Sianetak 1.0 (Android APK)" --notes "$notes"
           fi
-          gh release upload sianetak-debug Sianetak.apk --clobber
+          gh release upload sianetak-apk Sianetak.apk --clobber

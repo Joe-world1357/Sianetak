@@ -28,7 +28,7 @@ String verificationStatusParam(VerificationStatus status) => switch (status) {
   VerificationStatus.unknown => 'pending_review',
 };
 
-/// [Proposed] document categories pending the verification checklist (D-06).
+/// Verification document categories: identity, qualification, other (D-06, final for the school build).
 enum DocumentKind { identity, qualification, other }
 
 DocumentKind parseDocumentKind(Object? value) => switch (value) {

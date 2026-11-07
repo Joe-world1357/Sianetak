@@ -57,7 +57,7 @@ class LocalStore extends ChangeNotifier {
   /// 4: real accounts (password hashes, sessions) and no sample records.
   static const schemaVersion = 4;
 
-  /// [Proposed] How long a sign-in stays valid without being used.
+  /// Final (D-S4-2): how long a sign-in stays valid without being used.
   static const sessionLifetime = Duration(days: 30);
 
   final StorageBackend _backend;

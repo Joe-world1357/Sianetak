@@ -7,9 +7,9 @@ library;
 
 import '../core/storage/local_store.dart';
 
-/// Business rules in one place. Values marked [Proposed] await product sign-off; dispatch,
-/// offer expiry, cancellation and commission were approved by the product owner on
-/// 2 Nov 2026 (Sprint 3, audit P0-1).
+/// Business rules in one place. Dispatch, offer expiry, cancellation and commission were
+/// approved by the product owner on 2 Nov 2026 (Sprint 3, audit P0-1); the sign-in lock-out
+/// and session length were finalised at the recommended values on 7 Nov 2026 (Sprint 4, D-S4-2).
 abstract final class AppRules {
   /// Approved: how long a technician has to accept an offer.
   static const offerMinutes = 15;
@@ -23,7 +23,7 @@ abstract final class AppRules {
   /// Password policy: at least this many characters, with a letter and a digit.
   static const minPasswordLength = 8;
 
-  /// [Proposed] Failed sign-ins allowed per phone number before a short lock-out.
+  /// Final: failed sign-ins allowed per phone number before a short lock-out (minutes below).
   static const maxFailedSignIns = 5;
   static const signInLockMinutes = 5;
   static const scheduleLeadMinutes = 120;
