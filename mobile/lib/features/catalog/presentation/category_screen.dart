@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/app_scope.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/async_view.dart';
-import '../../../core/widgets/sample_badge.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../domain/catalog_models.dart';
@@ -87,10 +86,7 @@ class _ServiceTile extends StatelessWidget {
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.xs,
             crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              PriceGuidanceText(pricing: service.pricing),
-              if (service.isSample) const SampleBadge(),
-            ],
+            children: [PriceGuidanceText(pricing: service.pricing)],
           ),
         ),
         // Chevron points "forward" in both directions.

@@ -19,6 +19,11 @@ Future<void> openRequestFlow(WidgetTester tester) async {
   await tapVisible(tester, find.text('اطلب الخدمة'));
 }
 
+Future<void> openRequestsTab(WidgetTester tester) async {
+  await tester.tap(find.text('طلباتي').first);
+  await tester.pumpAndSettle();
+}
+
 Future<void> tapNext(WidgetTester tester) =>
     tapVisible(tester, find.text('التالي'));
 
@@ -94,7 +99,7 @@ void main() {
     // The confirmation leads to the request's detail with its initial status.
     await tapVisible(tester, find.text('عرض الطلب'));
     expect(find.text('تفاصيل الطلب'), findsOneWidget);
-    expect(find.text('تم الاستلام'), findsWidgets);
+    expect(find.text('بانتظار فني'), findsWidgets);
   });
 
   testWidgets('a failed photo upload can be retried', (tester) async {
@@ -205,56 +210,40 @@ void main() {
     requests.created.add(requestDetail());
     await pumpApp(tester, harness: TestHarness(requests: requests));
     await signIn(tester);
-    await openProfile(tester);
-    await tapVisible(tester, find.text('طلباتي'));
+    await openRequestsTab(tester);
     expect(find.textContaining('SN-261024-00001'), findsOneWidget);
-    expect(find.text('تم الاستلام'), findsOneWidget);
+    expect(find.text('بانتظار فني'), findsOneWidget);
     await tester.tap(find.textContaining('SN-261024-00001'));
     await tester.pumpAndSettle();
     expect(find.text('تفاصيل الطلب'), findsOneWidget);
     expect(find.text('الحنفية بتسرب مياه'), findsOneWidget);
+    await showVisible(tester, find.text('سجل الطلب'));
     expect(find.text('سجل الطلب'), findsOneWidget);
   });
 
   testWidgets('my requests shows an empty state', (tester) async {
     await pumpApp(tester);
     await signIn(tester);
-    await openProfile(tester);
-    await tapVisible(tester, find.text('طلباتي'));
+    await openRequestsTab(tester);
     expect(find.text('لم ترسل أي طلب بعد. اختر خدمة لتبدأ.'), findsOneWidget);
   });
 
-  testWidgets('non-customer accounts cannot start a request', (tester) async {
-    final auth = FakeAuthRepository()
-      ..user = const AppUser(
-        id: 'u2',
-        phone: '+201012345678',
-        name: null,
-        role: UserRole.admin,
-      );
+  testWidgets('non-customer accounts get their own navigation, not requests', (
+    tester,
+  ) async {
+    final auth = FakeAuthRepository(role: UserRole.admin);
     await pumpApp(tester, harness: TestHarness(auth: auth));
     await signIn(tester);
-    await tester.tap(find.text('سباكة'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('إصلاح تسريب'));
-    await tester.pumpAndSettle();
-    await tapVisible(tester, find.text('اطلب الخدمة'));
-    expect(find.text('طلب الخدمات متاح لحسابات العملاء فقط.'), findsOneWidget);
-    expect(find.text('صف المشكلة'), findsNothing);
+    expect(find.text('لوحة التشغيل'), findsOneWidget);
+    expect(find.text('سباكة'), findsNothing);
+    expect(find.text('طلباتي'), findsNothing);
   });
 
   testWidgets('the request flow works in English and LTR', (tester) async {
     await pumpApp(tester);
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.login));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '01012345678');
-    await tester.tap(find.text('Send code'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '123456');
-    await tester.pumpAndSettle();
-    await dismissSnackBars(tester);
+    await signIn(tester);
     await tester.tap(find.text('Plumbing'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Leak repair'));

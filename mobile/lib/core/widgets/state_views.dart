@@ -48,7 +48,7 @@ class ErrorView extends StatelessWidget {
     final isNotFound =
         error is ApiException && (error as ApiException).isNotFound;
     return _CenteredMessage(
-      icon: isNotFound ? Icons.search_off : Icons.wifi_off_rounded,
+      icon: isNotFound ? Icons.search_off : Icons.error_outline_rounded,
       title: isNotFound ? l10n.errorNotFound : l10n.errorLoadTitle,
       body: isNotFound ? null : messageForError(l10n, error),
       action: isNotFound
@@ -112,37 +112,12 @@ class _CenteredMessage extends StatelessWidget {
   }
 }
 
-/// Maps API error codes to localized, user-facing copy.
+/// Maps data-layer error codes to localized, user-facing copy.
 String messageForError(AppLocalizations l10n, Object error) {
   if (error is! ApiException) return l10n.errorGeneric;
   switch (error.code) {
     case ApiException.network:
       return l10n.errorNetwork;
-    case 'INVALID_PHONE':
-      return l10n.phoneInvalid;
-    case 'OTP_INVALID':
-      final attempts = error.intDetail('attemptsRemaining');
-      return attempts == null
-          ? l10n.errorOtpInvalidNoCount
-          : l10n.errorOtpInvalid(attempts);
-    case 'OTP_EXPIRED':
-      return l10n.errorOtpExpired;
-    case 'OTP_TOO_MANY_ATTEMPTS':
-      return l10n.errorOtpTooManyAttempts;
-    case 'OTP_RESEND_TOO_SOON':
-      return l10n.errorResendTooSoon(
-        error.intDetail('retryAfterSeconds') ?? 60,
-      );
-    case 'OTP_RATE_LIMITED':
-      return l10n.errorOtpRateLimited;
-    case 'RATE_LIMITED':
-      return l10n.errorRateLimited;
-    case 'OTP_DELIVERY_UNAVAILABLE':
-      return l10n.errorOtpUnavailable;
-    case 'OTP_DELIVERY_FAILED':
-      return l10n.errorOtpDeliveryFailed;
-    case 'ACCOUNT_SUSPENDED':
-      return l10n.errorAccountSuspended;
     case 'UNAUTHENTICATED':
     case 'REFRESH_TOKEN_INVALID':
       return l10n.errorSessionExpired;
@@ -196,6 +171,32 @@ String messageForError(AppLocalizations l10n, Object error) {
       return l10n.errorDocumentsRequired(error.intDetail('min') ?? 1);
     case 'CANNOT_REVIEW_OWN_APPLICATION':
       return l10n.errorCannotReviewOwn;
+    case 'OFFER_EXPIRED':
+      return l10n.errorOfferExpired;
+    case 'OFFER_TAKEN':
+      return l10n.errorOfferTaken;
+    case 'REQUEST_STATE_CONFLICT':
+      return l10n.errorStateConflict;
+    case 'INVALID_CREDENTIALS':
+      return l10n.errorInvalidCredentials;
+    case 'INVALID_PHONE':
+      return l10n.phoneInvalid;
+    case 'WEAK_PASSWORD':
+      return l10n.passwordRules;
+    case 'PHONE_TAKEN':
+      return l10n.errorPhoneTaken;
+    case 'TOO_MANY_ATTEMPTS':
+      return l10n.errorTooManyAttempts(
+        error.intDetail('retryAfterMinutes') ?? 1,
+      );
+    case 'ADMIN_EXISTS':
+      return l10n.errorAdminExists;
+    case 'ACCOUNT_DISABLED':
+      return l10n.errorAccountDisabled;
+    case 'WRONG_PASSWORD':
+      return l10n.errorWrongPassword;
+    case 'TECHNICIAN_NOT_APPROVED':
+      return l10n.errorTechnicianNotApproved;
     default:
       return l10n.errorGeneric;
   }

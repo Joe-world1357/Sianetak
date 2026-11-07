@@ -3,11 +3,14 @@ import 'package:flutter/widgets.dart';
 import '../features/admin/data/admin_repository.dart';
 import '../features/auth/application/auth_controller.dart';
 import '../features/catalog/data/catalog_repository.dart';
+import '../features/jobs/data/jobs_repository.dart';
 import '../features/media/data/media_repository.dart';
+import '../features/notifications/data/notifications_repository.dart';
 import '../features/requests/data/requests_repository.dart';
 import '../features/technician/data/technician_repository.dart';
 import 'device/image_picker_service.dart';
 import 'device/location_service.dart';
+import 'device/map_launcher.dart';
 import 'locale/locale_controller.dart';
 
 /// Dependency container for the widget tree; swapped for fakes in tests.
@@ -23,6 +26,10 @@ class AppScope extends InheritedWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    required this.maps,
+    required this.jobs,
+    required this.notifications,
+    required this.changes,
     required super.child,
   });
 
@@ -35,6 +42,12 @@ class AppScope extends InheritedWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final MapLauncher maps;
+  final JobsRepository jobs;
+  final NotificationsRepository notifications;
+
+  /// Fires whenever local data changes, so open screens can refresh.
+  final Listenable changes;
 
   static AppScope of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppScope>();
@@ -52,5 +65,9 @@ class AppScope extends InheritedWidget {
       technician != oldWidget.technician ||
       admin != oldWidget.admin ||
       imagePicker != oldWidget.imagePicker ||
-      location != oldWidget.location;
+      location != oldWidget.location ||
+      maps != oldWidget.maps ||
+      jobs != oldWidget.jobs ||
+      notifications != oldWidget.notifications ||
+      changes != oldWidget.changes;
 }

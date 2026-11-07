@@ -8,11 +8,16 @@ import '../support/fakes.dart';
 import '../support/flows.dart';
 import '../support/pump_app.dart';
 
-Future<void> openApplication(WidgetTester tester) async {
-  await signIn(tester);
-  await openProfile(tester);
-  await tapVisible(tester, find.text('انضم كفني'));
-}
+/// A newly registered technician: the application is their home until it is approved.
+TestHarness applicant({
+  FakeTechnicianRepository? technician,
+  TechnicianStatus status = TechnicianStatus.notSubmitted,
+}) => TestHarness(
+  auth: FakeAuthRepository(role: UserRole.technician, technicianStatus: status),
+  technician: technician,
+);
+
+Future<void> openApplication(WidgetTester tester) => signIn(tester);
 
 Future<void> fillForm(WidgetTester tester) async {
   await scrollToTop(tester);
@@ -30,9 +35,9 @@ Future<void> fillForm(WidgetTester tester) async {
 
 void main() {
   testWidgets(
-    'a customer applies with a document and sees the pending status',
+    'a new technician applies with a document and sees the pending status',
     (tester) async {
-      final h = await pumpApp(tester);
+      final h = await pumpApp(tester, harness: applicant());
       await openApplication(tester);
       expect(find.text('الانضمام كفني'), findsOneWidget);
 
@@ -53,15 +58,12 @@ void main() {
       expect(s.serviceAreaIds, ['area-kima']);
       expect(s.documents.single.$1, 'media-1');
       expect(find.text('قيد المراجعة'), findsOneWidget);
-      expect(
-        find.text('تراجع الإدارة بياناتك، وستظهر النتيجة هنا.'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('يراجع المسؤول بياناتك'), findsOneWidget);
     },
   );
 
   testWidgets('documents are optional while none are required', (tester) async {
-    final h = await pumpApp(tester);
+    final h = await pumpApp(tester, harness: applicant());
     await openApplication(tester);
     await fillForm(tester);
     await tapVisible(tester, find.text('إرسال طلب الانضمام'));
@@ -72,10 +74,7 @@ void main() {
     tester,
   ) async {
     final technician = FakeTechnicianRepository(minDocuments: 1);
-    final h = await pumpApp(
-      tester,
-      harness: TestHarness(technician: technician),
-    );
+    final h = await pumpApp(tester, harness: applicant(technician: technician));
     await openApplication(tester);
     await fillForm(tester);
     await tapVisible(tester, find.text('إرسال طلب الانضمام'));
@@ -91,7 +90,7 @@ void main() {
         code: 'APPLICATION_ALREADY_SUBMITTED',
         statusCode: 409,
       );
-    await pumpApp(tester, harness: TestHarness(technician: technician));
+    await pumpApp(tester, harness: applicant(technician: technician));
     await openApplication(tester);
     await fillForm(tester);
     await tapVisible(tester, find.text('إرسال طلب الانضمام'));
@@ -111,7 +110,10 @@ void main() {
     );
     final h = await pumpApp(
       tester,
-      harness: TestHarness(technician: technician),
+      harness: applicant(
+        technician: technician,
+        status: TechnicianStatus.rejected,
+      ),
     );
     await openApplication(tester);
     expect(find.text('لم يُقبل'), findsOneWidget);
@@ -129,16 +131,9 @@ void main() {
     expect(find.text('قيد المراجعة'), findsOneWidget);
   });
 
-  testWidgets('a technician account opens its verification status', (
+  testWidgets('a suspended technician sees why and cannot take work', (
     tester,
   ) async {
-    final auth = FakeAuthRepository()
-      ..user = const AppUser(
-        id: 'u1',
-        phone: '+201012345678',
-        name: null,
-        role: UserRole.technician,
-      );
     final technician = FakeTechnicianRepository(
       application: technicianApplication(
         status: VerificationStatus.suspended,
@@ -147,14 +142,35 @@ void main() {
     );
     await pumpApp(
       tester,
-      harness: TestHarness(auth: auth, technician: technician),
+      harness: applicant(
+        technician: technician,
+        status: TechnicianStatus.suspended,
+      ),
     );
     await signIn(tester);
-    await openProfile(tester);
     expect(find.text('طلباتي'), findsNothing);
-    await tapVisible(tester, find.text('طلب الانضمام كفني'));
+    expect(find.text('العروض'), findsNothing);
     expect(find.text('موقوف'), findsOneWidget);
     expect(find.text('شكاوى متكررة'), findsOneWidget);
     expect(find.text('تعديل وإعادة الإرسال'), findsNothing);
+  });
+
+  testWidgets('an approved technician finds the application in the account', (
+    tester,
+  ) async {
+    final technician = FakeTechnicianRepository(
+      application: technicianApplication(status: VerificationStatus.approved),
+    );
+    await pumpApp(
+      tester,
+      harness: applicant(
+        technician: technician,
+        status: TechnicianStatus.approved,
+      ),
+    );
+    await signIn(tester);
+    await openProfile(tester);
+    await tapVisible(tester, find.text('طلب الانضمام كفني'));
+    expect(find.text('معتمد'), findsOneWidget);
   });
 }

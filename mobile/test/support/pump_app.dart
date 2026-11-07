@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sianetak_customer/app.dart';
 import 'package:sianetak_customer/core/locale/locale_controller.dart';
 import 'package:sianetak_customer/features/auth/application/auth_controller.dart';
-import 'package:sianetak_customer/features/auth/data/token_store.dart';
 import 'package:sianetak_customer/features/catalog/data/catalog_repository.dart';
 
 import 'fakes.dart';
@@ -18,7 +17,10 @@ class TestHarness {
     FakeAdminRepository? admin,
     FakeImagePicker? imagePicker,
     FakeLocationService? location,
+    FakeMapLauncher? maps,
+    FakeJobsRepository? jobs,
     Locale locale = LocaleController.arabic,
+    bool signedIn = false,
   }) : catalog = catalog ?? FakeCatalogRepository(),
        authRepository = auth ?? FakeAuthRepository(),
        requests = requests ?? FakeRequestsRepository(),
@@ -27,11 +29,11 @@ class TestHarness {
        admin = admin ?? FakeAdminRepository(),
        imagePicker = imagePicker ?? FakeImagePicker(),
        location = location ?? FakeLocationService(),
+       maps = maps ?? FakeMapLauncher(),
+       jobs = jobs ?? FakeJobsRepository(),
        locale = LocaleController(initial: locale) {
-    authController = AuthController(
-      repository: authRepository,
-      tokenStore: InMemoryTokenStore(),
-    );
+    authController = AuthController(repository: authRepository);
+    if (signedIn) authRepository.signedIn = authRepository.user;
   }
 
   final CatalogRepository catalog;
@@ -42,8 +44,11 @@ class TestHarness {
   final FakeAdminRepository admin;
   final FakeImagePicker imagePicker;
   final FakeLocationService location;
+  final FakeMapLauncher maps;
+  final FakeJobsRepository jobs;
   final LocaleController locale;
   late final AuthController authController;
+  final changes = ChangeNotifier();
 
   Widget get app => SianetakApp(
     catalog: catalog,
@@ -55,12 +60,17 @@ class TestHarness {
     admin: admin,
     imagePicker: imagePicker,
     location: location,
+    maps: maps,
+    jobs: jobs,
+    notifications: FakeNotificationsRepository(),
+    changes: changes,
   );
 }
 
-/// Pumps the app and settles the initial load.
+/// Restores the session as `main` does, pumps the app and settles the initial load.
 Future<TestHarness> pumpApp(WidgetTester tester, {TestHarness? harness}) async {
   final h = harness ?? TestHarness();
+  await h.authController.restore();
   await tester.pumpWidget(h.app);
   await tester.pumpAndSettle();
   return h;

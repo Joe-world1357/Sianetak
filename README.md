@@ -1,8 +1,13 @@
 # Sianetak (صيانتك)
 
-Home maintenance marketplace for Aswan, Egypt. This repository holds the Sprint 1 and Sprint 2
-increments: project foundation, customer phone OTP authentication, the guest service catalog,
-customer service requests, technician onboarding, and admin verification.
+Home maintenance marketplace for Aswan, Egypt. This repository holds the Sprint 1 increment:
+project foundation, customer phone OTP authentication, and the guest service catalog.
+
+> **Current state: standalone local app.** This is a school project, so the mobile app runs
+> entirely on the device with its own local database and real local accounts (phone + hashed
+> password) for Customers, Technicians and Administrators. It starts empty: no sample users or
+> records. It no longer needs the backend or OTP. See [`mobile/README.md`](mobile/README.md). The
+> `backend/` folder is kept as the reference implementation of the Sprint 1/2 API rules.
 
 ```
 backend/   NestJS + PostgreSQL API (modular monolith)
@@ -20,24 +25,8 @@ mobile/    Flutter customer app (Arabic RTL by default, English available)
 - **Catalog (FR-AUTH-02, FR-REQ-01, FR-REQ-06).** Guests browse categories and service details
   with approved pricing guidance, in Arabic RTL or English, with loading, empty and error states.
 
-## What Sprint 2 delivers
-
-- **Service requests (FR-REQ-02…05).** A four-step flow — describe (with private photos), location
-  (saved or new, optional current-location pin), schedule (ASAP or a server-offered slot in
-  Africa/Cairo), review — then submit. Submission is idempotent, so a retried lost response never
-  creates a duplicate. Customers see their request history and a detail view with the initial status.
-- **Technician onboarding (FR-AUTH-06).** An application with specialties, service areas and optional
-  verification documents, duplicate prevention, and a verification-status screen with resubmission
-  after a rejection.
-- **Admin verification (FR-AUTH-07).** A pending queue, an application detail with private documents,
-  and approve / reject / suspend / reinstate with a required reason, recorded in an append-only audit
-  log. Admin-only, enforced server-side.
-
-See [docs/SPRINT_2_REPORT.md](docs/SPRINT_2_REPORT.md) for the full report, API changes and the
-acceptance checklist, and screenshots in `docs/screenshots/`.
-
-Sprint 3+ features (matching, dispatch, offers, tracking, chat, quotes, payments, ratings) are
-**not** implemented.
+Sprint 2 and later features (request creation, technician onboarding, dispatch, quotes, payments)
+are **not** implemented.
 
 ## Important limitation: OTP delivery
 
@@ -69,8 +58,7 @@ cp .env.example .env
 node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 npm install
 npm run migration:run
-npm run seed:catalog          # sample catalog + sample Aswan service areas, refuses to run in production
-npm run user:create-staff -- --phone 01099999999 --role admin --name "Reviewer name"
+npm run seed:catalog          # sample catalog, refuses to run in production
 npm run start:dev             # http://localhost:3000/api/v1
 
 # 3. Customer app (another terminal)
@@ -83,10 +71,7 @@ flutter run --dart-define=API_BASE_URL=http://localhost:3000/api/v1
 Check the API is up: `curl http://localhost:3000/api/v1/health`.
 
 In development, the OTP screen displays the code returned by the stub, so you can sign in with
-any valid Egyptian mobile number (`01012345678`). To demo all three Sprint 2 roles: create a
-request as a customer, apply as a technician from another number, then review it from the admin
-number created above (the admin screens live in the same app — use the web build for a desktop
-reviewer).
+any valid Egyptian mobile number (`01012345678`).
 
 See `backend/README.md` for the API reference, configuration and operator commands, and
 `mobile/README.md` for the app's structure and conventions.

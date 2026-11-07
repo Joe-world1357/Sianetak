@@ -326,7 +326,10 @@ class _ApplicationFormState extends State<_ApplicationForm> {
             controller: _name,
             maxLength: 80,
             textCapitalization: TextCapitalization.words,
-            decoration: InputDecoration(labelText: l10n.fullNameLabel),
+            decoration: InputDecoration(
+              labelText: l10n.fullNameLabel,
+              counterText: '',
+            ),
             validator: (v) {
               final value = v?.trim() ?? '';
               return value.length < 2 || !_namePattern.hasMatch(value)

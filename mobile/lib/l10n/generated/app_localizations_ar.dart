@@ -28,12 +28,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get switchLanguageTooltip => 'تغيير اللغة إلى الإنجليزية';
 
   @override
-  String get accountTooltip => 'حسابي';
-
-  @override
-  String get signInTooltip => 'تسجيل الدخول';
-
-  @override
   String servicesCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -47,12 +41,6 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get sampleDataBadge => 'بيانات تجريبية';
-
-  @override
-  String get sampleDataNotice => 'هذه بيانات تجريبية للعرض فقط ولم تُعتمد بعد.';
 
   @override
   String get loading => 'جارٍ التحميل…';
@@ -73,8 +61,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorNotFound => 'العنصر المطلوب غير موجود أو لم يعد متاحًا.';
 
   @override
-  String get errorNetwork =>
-      'تعذّر الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.';
+  String get errorNetwork => 'تعذّر الوصول إلى البيانات. حاول مرة أخرى.';
 
   @override
   String get errorGeneric => 'حدث خطأ غير متوقع. حاول مرة أخرى.';
@@ -105,115 +92,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestServiceButton => 'اطلب الخدمة';
 
   @override
-  String get signInToRequest => 'سجّل الدخول لطلب الخدمة';
-
-  @override
   String get signInTitle => 'تسجيل الدخول';
 
   @override
-  String get signInSubtitle =>
-      'أدخل رقم الموبايل وسنرسل إليك رمز تحقق في رسالة نصية.';
-
-  @override
-  String get phoneLabel => 'رقم الموبايل';
-
-  @override
-  String get phoneHint => '01XXXXXXXXX';
-
-  @override
-  String get phoneInvalid => 'أدخل رقم موبايل مصري صحيح (مثال: 01012345678).';
-
-  @override
-  String get sendCodeButton => 'إرسال الرمز';
-
-  @override
-  String get otpTitle => 'أدخل رمز التحقق';
-
-  @override
-  String otpSubtitle(int length, String phone) {
-    return 'أرسلنا رمزًا من $length أرقام إلى $phone.';
-  }
-
-  @override
-  String get otpLabel => 'رمز التحقق';
-
-  @override
-  String otpInvalidFormat(int length) {
-    return 'أدخل الرمز كاملًا ($length أرقام).';
-  }
-
-  @override
-  String get verifyButton => 'تأكيد';
-
-  @override
-  String resendIn(int seconds) {
-    return 'إعادة الإرسال بعد $seconds ث';
-  }
-
-  @override
-  String get resendButton => 'إعادة إرسال الرمز';
-
-  @override
-  String get changeNumber => 'تغيير الرقم';
-
-  @override
-  String get codeResent => 'تم إرسال رمز جديد.';
-
-  @override
-  String devCodeBanner(String code) {
-    return 'وضع التطوير فقط — لم تُرسل رسالة. الرمز: $code';
-  }
-
-  @override
-  String errorOtpInvalid(int attempts) {
-    String _temp0 = intl.Intl.pluralLogic(
-      attempts,
-      locale: localeName,
-      other: 'تبقّت $attempts محاولة.',
-      few: 'تبقّت $attempts محاولات.',
-      two: 'تبقّت محاولتان.',
-      one: 'تبقّت محاولة واحدة.',
-      zero: 'لا توجد محاولات متبقية.',
-    );
-    return 'الرمز غير صحيح. $_temp0';
-  }
-
-  @override
-  String get errorOtpInvalidNoCount => 'الرمز غير صحيح.';
-
-  @override
-  String get errorOtpExpired => 'انتهت صلاحية الرمز. اطلب رمزًا جديدًا.';
-
-  @override
-  String get errorOtpTooManyAttempts =>
-      'محاولات خاطئة كثيرة. اطلب رمزًا جديدًا.';
-
-  @override
-  String errorResendTooSoon(int seconds) {
-    return 'انتظر $seconds ثانية قبل طلب رمز جديد.';
-  }
-
-  @override
-  String get errorOtpRateLimited =>
-      'طلبت رموزًا كثيرة لهذا الرقم. حاول مرة أخرى بعد قليل.';
-
-  @override
-  String get errorRateLimited => 'طلبات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.';
-
-  @override
-  String get errorOtpUnavailable => 'تسجيل الدخول برسائل SMS غير متاح حاليًا.';
-
-  @override
-  String get errorOtpDeliveryFailed => 'تعذّر إرسال الرمز. حاول مرة أخرى.';
-
-  @override
-  String get errorAccountSuspended => 'تم إيقاف هذا الحساب. تواصل مع الدعم.';
+  String get signInSubtitle => 'أهلاً بعودتك. ادخل برقم موبايلك وكلمة المرور.';
 
   @override
   String get errorSessionExpired => 'انتهت جلستك. سجّل الدخول مرة أخرى.';
-
-  @override
-  String get signedInWelcome => 'أهلًا بك! تم تسجيل الدخول.';
 
   @override
   String get profileTitle => 'حسابي';
@@ -226,12 +111,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileNameInvalid => 'أدخل اسمًا من حرفين على الأقل.';
-
-  @override
-  String get profilePhoneLabel => 'رقم الموبايل';
-
-  @override
-  String get profileRoleLabel => 'نوع الحساب';
 
   @override
   String get roleCustomer => 'عميل';
@@ -524,7 +403,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backToHomeButton => 'العودة للرئيسية';
 
   @override
-  String get statusSubmitted => 'تم الاستلام';
+  String get statusSubmitted => 'بانتظار فني';
 
   @override
   String get statusUnknown => 'غير معروف';
@@ -631,16 +510,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorCannotReviewOwn => 'لا يمكنك مراجعة طلبك الشخصي.';
 
   @override
-  String get myRequestsEntry => 'طلباتي';
-
-  @override
-  String get technicianEntryApply => 'انضم كفني';
-
-  @override
   String get technicianEntryStatus => 'طلب الانضمام كفني';
-
-  @override
-  String get adminReviewEntry => 'مراجعة طلبات الفنيين';
 
   @override
   String get technicianApplyTitle => 'الانضمام كفني';
@@ -681,7 +551,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentsOptionalHelp =>
-      'المستندات المطلوبة لم تُحدَّد بعد. أرفق ما يثبت هويتك أو خبرتك إن وُجد.';
+      'اختياري: أرفق ما يثبت هويتك أو خبرتك، مثل البطاقة أو شهادة.';
 
   @override
   String documentsMinHelp(int min) {
@@ -698,7 +568,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentsPrivacy =>
-      'المستندات خاصة، ولا يطّلع عليها إلا فريق المراجعة.';
+      'المستندات محفوظة على هذا الجهاز، ولا يطّلع عليها إلا المسؤول.';
 
   @override
   String get documentKindLabel => 'نوع المستند';
@@ -740,14 +610,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationPendingBody =>
-      'تراجع الإدارة بياناتك، وستظهر النتيجة هنا.';
+      'يراجع المسؤول بياناتك، وستظهر النتيجة هنا. يمكنك الدخول لاحقاً لمتابعتها.';
 
   @override
   String get verificationApproved => 'معتمد';
 
   @override
   String get verificationApprovedBody =>
-      'تم اعتماد حسابك كفني. استقبال طلبات العمل سيتاح في تحديث قادم.';
+      'تم اعتماد حسابك كفني. ستجد عروض العمل والأعمال المسندة إليك في الشاشة الرئيسية.';
 
   @override
   String get verificationRejected => 'لم يُقبل';
@@ -757,14 +627,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationRejectedFinal =>
-      'لا يمكن إعادة الإرسال حاليًا. تواصل مع الدعم.';
+      'لا يمكن إعادة الإرسال حالياً. تواصل مع المسؤول.';
 
   @override
   String get verificationSuspended => 'موقوف';
 
   @override
   String get verificationSuspendedBody =>
-      'تم إيقاف حسابك كفني مؤقتًا. تواصل مع الدعم.';
+      'تم إيقاف حسابك كفني مؤقتاً. تواصل مع المسؤول.';
 
   @override
   String get decisionReasonLabel => 'سبب القرار';
@@ -847,4 +717,791 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminDecisionSaved => 'تم حفظ القرار.';
+
+  @override
+  String get statusUnmatched => 'بانتظار الإدارة';
+
+  @override
+  String get statusAssigned => 'تم تعيين فني';
+
+  @override
+  String get statusEnRoute => 'الفني في الطريق';
+
+  @override
+  String get statusArrived => 'وصل الفني';
+
+  @override
+  String get statusQuoted => 'بانتظار موافقة السعر';
+
+  @override
+  String get statusQuoteRejected => 'العرض مرفوض';
+
+  @override
+  String get statusInProgress => 'جارٍ التنفيذ';
+
+  @override
+  String get statusCompleted => 'مكتمل';
+
+  @override
+  String get statusCancelled => 'ملغي';
+
+  @override
+  String homeGreeting(String name) {
+    return 'أهلًا $name 👋';
+  }
+
+  @override
+  String get tabHome => 'الرئيسية';
+
+  @override
+  String get tabRequests => 'طلباتي';
+
+  @override
+  String get tabNotifications => 'الإشعارات';
+
+  @override
+  String get tabAccount => 'حسابي';
+
+  @override
+  String get tabOffers => 'العروض';
+
+  @override
+  String get tabJobs => 'أعمالي';
+
+  @override
+  String get tabDashboard => 'لوحة التحكم';
+
+  @override
+  String get tabTechnicians => 'الفنيون';
+
+  @override
+  String get languageSetting => 'اللغة';
+
+  @override
+  String get technicianCardTitle => 'الفني';
+
+  @override
+  String get customerCardTitle => 'العميل';
+
+  @override
+  String get ratingNone => 'لا تقييمات بعد';
+
+  @override
+  String ratingSummary(String avg, int count) {
+    return '$avg ($count)';
+  }
+
+  @override
+  String ratingStars(int stars) {
+    return '$stars من ٥ نجوم';
+  }
+
+  @override
+  String get ratingTitle => 'تقييمك';
+
+  @override
+  String get etaEstimate => 'الوصول المتوقع خلال ٢٠–٣٠ دقيقة تقريبًا';
+
+  @override
+  String get chatOpenButton => 'محادثة الطلب';
+
+  @override
+  String get chatViewButton => 'عرض المحادثة';
+
+  @override
+  String get chatTitle => 'المحادثة';
+
+  @override
+  String get chatEmpty => 'لا رسائل بعد. اكتب أول رسالة.';
+
+  @override
+  String get chatHint => 'اكتب رسالة…';
+
+  @override
+  String get chatSend => 'إرسال';
+
+  @override
+  String get chatReadOnly => 'المحادثة للعرض فقط.';
+
+  @override
+  String get paymentTitle => 'الدفع';
+
+  @override
+  String get paymentCashCollected => 'تم التحصيل نقدًا';
+
+  @override
+  String get paymentCommission => 'عمولة المنصة';
+
+  @override
+  String get paymentRecordedAt => 'وقت التسجيل';
+
+  @override
+  String get cancelReasonTitle => 'سبب الإلغاء';
+
+  @override
+  String get addressHiddenUntilAccepted =>
+      'يظهر العنوان بالتفصيل بعد قبول الطلب.';
+
+  @override
+  String get byOperations => 'بواسطة الإدارة';
+
+  @override
+  String get quoteTitle => 'عرض السعر';
+
+  @override
+  String get quotePending => 'بانتظار الموافقة';
+
+  @override
+  String get quoteApproved => 'تمت الموافقة';
+
+  @override
+  String get quoteRejected => 'مرفوض';
+
+  @override
+  String journeyStep(int step, int total) {
+    return 'المرحلة $step من $total';
+  }
+
+  @override
+  String get cancelRequestButton => 'إلغاء الطلب';
+
+  @override
+  String get cancelSheetTitle => 'لماذا تريد إلغاء الطلب؟';
+
+  @override
+  String get cancelReasonChangedMind => 'لم أعد بحاجة للخدمة';
+
+  @override
+  String get cancelReasonFixed => 'تم حل المشكلة';
+
+  @override
+  String get cancelReasonTooLong => 'الانتظار طويل';
+
+  @override
+  String get cancelReasonOther => 'سبب آخر';
+
+  @override
+  String get requestCancelledToast => 'تم إلغاء الطلب.';
+
+  @override
+  String get customerSearchingTitle => 'نبحث لك عن فني مناسب';
+
+  @override
+  String get customerSearchingBody =>
+      'أرسلنا طلبك للفنيين المعتمدين في منطقتك. ستصلك رسالة فور قبول أحدهم.';
+
+  @override
+  String get customerUnmatchedTitle => 'لم يقبل أي فني بعد';
+
+  @override
+  String get customerUnmatchedBody =>
+      'لم يقبل أي فني الطلب بعد. سيعيّن المسؤول فنياً يدوياً.';
+
+  @override
+  String get customerAssignedTitle => 'فنيك جاهز';
+
+  @override
+  String get customerAssignedBody =>
+      'سيعاين الفني المشكلة ثم يرسل لك عرض سعر قبل بدء أي عمل.';
+
+  @override
+  String customerQuoteTitle(String amount) {
+    return 'عرض سعر: $amount';
+  }
+
+  @override
+  String get customerQuoteBody =>
+      'لن يبدأ العمل إلا بعد موافقتك. الدفع نقدًا عند الانتهاء.';
+
+  @override
+  String get customerQuoteRejectedTitle => 'رفضت عرض السعر';
+
+  @override
+  String get customerQuoteRejectedBody =>
+      'يمكن للفني إرسال عرض جديد، أو يمكنك إلغاء الطلب.';
+
+  @override
+  String get customerInProgressTitle => 'العمل جارٍ الآن';
+
+  @override
+  String get customerInProgressBody =>
+      'سيؤكد الفني الانتهاء وتحصيل المبلغ المتفق عليه.';
+
+  @override
+  String get customerCompletedTitle => 'اكتملت الخدمة';
+
+  @override
+  String get customerCompletedBody => 'شاركنا رأيك في الفني لمساعدة الآخرين.';
+
+  @override
+  String get approveQuoteButton => 'الموافقة على السعر';
+
+  @override
+  String get rejectQuoteButton => 'رفض العرض';
+
+  @override
+  String get quoteApprovedToast => 'تمت الموافقة. أبلغنا الفني ليبدأ العمل.';
+
+  @override
+  String get rateButton => 'قيّم الخدمة';
+
+  @override
+  String get rateSheetTitle => 'كيف كانت الخدمة؟';
+
+  @override
+  String get rateCommentLabel => 'تعليق (اختياري)';
+
+  @override
+  String get rateSubmitButton => 'إرسال التقييم';
+
+  @override
+  String get ratingThanks => 'شكرًا لتقييمك!';
+
+  @override
+  String get offerForYouTitle => 'طلب جديد لك';
+
+  @override
+  String offerExpiresIn(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'ينتهي خلال $minutes دقيقة',
+      few: 'ينتهي خلال $minutes دقائق',
+      two: 'ينتهي خلال دقيقتين',
+      one: 'ينتهي خلال دقيقة',
+      zero: 'ينتهي العرض الآن',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get acceptOfferButton => 'قبول الطلب';
+
+  @override
+  String get declineOfferButton => 'اعتذار';
+
+  @override
+  String get offerAcceptedToast => 'تم قبول الطلب وأبلغنا العميل.';
+
+  @override
+  String get techAssignedTitle => 'الطلب لك';
+
+  @override
+  String get techAssignedBody => 'أبلغ العميل عندما تتحرك إليه.';
+
+  @override
+  String get onMyWayButton => 'أنا في الطريق';
+
+  @override
+  String get arrivedButton => 'وصلت';
+
+  @override
+  String get customerNotifiedToast => 'تم إبلاغ العميل.';
+
+  @override
+  String get techQuoteNeededTitle => 'عاين وأرسل عرض السعر';
+
+  @override
+  String get techQuoteRejectedTitle => 'رفض العميل العرض';
+
+  @override
+  String get techQuoteNeededBody =>
+      'لا يبدأ العمل قبل موافقة العميل على السعر.';
+
+  @override
+  String get sendQuoteButton => 'إرسال عرض السعر';
+
+  @override
+  String get techAwaitingApprovalTitle => 'بانتظار موافقة العميل';
+
+  @override
+  String get techAwaitingApprovalBody =>
+      'سنبلغك فور الموافقة على العرض أو رفضه.';
+
+  @override
+  String get techWorkingTitle => 'تمت الموافقة، ابدأ العمل';
+
+  @override
+  String techWorkingBody(String amount) {
+    return 'عند الانتهاء حصّل $amount نقدًا وأكّد الإنجاز.';
+  }
+
+  @override
+  String get completeJobButton => 'تم الانتهاء وتحصيل المبلغ';
+
+  @override
+  String get completeJobTitle => 'تأكيد الانتهاء';
+
+  @override
+  String completeJobBody(String amount) {
+    return 'هل انتهى العمل وتم تحصيل $amount نقدًا من العميل؟';
+  }
+
+  @override
+  String get jobCompletedToast => 'تم تسجيل الإنجاز والدفع.';
+
+  @override
+  String get quoteSheetTitle => 'عرض السعر';
+
+  @override
+  String get quoteSheetHint =>
+      'أدخل السعر الإجمالي (مصنعية وقطع غيار) بعد المعاينة.';
+
+  @override
+  String get quoteAmountLabel => 'المبلغ';
+
+  @override
+  String get quoteAmountInvalid => 'أدخل مبلغًا صحيحًا.';
+
+  @override
+  String get quoteNoteLabel => 'تفاصيل العمل (اختياري)';
+
+  @override
+  String get currencyEgpShort => 'ج.م';
+
+  @override
+  String get quoteSentToast => 'تم إرسال العرض للعميل.';
+
+  @override
+  String get adminSearchingTitle => 'العروض مرسلة للفنيين';
+
+  @override
+  String get adminUnmatchedTitle => 'يحتاج تعيينًا يدويًا';
+
+  @override
+  String get adminAssignBody => 'يمكنك تعيين فني معتمد يغطي الخدمة والمنطقة.';
+
+  @override
+  String get assignTechnicianButton => 'تعيين فني';
+
+  @override
+  String get assignSheetTitle => 'اختر فنيًا';
+
+  @override
+  String get assignNoneEligible =>
+      'لا يوجد فني معتمد يغطي هذه الخدمة والمنطقة.';
+
+  @override
+  String get assignedToast => 'تم تعيين الفني.';
+
+  @override
+  String get offersTitle => 'عروض العمل';
+
+  @override
+  String get offersIntro =>
+      'طلبات تناسب تخصصك ومنطقتك. أول من يقبل يحصل على الطلب.';
+
+  @override
+  String get offersEmpty => 'لا عروض جديدة الآن. سنبلغك عند وصول طلب.';
+
+  @override
+  String get myJobsTitle => 'أعمالي';
+
+  @override
+  String get jobsActiveTab => 'الحالية';
+
+  @override
+  String get jobsHistoryTab => 'السابقة';
+
+  @override
+  String get jobsEmptyActive => 'لا أعمال حالية. اقبل عرضًا لتبدأ.';
+
+  @override
+  String get jobsEmptyHistory => 'لا أعمال منتهية بعد.';
+
+  @override
+  String get earningsTitle => 'صافي أرباحك';
+
+  @override
+  String get earningsNetHint => 'بعد خصم عمولة المنصة (١٠٪ — قيمة مقترحة)';
+
+  @override
+  String get earningsJobs => 'أعمال';
+
+  @override
+  String get earningsCollected => 'المحصّل';
+
+  @override
+  String get earningsCommission => 'العمولة';
+
+  @override
+  String get notificationsTitle => 'الإشعارات';
+
+  @override
+  String get notificationsEmpty => 'لا إشعارات بعد.';
+
+  @override
+  String get markAllRead => 'تحديد الكل كمقروء';
+
+  @override
+  String ntfNewOffer(String ref) {
+    return 'طلب جديد يناسبك $ref';
+  }
+
+  @override
+  String ntfAssignedByAdmin(String ref) {
+    return 'عيّنتك الإدارة على الطلب $ref';
+  }
+
+  @override
+  String ntfAssigned(String ref) {
+    return 'تم تعيين فني لطلبك $ref';
+  }
+
+  @override
+  String ntfEnRoute(String ref) {
+    return 'الفني في الطريق إليك $ref';
+  }
+
+  @override
+  String ntfArrived(String ref) {
+    return 'وصل الفني $ref';
+  }
+
+  @override
+  String ntfQuoted(String ref) {
+    return 'وصلك عرض سعر للطلب $ref';
+  }
+
+  @override
+  String ntfQuoteApproved(String ref) {
+    return 'وافق العميل على عرضك $ref';
+  }
+
+  @override
+  String ntfQuoteRejected(String ref) {
+    return 'رفض العميل عرضك $ref';
+  }
+
+  @override
+  String ntfCompleted(String ref) {
+    return 'اكتملت الخدمة $ref. قيّم الفني';
+  }
+
+  @override
+  String ntfRated(String ref) {
+    return 'وصلك تقييم جديد $ref';
+  }
+
+  @override
+  String ntfMessage(String ref) {
+    return 'رسالة جديدة بخصوص $ref';
+  }
+
+  @override
+  String ntfCancelled(String ref) {
+    return 'تم إلغاء الطلب $ref';
+  }
+
+  @override
+  String ntfUnmatched(String ref) {
+    return 'الطلب $ref يحتاج تعيين فني';
+  }
+
+  @override
+  String get ntfApplicationSubmitted => 'طلب انضمام فني جديد بانتظار المراجعة';
+
+  @override
+  String get ntfApplicationApproved => 'تمت الموافقة على طلب انضمامك كفني';
+
+  @override
+  String get ntfApplicationRejected => 'لم تتم الموافقة على طلب انضمامك';
+
+  @override
+  String get ntfApplicationSuspended => 'تم إيقاف حسابك كفني مؤقتًا';
+
+  @override
+  String get adminDashboardTitle => 'لوحة التشغيل';
+
+  @override
+  String get kpiNeedsAttention => 'بحاجة لمتابعة';
+
+  @override
+  String get kpiInProgress => 'قيد التنفيذ';
+
+  @override
+  String get kpiCompleted => 'مكتملة';
+
+  @override
+  String get kpiCommission => 'إجمالي العمولات';
+
+  @override
+  String kpiPendingApplications(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طلب انضمام بانتظار المراجعة',
+      few: '$count طلبات انضمام بانتظار المراجعة',
+      two: 'طلبا انضمام بانتظار المراجعة',
+      one: 'طلب انضمام واحد بانتظار المراجعة',
+      zero: 'لا طلبات انضمام معلّقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kpiApprovedTechnicians(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count فني معتمد',
+      few: '$count فنيين معتمدين',
+      two: 'فنيان معتمدان',
+      one: 'فني معتمد واحد',
+      zero: 'لا فنيين معتمدين',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminRequestsTitle => 'الطلبات';
+
+  @override
+  String get adminFilterAttention => 'بحاجة لمتابعة';
+
+  @override
+  String get adminFilterActive => 'قيد التنفيذ';
+
+  @override
+  String get adminFilterDone => 'منتهية';
+
+  @override
+  String get adminFilterAll => 'الكل';
+
+  @override
+  String get adminRequestsEmpty => 'لا طلبات هنا.';
+
+  @override
+  String get errorOfferExpired => 'انتهت مهلة هذا العرض.';
+
+  @override
+  String get errorOfferTaken => 'قبل فني آخر هذا الطلب بالفعل.';
+
+  @override
+  String get errorStateConflict =>
+      'تغيّرت حالة الطلب. حدّث الصفحة وحاول مرة أخرى.';
+
+  @override
+  String get onboardingSkip => 'تخطي';
+
+  @override
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingStart => 'ابدأ الآن';
+
+  @override
+  String get onboarding1Title => 'صيانة بيتك في مكان واحد';
+
+  @override
+  String get onboarding1Body =>
+      'سباكة وكهرباء وتكييف ونجارة ونقاشة وأجهزة منزلية في أسوان.';
+
+  @override
+  String get onboarding2Title => 'فنيون تتم مراجعتهم';
+
+  @override
+  String get onboarding2Body =>
+      'كل فني يقدّم طلب انضمام، ولا يستقبل أي عمل إلا بعد موافقة المسؤول.';
+
+  @override
+  String get onboarding3Title => 'أنت تقرر قبل البدء';
+
+  @override
+  String get onboarding3Body =>
+      'راجع عرض السعر ووافق عليه، وتابع الحالة لحظة بلحظة، ثم قيّم الخدمة.';
+
+  @override
+  String get phoneLabel => 'رقم الموبايل';
+
+  @override
+  String get phoneInvalid => 'أدخل رقم موبايل مصري صحيح، مثل 01012345678.';
+
+  @override
+  String get passwordLabel => 'كلمة المرور';
+
+  @override
+  String get passwordConfirmLabel => 'تأكيد كلمة المرور';
+
+  @override
+  String get passwordRules => '٨ أحرف على الأقل، منها حرف ورقم.';
+
+  @override
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get passwordRequired => 'أدخل كلمة المرور.';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get signInButton => 'دخول';
+
+  @override
+  String get noAccountPrompt => 'جديد على صيانتك؟';
+
+  @override
+  String get createAccountLink => 'أنشئ حساباً';
+
+  @override
+  String get haveAccountPrompt => 'لديك حساب؟';
+
+  @override
+  String get signInLink => 'سجّل الدخول';
+
+  @override
+  String get registerTitle => 'إنشاء حساب';
+
+  @override
+  String get registerSubtitle => 'اختر نوع الحساب ثم أكمل بياناتك.';
+
+  @override
+  String get accountTypeLabel => 'نوع الحساب';
+
+  @override
+  String get accountTypeCustomerBlurb => 'اطلب خدمة وتابعها حتى تنتهي.';
+
+  @override
+  String get accountTypeTechnicianBlurb =>
+      'قدّم طلب انضمام واستقبل الأعمال بعد الموافقة.';
+
+  @override
+  String get registerButton => 'إنشاء الحساب';
+
+  @override
+  String get localDataNote =>
+      'يعمل التطبيق بدون إنترنت. الحسابات والبيانات محفوظة على هذا الجهاز فقط، وتتشاركها كل الحسابات المسجلة عليه.';
+
+  @override
+  String get adminSetupPrompt => 'مالك الجهاز؟';
+
+  @override
+  String get adminSetupLink => 'إعداد حساب المسؤول';
+
+  @override
+  String get adminSetupTitle => 'إعداد حساب المسؤول';
+
+  @override
+  String get adminSetupBody =>
+      'يمكن إنشاء أول حساب مسؤول مرة واحدة فقط على هذا الجهاز. بعدها لا يضيف مسؤولاً جديداً إلا مسؤول.';
+
+  @override
+  String get adminSetupButton => 'إنشاء حساب المسؤول';
+
+  @override
+  String get addAdminEntry => 'إضافة مسؤول';
+
+  @override
+  String get addAdminTitle => 'إضافة مسؤول';
+
+  @override
+  String get addAdminBody =>
+      'سيتمكن من مراجعة الفنيين وإدارة الطلبات. أبلغه بكلمة المرور بطريقة آمنة.';
+
+  @override
+  String get addAdminButton => 'إضافة المسؤول';
+
+  @override
+  String adminAdded(String name) {
+    return 'تمت إضافة المسؤول $name.';
+  }
+
+  @override
+  String get changePasswordEntry => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get currentPasswordLabel => 'كلمة المرور الحالية';
+
+  @override
+  String get newPasswordLabel => 'كلمة المرور الجديدة';
+
+  @override
+  String get passwordChanged => 'تم تغيير كلمة المرور.';
+
+  @override
+  String get signOutConfirmTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get signOutConfirmBody => 'ستحتاج رقمك وكلمة المرور للدخول مرة أخرى.';
+
+  @override
+  String get aboutDataEntry => 'عن بياناتك';
+
+  @override
+  String get aboutDataBody =>
+      'صيانتك نسخة تعمل محلياً بالكامل لأغراض مشروع دراسي. لا يوجد خادم: الحسابات والطلبات والرسائل والصور محفوظة في قاعدة بيانات على هذا الجهاز فقط، وكلمات المرور مخزنة كبصمة مشفرة لا يمكن استرجاعها. الإشعارات والمحادثات تصل فقط للحسابات المسجلة على نفس الجهاز، والدفع نقدي يُسجَّل يدوياً.';
+
+  @override
+  String get gotIt => 'حسناً';
+
+  @override
+  String get tabApplication => 'طلب الانضمام';
+
+  @override
+  String get errorInvalidCredentials =>
+      'رقم الموبايل أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get errorPhoneTaken =>
+      'هذا الرقم له حساب بالفعل. سجّل الدخول بدلاً من ذلك.';
+
+  @override
+  String errorTooManyAttempts(int minutes) {
+    return 'محاولات كثيرة. حاول مرة أخرى بعد $minutes دقيقة.';
+  }
+
+  @override
+  String get errorAdminExists => 'يوجد حساب مسؤول بالفعل على هذا الجهاز.';
+
+  @override
+  String get errorAccountDisabled => 'هذا الحساب موقوف.';
+
+  @override
+  String get errorWrongPassword => 'كلمة المرور الحالية غير صحيحة.';
+
+  @override
+  String get errorTechnicianNotApproved =>
+      'يجب أن يوافق المسؤول على طلب انضمامك أولاً.';
+
+  @override
+  String get switchToCustomerMode => 'استخدم التطبيق كعميل';
+
+  @override
+  String get switchToTechnicianMode => 'التبديل إلى وضع الفني';
+
+  @override
+  String get switchRoleNote =>
+      'نفس الحساب ورقم الهاتف. يمكنك العودة في أي وقت.';
+
+  @override
+  String get actingAsLabel => 'الوضع الحالي';
+
+  @override
+  String get availabilityTitle => 'متاح لاستقبال أعمال جديدة';
+
+  @override
+  String get availabilityOnNote => 'تصلك العروض الجديدة لتخصصاتك ومناطقك.';
+
+  @override
+  String get availabilityOffNote =>
+      'لن تصلك عروض أو تكليفات جديدة. أعمالك الحالية لا تتأثر.';
+
+  @override
+  String get openInMaps => 'افتح في الخرائط';
+
+  @override
+  String get mapsUnavailable => 'لم يتمكن أي تطبيق خرائط من فتح هذا الموقع.';
+
+  @override
+  String get locationPinTitle => 'موقع الدبوس';
+
+  @override
+  String get locationRefresh => 'تحديث الموقع';
 }

@@ -1,176 +1,145 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sianetak_customer/core/network/api_exception.dart';
+import 'package:sianetak_customer/features/auth/domain/auth_models.dart';
 
 import '../support/fakes.dart';
+import '../support/flows.dart';
 import '../support/pump_app.dart';
 
-Future<void> openSignIn(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.login));
-  await tester.pumpAndSettle();
-}
-
-Future<void> enterPhone(WidgetTester tester, String phone) async {
-  await tester.enterText(find.byType(TextFormField), phone);
-  await tester.tap(find.text('إرسال الرمز'));
-  await tester.pumpAndSettle();
-}
-
 void main() {
-  testWidgets('customer signs in with a phone number and OTP', (tester) async {
-    final harness = await pumpApp(tester);
-    await openSignIn(tester);
-
-    expect(find.text('تسجيل الدخول'), findsWidgets);
-    await enterPhone(tester, '01012345678');
-
-    // The OTP step shows the number it was sent to, in local form.
-    expect(find.textContaining('01012345678'), findsOneWidget);
-    expect(harness.authRepository.requestCount, 1);
-
-    await tester.enterText(find.byType(TextFormField), '123456');
+  testWidgets('first launch shows the welcome pages, then sign-in', (
+    tester,
+  ) async {
+    final harness = await pumpApp(
+      tester,
+      harness: TestHarness(auth: FakeAuthRepository(onboardingDone: false)),
+    );
+    expect(find.text('صيانة بيتك في مكان واحد'), findsOneWidget);
+    await tester.tap(find.text('التالي'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('التالي'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ابدأ الآن'));
+    await tester.pumpAndSettle();
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
+    expect(harness.authRepository.onboardingDone, isTrue);
+  });
 
+  testWidgets('signing in lands in the customer navigation', (tester) async {
+    final harness = await pumpApp(tester);
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
+    await signIn(tester);
     expect(harness.authController.isSignedIn, isTrue);
-    expect(find.text('أهلًا بك! تم تسجيل الدخول.'), findsOneWidget);
-    // Back on the catalog, the account icon has replaced the sign-in icon.
-    expect(find.byIcon(Icons.account_circle), findsOneWidget);
+    expect(find.text('الرئيسية'), findsOneWidget);
+    expect(find.text('طلباتي'), findsOneWidget);
+    expect(find.text('حسابي'), findsOneWidget);
   });
 
-  testWidgets('normalizes an Arabic-Indic number before sending it', (
+  testWidgets('a wrong password shows an error and stays on sign-in', (
     tester,
   ) async {
     final harness = await pumpApp(tester);
-    await openSignIn(tester);
-    await enterPhone(tester, '٠١٠١٢٣٤٥٦٧٨');
-    expect(harness.authRepository.requestCount, 1);
-    expect(find.textContaining('01012345678'), findsOneWidget);
+    await signIn(tester, password: 'wrong-pass1');
+    expect(harness.authController.isSignedIn, isFalse);
+    expect(find.text('رقم الموبايل أو كلمة المرور غير صحيحة.'), findsOneWidget);
   });
 
-  testWidgets('rejects an invalid phone number before calling the server', (
-    tester,
-  ) async {
-    final harness = await pumpApp(tester);
-    await openSignIn(tester);
-    await enterPhone(tester, '0221234567');
-
-    expect(
-      find.text('أدخل رقم موبايل مصري صحيح (مثال: 01012345678).'),
-      findsOneWidget,
-    );
-    expect(harness.authRepository.requestCount, 0);
-  });
-
-  testWidgets('shows the server message when sign-in is unavailable', (
-    tester,
-  ) async {
-    final auth = FakeAuthRepository()
-      ..requestError = const ApiException(
-        code: 'OTP_DELIVERY_UNAVAILABLE',
-        statusCode: 503,
-      );
-    await pumpApp(tester, harness: TestHarness(auth: auth));
-    await openSignIn(tester);
-    await enterPhone(tester, '01012345678');
-    expect(
-      find.text('تسجيل الدخول برسائل SMS غير متاح حاليًا.'),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets(
-    'shows remaining attempts for a wrong code and stays on the screen',
-    (tester) async {
-      final harness = await pumpApp(tester);
-      await openSignIn(tester);
-      await enterPhone(tester, '01012345678');
-
-      await tester.enterText(find.byType(TextFormField), '000000');
-      await tester.pumpAndSettle();
-
-      expect(find.text('الرمز غير صحيح. تبقّت 4 محاولات.'), findsOneWidget);
-      expect(harness.authController.isSignedIn, isFalse);
-      expect(find.text('تأكيد'), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    'an expired code blocks verification until a new one is requested',
-    (tester) async {
-      final auth = FakeAuthRepository()
-        ..verifyError = const ApiException(
-          code: 'OTP_EXPIRED',
-          statusCode: 400,
-        );
-      final harness = await pumpApp(tester, harness: TestHarness(auth: auth));
-      await openSignIn(tester);
-      await enterPhone(tester, '01012345678');
-
-      await tester.enterText(find.byType(TextFormField), '123456');
-      await tester.pumpAndSettle();
-
-      expect(
-        find.text('انتهت صلاحية الرمز. اطلب رمزًا جديدًا.'),
-        findsOneWidget,
-      );
-      final verifyButton = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
-      expect(verifyButton.onPressed, isNull);
-      expect(harness.authController.isSignedIn, isFalse);
-    },
-  );
-
-  testWidgets('resend is disabled during the countdown and re-arms after it', (
-    tester,
-  ) async {
-    final auth = FakeAuthRepository(resendAfterSeconds: 2);
-    final harness = await pumpApp(tester, harness: TestHarness(auth: auth));
-    await openSignIn(tester);
-    await enterPhone(tester, '01012345678');
-
-    expect(find.textContaining('إعادة الإرسال بعد'), findsOneWidget);
-    await tester.pump(const Duration(seconds: 3));
-    expect(find.text('إعادة إرسال الرمز'), findsOneWidget);
-
-    await tester.tap(find.text('إعادة إرسال الرمز'));
-    await tester.pumpAndSettle();
-    expect(harness.authRepository.requestCount, 2);
-    expect(find.text('تم إرسال رمز جديد.'), findsOneWidget);
-  });
-
-  testWidgets(
-    'shows the development banner only when the backend returns a dev code',
-    (tester) async {
-      final auth = FakeAuthRepository()..devCode = '424242';
-      await pumpApp(tester, harness: TestHarness(auth: auth));
-      await openSignIn(tester);
-      await enterPhone(tester, '01012345678');
-      expect(find.textContaining('وضع التطوير فقط'), findsOneWidget);
-      expect(find.textContaining('424242'), findsOneWidget);
-    },
-  );
-
-  testWidgets('no development banner when the backend sends a real SMS', (
+  testWidgets('sign-in validates the phone number and password', (
     tester,
   ) async {
     await pumpApp(tester);
-    await openSignIn(tester);
-    await enterPhone(tester, '01012345678');
-    expect(find.textContaining('وضع التطوير فقط'), findsNothing);
+    await tester.tap(find.widgetWithText(FilledButton, 'دخول'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('أدخل رقم موبايل مصري صحيح'), findsOneWidget);
+    expect(find.text('أدخل كلمة المرور.'), findsOneWidget);
   });
 
-  testWidgets('profile shows the role, saves a name and signs out', (
+  testWidgets('sign-up creates a customer account and signs it in', (
     tester,
   ) async {
     final harness = await pumpApp(tester);
-    await openSignIn(tester);
-    await enterPhone(tester, '01012345678');
-    await tester.enterText(find.byType(TextFormField), '123456');
+    await tester.tap(find.text('أنشئ حساباً'));
     await tester.pumpAndSettle();
+    expect(find.text('إنشاء حساب'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.account_circle));
-    await tester.pumpAndSettle();
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), 'منى حسن');
+    await tester.enterText(fields.at(1), '01112345678');
+    await tester.enterText(fields.at(2), 'short');
+    await tester.enterText(fields.at(3), 'other');
+    await tapVisible(tester, find.widgetWithText(FilledButton, 'إنشاء الحساب'));
+    expect(find.text('كلمتا المرور غير متطابقتين.'), findsOneWidget);
+    expect(harness.authController.isSignedIn, isFalse);
+
+    await tester.enterText(fields.at(2), 'secret123');
+    await tester.enterText(fields.at(3), 'secret123');
+    await tapVisible(tester, find.widgetWithText(FilledButton, 'إنشاء الحساب'));
+    expect(harness.authController.user?.name, 'منى حسن');
+    expect(harness.authController.user?.role, UserRole.customer);
+    expect(find.text('طلباتي'), findsOneWidget);
+  });
+
+  testWidgets('a new technician sees only the application until approved', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      harness: TestHarness(
+        auth: FakeAuthRepository(
+          role: UserRole.technician,
+          technicianStatus: TechnicianStatus.notSubmitted,
+        ),
+      ),
+    );
+    await signIn(tester);
+    expect(find.text('طلب الانضمام'), findsWidgets);
+    expect(find.text('العروض'), findsNothing);
+    expect(find.text('أعمالي'), findsNothing);
+  });
+
+  testWidgets('an approved technician gets offers and jobs', (tester) async {
+    await pumpApp(
+      tester,
+      harness: TestHarness(auth: FakeAuthRepository(role: UserRole.technician)),
+    );
+    await signIn(tester);
+    expect(find.text('العروض'), findsOneWidget);
+    expect(find.text('أعمالي'), findsWidgets);
+    expect(find.text('الرئيسية'), findsNothing);
+  });
+
+  testWidgets('administrator setup is offered only while none exists', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    expect(find.text('إعداد حساب المسؤول'), findsNothing);
+  });
+
+  testWidgets('the first administrator is set up once from sign-in', (
+    tester,
+  ) async {
+    final harness = await pumpApp(
+      tester,
+      harness: TestHarness(auth: FakeAuthRepository(adminExists: false)),
+    );
+    await tapVisible(tester, find.text('إعداد حساب المسؤول'));
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), 'مدير النظام');
+    await tester.enterText(fields.at(1), '01222222222');
+    await tester.enterText(fields.at(2), 'admin1234');
+    await tester.enterText(fields.at(3), 'admin1234');
+    await tapVisible(
+      tester,
+      find.widgetWithText(FilledButton, 'إنشاء حساب المسؤول'),
+    );
+    expect(harness.authController.user?.role, UserRole.admin);
+    expect(find.text('لوحة التشغيل'), findsWidgets);
+  });
+
+  testWidgets('profile saves a name, and sign-out asks first', (tester) async {
+    final harness = await pumpApp(tester);
+    await signIn(tester);
+    await openProfile(tester);
     expect(find.text('عميل'), findsOneWidget);
     expect(find.textContaining('01012345678'), findsOneWidget);
 
@@ -180,39 +149,32 @@ void main() {
     expect(harness.authRepository.lastName, 'أحمد محمد');
     expect(find.text('تم حفظ البيانات.'), findsOneWidget);
 
-    await tester.ensureVisible(find.text('تسجيل الخروج'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('تسجيل الخروج'));
+    await dismissSnackBars(tester);
+    await tapVisible(
+      tester,
+      find.widgetWithText(OutlinedButton, 'تسجيل الخروج'),
+    );
+    expect(find.text('تسجيل الخروج؟'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'تسجيل الخروج'));
     await tester.pumpAndSettle();
     expect(harness.authController.isSignedIn, isFalse);
-    expect(find.byIcon(Icons.login), findsOneWidget);
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
   });
 
-  testWidgets(
-    'a guest is sent to sign-in from the service detail request button',
-    (tester) async {
-      final harness = await pumpApp(tester);
-      await tester.tap(find.text('سباكة'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('إصلاح تسريب'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('سجّل الدخول لطلب الخدمة'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text('أدخل رقم الموبايل وسنرسل إليك رمز تحقق في رسالة نصية.'),
-        findsOneWidget,
-      );
-
-      await enterPhone(tester, '01012345678');
-      await tester.enterText(find.byType(TextFormField), '123456');
-      await tester.pumpAndSettle();
-
-      // Signed in, the customer continues straight into the request flow.
-      expect(harness.authController.isSignedIn, isTrue);
-      expect(find.text('صف المشكلة'), findsOneWidget);
-    },
-  );
+  testWidgets('a signed-in user can change their password', (tester) async {
+    final harness = await pumpApp(tester);
+    await signIn(tester);
+    await openProfile(tester);
+    await tapVisible(tester, find.text('تغيير كلمة المرور'));
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), 'secret123');
+    await tester.enterText(fields.at(1), 'newpass99');
+    await tester.enterText(fields.at(2), 'newpass99');
+    await tester.tap(find.widgetWithText(FilledButton, 'حفظ'));
+    await tester.pumpAndSettle();
+    expect(harness.authRepository.currentPassword, 'newpass99');
+    expect(find.text('تم تغيير كلمة المرور.'), findsOneWidget);
+  });
 
   testWidgets('the sign-in screen works in English and LTR too', (
     tester,
@@ -220,11 +182,12 @@ void main() {
     await pumpApp(tester);
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.login));
-    await tester.pumpAndSettle();
-    expect(find.text('Send code'), findsOneWidget);
     expect(
-      Directionality.of(tester.element(find.text('Send code'))),
+      find.text('Welcome back. Use your mobile number and password.'),
+      findsOneWidget,
+    );
+    expect(
+      Directionality.of(tester.element(find.text('Mobile number'))),
       TextDirection.ltr,
     );
   });

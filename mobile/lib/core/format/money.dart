@@ -13,3 +13,8 @@ String formatEgp(int minorUnits, String languageCode) {
       : '$whole${number.symbols.DECIMAL_SEP}${number.format(piastres).padLeft(2, number.format(0))}';
   return isArabic ? '$amount ج.م' : 'EGP $amount';
 }
+
+/// Whole numbers in the UI language's digits, matching how amounts are shown.
+String formatCount(int value, String languageCode) =>
+    NumberFormat.decimalPattern(languageCode == 'ar' ? 'ar_EG' : 'en')
+        .format(value);

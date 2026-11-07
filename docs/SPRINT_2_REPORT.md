@@ -1,5 +1,12 @@
 # Sprint 2 Report — Sianetak (صيانتك)
 
+> **Historical note (2 Nov 2026).** This report describes Sprint 2 as built against the NestJS
+> backend (23 Oct 2026, PR #1). Since 24 Oct the project is a school project and the Flutter app
+> runs standalone on a local database; `backend/` is kept for reference only. The Sprint 2 flows
+> here were carried into the local app (PRs #3 and #4). Gaps listed in section 11 are tracked in
+> [SPRINT_3_PLAN.md](SPRINT_3_PLAN.md): multi-role accounts, the map pin and cancellation are
+> addressed there. Merged from PR #2, whose README rewrites were dropped as out of date.
+
 Aswan home‑maintenance marketplace. Sprint 2 adds the three request‑and‑onboarding flows on top of
 the Sprint 1 foundation: customers create service requests, technicians apply to join, and admins
 verify those applications. Built on NestJS + PostgreSQL and the Flutter customer app, Arabic‑first

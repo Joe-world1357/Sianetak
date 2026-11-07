@@ -1,65 +1,111 @@
-# Sianetak customer app
+# Sianetak app (standalone, local database)
 
-Flutter customer app. Scope through Sprint 2: guest catalog browsing, service details with pricing
-guidance, phone OTP sign-in, service requests, technician onboarding, and admin verification.
+Flutter app for Android and iOS. It runs entirely on the device: there is no server, no OTP and
+no network dependency. Everything is kept in a local database in the app's private storage.
+
+A fresh install contains **only the service catalog and the Aswan service areas**. There are no
+sample users, technicians, requests, reviews, chats or notifications: every record is created by
+someone using the app.
+
+## First run
+
+1. Welcome pages (once per device), then the sign-in screen.
+2. **Set up the administrator.** While the device has no administrator, the sign-in screen shows
+   "إعداد حساب المسؤول" (Set up the administrator). It creates the first admin once; after that
+   the link disappears and only an administrator can add another (Account → Add an administrator).
+3. **Create accounts.** "أنشئ حساباً" (Create an account) offers *Customer* or *Technician*.
+   Administrators can never sign up.
+4. A technician fills in the application (specialties, areas, optional documents) and sees only
+   that until an administrator approves it under *Technicians*. Approved technicians get job
+   offers and jobs; suspended or rejected ones are blocked by the data layer, not just the UI.
+
+## Accounts and security
+
+- Sign in with an Egyptian mobile number and password (Arabic-Indic digits accepted).
+- Passwords: at least 8 characters with a letter and a digit, stored only as salted
+  PBKDF2-HMAC-SHA256 hashes (60,000 iterations, run off the UI thread). Never in plaintext.
+- One phone number per account. Customer and technician accounts are **multi-role**: Account →
+  "Switch to customer mode / technician mode" changes the role the same account acts in (a
+  technician can book a service for their own home; a customer can apply as a technician
+  without a second number). Each role sees its own navigation and its own notices; a technician
+  is never offered their own request. Administrators cannot switch. Sign-in starts in the
+  account's stored role.
+- Wrong number and wrong password fail the same way; 5 failures
+  lock that number for 5 minutes [Proposed].
+- Sessions persist across restarts, slide forward on each launch and expire after 30 days unused.
+  Sign-out (with confirmation) ends the session. Change password needs the current one.
+
+## Workflows
+
+| Role | What it can do |
+|------|----------------|
+| Customer | Browse services, create requests (photos, saved addresses, schedule), track status, chat with the assigned technician, approve or reject quotes, cancel, rate completed work |
+| Technician | Apply, see verification status, switch "available for new jobs" on or off, accept or decline offers, move a job through on the way → arrived → quote → completed (cash recorded), see earnings |
+| Admin | Dashboard, review / approve / reject / suspend technicians, assign requests nobody accepted, add administrators |
+
+Rules (in `local/initial_data.dart`; dispatch, expiry, cancellation and commission approved
+2 Nov 2026, lock-out and session times still [Proposed]): offers go to up to 3 approved,
+available technicians covering the category and area and expire after 15 minutes (swept on
+every read and every 30 seconds while the app is open; there is no server job runner);
+turning availability off hands back pending offers; the first to accept wins;
+with nobody eligible or after every offer lapses the request waits for an admin to assign it;
+work starts only after the customer approves the quote; payment is cash with a 10% commission.
+
+## Limitations (honest ones)
+
+- **One device, one database.** All roles share the device. Notifications and chat reach other
+  accounts only on this same phone, and there is no sync between phones.
+- No SMS, push notifications, online payment, in-app map or live location: these need a server
+  or a provider. Location is an optional one-off pin from the phone's GPS; it shows as
+  coordinates and opens in the phone's own maps app ("Open in Maps"), for the customer, the
+  assigned technician and admins only. Notifications are in-app (badge + list).
+- No password recovery (there is no channel to verify identity offline). An administrator can
+  add a new admin, but cannot reset passwords.
+- The previous demo build kept sample data in `sianetak_demo/` in app storage; this version
+  leaves that folder untouched and starts clean in `sianetak_data/`. An unreadable or older
+  database file is kept as `db.backup-<time>.json`, never deleted.
 
 ## Layout
 
 ```
 lib/
-  core/        config, API client, theme tokens, shared state widgets, localization plumbing
-    device/    image picker and one-off location services (abstracted for tests)
-    widgets/   state views, private_image (credentialed byte fetch, kept in memory)
+  core/
+    security/  PasswordHasher (salted PBKDF2-SHA256)
+    storage/   LocalStore (JSON document, atomic writes, sessions) and the file backend
+    theme/     design tokens; widgets/ shared UI pieces and loading/empty/error states
+  local/       initial data, LocalBackend (validation, permissions, state transitions), wiring
   features/
-    catalog/    domain models, repository, home / category / service detail screens
-    auth/       phone rules, auth models, token store, AuthController, sign-in / OTP / profile
-    requests/   models, repository, draft controller, four-step flow, history, detail
-    media/      private upload models and repository
-    technician/ application form and verification-status view
-    admin/      technician application queue and review detail
-  l10n/        app_ar.arb (template) and app_en.arb; generated code under l10n/generated is committed
+    auth/      onboarding, sign-in, sign-up, admin setup, change password, Account screen
+    catalog/   home, category and service detail screens
+    requests/  request form, list, detail, quote/cancel/rating sheets, chat
+    jobs/      technician offers, jobs and earnings
+    technician/ application and verification status
+    admin/     dashboard, technician review, manual assignment
+    notifications/ in-app alerts
+    shell/     role-based navigation
+  l10n/        app_ar.arb (template) and app_en.arb
 ```
 
-Dependencies are provided through `AppScope`, so widget tests inject fakes (repositories, image
-picker, location) instead of touching the network or platform channels. Business rules live on the
-server; the app validates input for fast feedback and renders what the API returns.
-
-Presentation, domain and data are kept separate (NFR-MNT-01). Business rules live on the server;
-the app validates input for fast feedback and renders what the API returns. Dependencies are
-provided through `AppScope`, so tests inject fakes instead of hitting the network.
+Presentation, domain and data stay separate. Repositories keep abstract interfaces; the `Local*`
+implementations call `LocalBackend`, which enforces every permission and state transition and
+answers in the API's JSON shapes and error codes. Screens refresh when the store changes.
 
 ## Running
 
 ```bash
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://localhost:3000/api/v1
+flutter run                 # Android device or emulator
+flutter build apk --debug   # build/app/outputs/flutter-apk/app-debug.apk
 ```
 
-`API_BASE_URL` defaults to `http://localhost:3000/api/v1`. On an Android emulator the host machine
-is `10.0.2.2`. Generated localizations are produced by `flutter gen-l10n` and committed under
-`lib/l10n/generated`; regenerate after changing the ARB files.
-
-The app requests camera, photo-library and location permissions at the point of use (attaching a
-request or document photo, or the optional "use my current location"). The platform manifests
-(`AndroidManifest.xml`, `Info.plist`) declare these plus `INTERNET`. A release web build is produced
-with `flutter build web --release`.
+CI (`.github/workflows/android-apk.yml`) analyzes, tests, builds the debug APK, installs and
+launches it on an emulator, and publishes it as `Sianetak.apk` on the `sianetak-debug` release.
 
 ## Language and layout
 
-Arabic is the default locale and the UI mirrors to RTL automatically; English is one tap away in
-the app bar. Layout uses directional spacing (`EdgeInsetsDirectional`, `AlignmentDirectional`), so
-nothing is hard-coded to the left or right. Phone numbers and OTP codes are wrapped in Unicode
-isolate marks and forced LTR so they read correctly inside Arabic text. Cairo is bundled
-(SIL OFL, see `assets/fonts/OFL.txt`) so Arabic renders consistently offline.
-
-New user-facing strings go in `lib/l10n/app_ar.arb` **and** `lib/l10n/app_en.arb`; never hard-code
-display text in a widget.
-
-## Error handling
-
-The API's stable error codes are mapped to localized copy in one place,
-`core/widgets/state_views.dart` (`messageForError`). Every screen that loads data handles loading,
-empty and error states, with retry where a retry makes sense.
+Arabic is the default locale and the UI mirrors to RTL; English is one tap away. Layout uses
+directional spacing, phone numbers are forced LTR inside Arabic text, and Cairo is bundled
+(SIL OFL) so Arabic renders consistently offline. New strings go in both ARB files.
 
 ## Tests
 
@@ -68,11 +114,8 @@ flutter analyze
 flutter test
 ```
 
-`test/unit` covers phone normalization, money formatting, model parsing (requests and
-applications), the API client (JSON, multipart upload, credentialed byte fetch, extra headers),
-the auth controller, and the request draft controller (steps, photo upload/retry/remove,
-idempotency-key reuse, slot refresh on an expired slot, orphan cleanup). `test/widget` drives the
-real screens through fakes: the full OTP sign-in flow, the four-step request flow (photo failure and
-retry, denied camera, denied location, idempotent retry, saved address, history and detail), the
-technician application and status/resubmit flows, and the admin review flow (approve,
-reject-with-reason, cancel, reinstate, conflict) — each in Arabic RTL and English.
+`test/local` covers the local backend (clean database, backups, registration, hashing, lock-out,
+sessions, admin setup, technician gating, dispatch, offer races, quote gate, payment, privacy)
+and full journeys from a clean install through the real UI: admin setup → technician applies →
+admin approves → customer requests → offer → quote → completion → rating, admin assignment and
+chat, and persistence across restarts. `test/unit` and `test/widget` cover each screen via fakes.

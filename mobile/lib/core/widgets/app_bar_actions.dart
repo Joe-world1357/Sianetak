@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../features/auth/domain/auth_models.dart';
-import '../../features/auth/presentation/profile_screen.dart';
-import '../../features/requests/presentation/my_requests_screen.dart';
-import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../app_scope.dart';
 
-/// Language switch and account entry shown on every top-level screen.
+/// Language switch for app bars. Accounts are reached from the bottom navigation.
 class AppBarActions extends StatelessWidget {
   const AppBarActions({super.key});
 
@@ -15,45 +11,15 @@ class AppBarActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scope = AppScope.of(context);
-    return ListenableBuilder(
-      listenable: scope.auth,
-      builder: (context, _) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (scope.auth.user?.role == UserRole.customer)
-            IconButton(
-              tooltip: l10n.myRequestsTitle,
-              icon: const Icon(Icons.assignment_outlined),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const MyRequestsScreen(),
-                ),
-              ),
-            ),
-          TextButton(
-            onPressed: scope.locale.toggle,
-            child: Semantics(
-              label: l10n.switchLanguageTooltip,
-              excludeSemantics: true,
-              child: Text(l10n.switchLanguage),
-            ),
-          ),
-          IconButton(
-            tooltip: scope.auth.isSignedIn
-                ? l10n.accountTooltip
-                : l10n.signInTooltip,
-            icon: Icon(
-              scope.auth.isSignedIn ? Icons.account_circle : Icons.login,
-            ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => scope.auth.isSignedIn
-                    ? const ProfileScreen()
-                    : const SignInScreen(),
-              ),
-            ),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(end: 4),
+      child: TextButton(
+        onPressed: scope.locale.toggle,
+        child: Semantics(
+          label: l10n.switchLanguageTooltip,
+          excludeSemantics: true,
+          child: Text(l10n.switchLanguage),
+        ),
       ),
     );
   }

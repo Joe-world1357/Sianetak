@@ -2,14 +2,18 @@ import 'dart:typed_data';
 
 import 'package:sianetak_customer/core/device/image_picker_service.dart';
 import 'package:sianetak_customer/core/device/location_service.dart';
+import 'package:sianetak_customer/core/device/map_launcher.dart';
 import 'package:sianetak_customer/core/network/api_exception.dart';
 import 'package:sianetak_customer/features/admin/data/admin_repository.dart';
 import 'package:sianetak_customer/features/auth/data/auth_repository.dart';
 import 'package:sianetak_customer/features/auth/domain/auth_models.dart';
 import 'package:sianetak_customer/features/catalog/data/catalog_repository.dart';
 import 'package:sianetak_customer/features/catalog/domain/catalog_models.dart';
+import 'package:sianetak_customer/features/jobs/data/jobs_repository.dart';
+import 'package:sianetak_customer/features/jobs/domain/job_models.dart';
 import 'package:sianetak_customer/features/media/data/media_repository.dart';
 import 'package:sianetak_customer/features/media/domain/media_models.dart';
+import 'package:sianetak_customer/features/notifications/data/notifications_repository.dart';
 import 'package:sianetak_customer/features/requests/data/requests_repository.dart';
 import 'package:sianetak_customer/features/requests/domain/request_models.dart';
 import 'package:sianetak_customer/features/technician/data/technician_repository.dart';
@@ -22,7 +26,6 @@ ServiceCategory category({
   String ar = 'سباكة',
   String en = 'Plumbing',
   int serviceCount = 2,
-  bool isSample = true,
 }) => ServiceCategory(
   id: 'cat-$slug',
   slug: slug,
@@ -30,7 +33,6 @@ ServiceCategory category({
   description: text('وصف $ar', '$en description'),
   iconKey: slug,
   serviceCount: serviceCount,
-  isSample: isSample,
 );
 
 ServiceSummary service({
@@ -38,13 +40,11 @@ ServiceSummary service({
   String ar = 'إصلاح تسريب',
   String en = 'Leak repair',
   PricingGuidance? pricing,
-  bool isSample = true,
 }) => ServiceSummary(
   id: 'svc-$slug',
   slug: slug,
   name: text(ar, en),
   pricing: pricing ?? const PricingGuidance.inspectionRequired(),
-  isSample: isSample,
 );
 
 /// In-memory catalog that can be told to fail or stall.
@@ -90,87 +90,162 @@ class FakeCatalogRepository implements CatalogRepository {
   );
 }
 
-/// Scriptable auth backend: records calls and returns queued answers.
+/// Local accounts with one scriptable user; signs in with [phone] and [password].
 class FakeAuthRepository implements AuthRepository {
-  FakeAuthRepository({this.codeLength = 6, this.resendAfterSeconds = 60});
+  FakeAuthRepository({
+    UserRole role = UserRole.customer,
+    TechnicianStatus? technicianStatus,
+    this.adminExists = true,
+    this.onboardingDone = true,
+  }) : user = AppUser(
+         id: 'u1',
+         phone: '+201012345678',
+         name: 'أحمد',
+         role: role,
+         technicianStatus:
+             technicianStatus ??
+             (role == UserRole.technician ? TechnicianStatus.approved : null),
+       );
 
-  final int codeLength;
-  final int resendAfterSeconds;
+  static const phone = '01012345678';
+  static const password = 'secret123';
 
-  /// The code the fake server accepts.
-  String validCode = '123456';
-  Object? requestError;
-  Object? verifyError;
-  Object? refreshError = const ApiException(
-    code: 'REFRESH_TOKEN_INVALID',
-    statusCode: 401,
-  );
-  String? devCode;
-  int requestCount = 0;
-  int verifyCount = 0;
-  int logoutCount = 0;
+  AppUser user;
+  AppUser? signedIn;
   String? lastName;
-  AppUser user = const AppUser(
-    id: 'u1',
-    phone: '+201012345678',
-    name: null,
-    role: UserRole.customer,
-  );
+  int signOutCount = 0;
+  bool adminExists;
+  bool onboardingDone;
+  String currentPassword = password;
+  final List<AppUser> createdAdmins = [];
 
   @override
-  Future<OtpChallenge> requestOtp(String phoneE164) async {
-    requestCount++;
-    if (requestError != null) throw requestError!;
-    return OtpChallenge(
-      challengeId: 'challenge-$requestCount',
-      phone: phoneE164,
-      codeLength: codeLength,
-      resendAfterSeconds: resendAfterSeconds,
-      expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      devCode: devCode,
-    );
-  }
+  Future<AppUser?> currentUser({bool renew = false}) async => signedIn;
 
   @override
-  Future<AuthSession> verifyOtp(OtpChallenge challenge, String code) async {
-    verifyCount++;
-    if (verifyError != null) throw verifyError!;
-    if (code != validCode) {
-      throw const ApiException(
-        code: 'OTP_INVALID',
-        statusCode: 400,
-        details: {'attemptsRemaining': 4},
-      );
+  Future<AppUser> signIn({
+    required String phone,
+    required String password,
+  }) async {
+    if (phone != FakeAuthRepository.phone || password != currentPassword) {
+      throw const ApiException(code: 'INVALID_CREDENTIALS', statusCode: 401);
     }
-    return AuthSession(
-      accessToken: 'access-$verifyCount',
-      refreshToken: 'refresh-$verifyCount',
-      user: user,
+    return signedIn = user;
+  }
+
+  @override
+  Future<AppUser> register({
+    required String name,
+    required String phone,
+    required String password,
+    required AccountType type,
+  }) async {
+    if (phone == FakeAuthRepository.phone) {
+      throw const ApiException(code: 'PHONE_TAKEN', statusCode: 409);
+    }
+    return signedIn = user = AppUser(
+      id: 'u2',
+      phone: '+2$phone',
+      name: name,
+      role: type == AccountType.customer
+          ? UserRole.customer
+          : UserRole.technician,
+      technicianStatus: type == AccountType.technician
+          ? TechnicianStatus.notSubmitted
+          : null,
     );
   }
 
   @override
-  Future<AuthSession> refresh(String refreshToken) async {
-    if (refreshError != null) throw refreshError!;
-    return AuthSession(
-      accessToken: 'access-refreshed',
-      refreshToken: 'refresh-rotated',
-      user: user,
-    );
+  Future<void> signOut() async {
+    signOutCount++;
+    signedIn = null;
   }
-
-  @override
-  Future<void> logout(String refreshToken) async => logoutCount++;
-
-  @override
-  Future<AppUser> fetchMe() async => user;
 
   @override
   Future<AppUser> updateName(String name) async {
     lastName = name;
-    user = AppUser(id: user.id, phone: user.phone, name: name, role: user.role);
-    return user;
+    user = AppUser(
+      id: user.id,
+      phone: user.phone,
+      name: name,
+      role: user.role,
+      technicianStatus: user.technicianStatus,
+    );
+    return signedIn = user;
   }
+
+  final List<UserRole> switchedTo = [];
+
+  @override
+  Future<AppUser> switchRole(UserRole role) async {
+    switchedTo.add(role);
+    user = AppUser(
+      id: user.id,
+      phone: user.phone,
+      name: user.name,
+      role: role,
+      roles: user.roles,
+      technicianStatus: role == UserRole.technician
+          ? (user.technicianStatus ?? TechnicianStatus.notSubmitted)
+          : null,
+    );
+    return signedIn = user;
+  }
+
+  @override
+  Future<void> changePassword({
+    required String current,
+    required String next,
+  }) async {
+    if (current != currentPassword) {
+      throw const ApiException(code: 'WRONG_PASSWORD', statusCode: 422);
+    }
+    currentPassword = next;
+  }
+
+  @override
+  Future<bool> hasAdmin() async => adminExists;
+
+  @override
+  Future<AppUser> setupAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    if (adminExists) {
+      throw const ApiException(code: 'ADMIN_EXISTS', statusCode: 409);
+    }
+    adminExists = true;
+    return signedIn = user = AppUser(
+      id: 'admin',
+      phone: '+2$phone',
+      name: name,
+      role: UserRole.admin,
+    );
+  }
+
+  @override
+  Future<AppUser> createAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    final admin = AppUser(
+      id: 'admin-${createdAdmins.length}',
+      phone: '+2$phone',
+      name: name,
+      role: UserRole.admin,
+    );
+    createdAdmins.add(admin);
+    return admin;
+  }
+
+  @override
+  Future<bool> onboardingSeen() async => onboardingDone;
+
+  @override
+  Future<void> markOnboardingSeen() async => onboardingDone = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -180,12 +255,7 @@ ServiceArea area({
   String slug = 'aswan-city-centre',
   String ar = 'وسط المدينة',
   String en = 'City centre',
-}) => ServiceArea(
-  id: 'area-$slug',
-  slug: slug,
-  name: text(ar, en),
-  isSample: true,
-);
+}) => ServiceArea(id: 'area-$slug', slug: slug, name: text(ar, en));
 
 /// Slots start tomorrow so they never fall in the past while a test runs.
 List<TimeSlot> sampleSlots() {
@@ -294,6 +364,24 @@ class FakeRequestsRepository implements RequestsRepository {
   }
 
   @override
+  Future<RequestDetail> cancel(String id, String reason) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> decideQuote(String id, {required bool approve}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> rate(String id, int stars, {String? comment}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<List<ChatMessage>> messages(String id) async => const [];
+
+  @override
+  Future<void> sendMessage(String id, String text) async {}
+
+  @override
   Future<RequestPage> list({String? cursor}) async {
     listCalls++;
     if (listError != null) throw listError!;
@@ -316,6 +404,7 @@ RequestDetail requestDetail({
   ServiceArea? area,
   String details = 'شارع النيل، عمارة 5',
   RequestSchedule schedule = const RequestSchedule.asap(),
+  GeoPoint? coordinates,
 }) {
   final a = area ?? sampleArea;
   return RequestDetail(
@@ -338,6 +427,7 @@ RequestDetail requestDetail({
     photoIds: photoIds,
     areaName: a.name,
     addressDetails: details,
+    coordinates: coordinates,
     pricing: const PricingGuidance.inspectionRequired(),
     timeline: [
       RequestTimelineEntry(status: RequestStatus.submitted, at: DateTime.now()),
@@ -455,6 +545,17 @@ class FakeImagePicker implements ImagePickerService {
     final value = next;
     if (value is Exception) throw value;
     return value as PickedImage?;
+  }
+}
+
+class FakeMapLauncher implements MapLauncher {
+  final opened = <GeoPoint>[];
+  bool succeeds = true;
+
+  @override
+  Future<bool> open(GeoPoint point, {String? label}) async {
+    opened.add(point);
+    return succeeds;
   }
 }
 
@@ -595,6 +696,79 @@ class FakeAdminRepository implements AdminRepository {
     applications[i] = updated;
     return updated;
   }
+
+  @override
+  Future<AdminOverview> overview() async => const AdminOverview(
+    statusCounts: {},
+    pendingApplications: 0,
+    approvedTechnicians: 0,
+    commissionMinor: 0,
+  );
+
+  @override
+  Future<List<RequestSummary>> requests(Set<RequestStatus> statuses) async =>
+      const [];
+
+  @override
+  Future<List<PersonRef>> assignableTechnicians(String requestId) async =>
+      const [];
+
+  @override
+  Future<RequestDetail> assign(String requestId, String technicianId) =>
+      throw UnimplementedError();
+}
+
+/// Technician dispatch with no offers or jobs.
+class FakeJobsRepository implements JobsRepository {
+  bool available = true;
+
+  @override
+  Future<bool> availability() async => available;
+
+  @override
+  Future<bool> setAvailability(bool value) async => available = value;
+
+  @override
+  Future<List<OfferedJob>> offers() async => const [];
+
+  @override
+  Future<RequestDetail> accept(String offerId) => throw UnimplementedError();
+
+  @override
+  Future<void> decline(String offerId) async {}
+
+  @override
+  Future<List<RequestSummary>> jobs({required bool active}) async => const [];
+
+  @override
+  Future<RequestDetail> advance(String requestId, JobStep step) =>
+      throw UnimplementedError();
+
+  @override
+  Future<RequestDetail> sendQuote(
+    String requestId,
+    int amountMinor, {
+    String? note,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Earnings> earnings() async => const Earnings(
+    jobs: 0,
+    collectedMinor: 0,
+    commissionMinor: 0,
+    ratingCount: 0,
+  );
+}
+
+class FakeNotificationsRepository implements NotificationsRepository {
+  @override
+  Future<List<AppNotification>> list() async => const [];
+
+  @override
+  Future<void> markAllRead() async {}
+
+  @override
+  int unreadCount() => 0;
 }
 
 ReviewApplication reviewApplication({

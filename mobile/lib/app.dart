@@ -4,14 +4,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/app_scope.dart';
 import 'core/device/image_picker_service.dart';
 import 'core/device/location_service.dart';
+import 'core/device/map_launcher.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'features/admin/data/admin_repository.dart';
 import 'features/auth/application/auth_controller.dart';
 import 'features/catalog/data/catalog_repository.dart';
-import 'features/catalog/presentation/home_screen.dart';
+import 'features/jobs/data/jobs_repository.dart';
 import 'features/media/data/media_repository.dart';
+import 'features/notifications/data/notifications_repository.dart';
 import 'features/requests/data/requests_repository.dart';
+import 'features/shell/role_shell.dart';
 import 'features/technician/data/technician_repository.dart';
 import 'l10n/generated/app_localizations.dart';
 
@@ -27,6 +30,10 @@ class SianetakApp extends StatelessWidget {
     required this.admin,
     required this.imagePicker,
     required this.location,
+    this.maps = const DeviceMapLauncher(),
+    required this.jobs,
+    required this.notifications,
+    required this.changes,
   });
 
   final CatalogRepository catalog;
@@ -38,6 +45,10 @@ class SianetakApp extends StatelessWidget {
   final AdminRepository admin;
   final ImagePickerService imagePicker;
   final LocationService location;
+  final MapLauncher maps;
+  final JobsRepository jobs;
+  final NotificationsRepository notifications;
+  final Listenable changes;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +62,10 @@ class SianetakApp extends StatelessWidget {
       admin: admin,
       imagePicker: imagePicker,
       location: location,
+      maps: maps,
+      jobs: jobs,
+      notifications: notifications,
+      changes: changes,
       child: ListenableBuilder(
         listenable: locale,
         builder: (context, _) => MaterialApp(
@@ -66,7 +81,7 @@ class SianetakApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           // Directionality (RTL for Arabic) follows the locale automatically.
-          home: const HomeScreen(),
+          home: const RootScreen(),
         ),
       ),
     );

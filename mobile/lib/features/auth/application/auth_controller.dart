@@ -1,111 +1,117 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../core/network/api_client.dart';
-import '../../../core/network/api_exception.dart';
 import '../data/auth_repository.dart';
-import '../data/token_store.dart';
 import '../domain/auth_models.dart';
 
 enum AuthStatus { restoring, signedOut, signedIn }
 
-/// Session state for the app. Business rules (limits, expiry, roles) live on the server;
-/// this class only keeps tokens and exposes the signed-in user.
-class AuthController extends ChangeNotifier implements AccessTokenProvider {
-  AuthController({
-    required AuthRepository repository,
-    required TokenStore tokenStore,
-  }) // Named parameters cannot be private field formals, so assign them here.
+/// Session state for the app: which local account (if any) is signed in on this device.
+class AuthController extends ChangeNotifier {
+  AuthController({required AuthRepository repository})
+    // Named parameters cannot be private field formals, so assign them here.
     // ignore: prefer_initializing_formals
-    : _repository = repository,
-       // ignore: prefer_initializing_formals
-       _tokenStore = tokenStore;
+    : _repository = repository;
 
   final AuthRepository _repository;
-  final TokenStore _tokenStore;
 
   AuthStatus _status = AuthStatus.restoring;
   AppUser? _user;
-  String? _accessToken;
-  Future<bool>? _refreshing;
+  bool _onboardingSeen = true;
 
   AuthStatus get status => _status;
   AppUser? get user => _user;
   bool get isSignedIn => _status == AuthStatus.signedIn;
 
-  @override
-  String? get accessToken => _accessToken;
+  /// False only on a device that has never finished the welcome screens.
+  bool get onboardingSeen => _onboardingSeen;
 
-  /// Restores a previous session from the stored refresh token, if any.
+  /// Restores the account signed in at the last launch, if its session is still valid.
   Future<void> restore() async {
-    final ok = await refreshAccessToken();
-    if (!ok && _status == AuthStatus.restoring) _setSignedOut();
-  }
-
-  Future<OtpChallenge> requestOtp(String phoneE164) =>
-      _repository.requestOtp(phoneE164);
-
-  Future<AuthSession> verifyOtp(OtpChallenge challenge, String code) async {
-    final session = await _repository.verifyOtp(challenge, code);
-    await _applySession(session);
-    return session;
-  }
-
-  @override
-  Future<bool> refreshAccessToken() {
-    // Coalesce concurrent refreshes into one request.
-    return _refreshing ??= _doRefresh().whenComplete(() => _refreshing = null);
-  }
-
-  Future<bool> _doRefresh() async {
-    final stored = await _tokenStore.readRefreshToken();
-    if (stored == null) {
-      if (_status != AuthStatus.signedOut) _setSignedOut();
-      return false;
-    }
     try {
-      await _applySession(await _repository.refresh(stored));
-      return true;
-    } on ApiException catch (e) {
-      if (e.code == ApiException.network) {
-        // Keep the stored token; the user may be offline. Stay signed out until it works.
-        if (_status == AuthStatus.restoring) _setSignedOut(clearToken: false);
-        return false;
-      }
-      _setSignedOut();
-      return false;
+      _onboardingSeen = await _repository.onboardingSeen();
+      _apply(await _repository.currentUser(renew: true));
+    } catch (_) {
+      _apply(null);
     }
   }
 
-  Future<void> updateName(String name) async {
-    _user = await _repository.updateName(name);
+  Future<void> completeOnboarding() async {
+    _onboardingSeen = true;
     notifyListeners();
+    await _repository.markOnboardingSeen();
   }
+
+  Future<void> register({
+    required String name,
+    required String phone,
+    required String password,
+    required AccountType type,
+  }) async => _apply(
+    await _repository.register(
+      name: name,
+      phone: phone,
+      password: password,
+      type: type,
+    ),
+  );
+
+  Future<void> signIn({
+    required String phone,
+    required String password,
+  }) async =>
+      _apply(await _repository.signIn(phone: phone, password: password));
+
+  Future<bool> hasAdmin() => _repository.hasAdmin();
+
+  Future<void> setupAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) async => _apply(
+    await _repository.setupAdmin(name: name, phone: phone, password: password),
+  );
+
+  Future<AppUser> createAdmin({
+    required String name,
+    required String phone,
+    required String password,
+  }) => _repository.createAdmin(name: name, phone: phone, password: password);
+
+  /// Re-reads the account (a technician's status changes when an admin reviews them).
+  Future<void> refresh() async {
+    try {
+      final user = await _repository.currentUser();
+      if (user?.id != _user?.id ||
+          user?.technicianStatus != _user?.technicianStatus ||
+          user?.role != _user?.role ||
+          user?.name != _user?.name) {
+        _apply(user);
+      }
+    } catch (_) {
+      // Keep the current state; the next action will surface any problem.
+    }
+  }
+
+  Future<void> updateName(String name) async =>
+      _apply(await _repository.updateName(name));
+
+  /// Multi-role accounts: switches between customer and technician mode.
+  Future<void> switchRole(UserRole role) async =>
+      _apply(await _repository.switchRole(role));
+
+  Future<void> changePassword({
+    required String current,
+    required String next,
+  }) => _repository.changePassword(current: current, next: next);
 
   Future<void> signOut() async {
-    final stored = await _tokenStore.readRefreshToken();
-    _setSignedOut();
-    if (stored != null) {
-      try {
-        await _repository.logout(stored);
-      } catch (_) {
-        // Local sign-out already happened; the server token expires on its own.
-      }
-    }
+    _apply(null);
+    await _repository.signOut();
   }
 
-  Future<void> _applySession(AuthSession session) async {
-    await _tokenStore.writeRefreshToken(session.refreshToken);
-    _accessToken = session.accessToken;
-    _user = session.user;
-    _status = AuthStatus.signedIn;
-    notifyListeners();
-  }
-
-  void _setSignedOut({bool clearToken = true}) {
-    if (clearToken) _tokenStore.clear();
-    _accessToken = null;
-    _user = null;
-    _status = AuthStatus.signedOut;
+  void _apply(AppUser? user) {
+    _user = user;
+    _status = user == null ? AuthStatus.signedOut : AuthStatus.signedIn;
     notifyListeners();
   }
 }
