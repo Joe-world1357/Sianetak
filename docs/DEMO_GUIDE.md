@@ -1,4 +1,4 @@
-# Sianetak demo guide (Sprint 4)
+# Sianetak demo guide (Sprint 4, version 1.0)
 
 How to install the app, present the full journey in about 12 minutes, reset the phone, and what
 to say about the parts that are simulated.
@@ -6,11 +6,15 @@ to say about the parts that are simulated.
 ## 1. Install
 
 1. On an Android phone (Android 7+), open the repository's **Releases** page and download
-   `Sianetak.apk` from the `sianetak-debug` release (it is rebuilt by GitHub Actions on every push).
+   `Sianetak.apk` from the **Sianetak 1.0 (Android APK)** release (tag `sianetak-apk`; GitHub
+   Actions rebuilds it on every push to `main`). The app appears on the home screen as **صيانتك**.
 2. Open the file and allow "Install unknown apps" for your browser or Files app when asked.
 3. Allow location when the app asks during a request (needed only for the map pin).
 
-To build it yourself: `cd mobile && flutter pub get && flutter build apk --debug`
+If an older Sianetak build is installed, uninstall it first: each CI build is signed with that
+runner's key, so Android refuses to install one over another.
+
+To build it yourself: `cd mobile && flutter pub get && flutter build apk --release`
 (Flutter 3.47.8, Android SDK). `flutter run` works on an emulator too.
 
 ## 2. Before you present (3 minutes)
@@ -67,7 +71,9 @@ Optional: switch the language to English from Account → Language to show the b
 - **Offers expire** while the app is open (checked every 30 s and on every screen load), not in
   the background.
 - **Policies** are fixed in code (`mobile/lib/local/initial_data.dart`): 3 offers per request,
-  15-minute expiry, cancel until work starts, 10% commission. Lock-out (5 tries → 5 min) and
-  session length (30 days) are still `[Proposed]`.
+  15-minute expiry, cancel until work starts, 10% commission, lock-out after 5 wrong passwords
+  for 5 minutes, sessions valid 30 days unused.
+- **No internet use.** The release APK does not even request the internet permission; "Open in
+  Maps" hands the pin to the phone's maps app.
 - **Technician documents** are reviewed as images only; no PDF preview.
 - The `backend/` folder is the earlier server design, kept for reference; the app does not use it.
